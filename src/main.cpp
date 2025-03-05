@@ -24,6 +24,13 @@ int WINAPI wWinMain(
 		system("pause");
 		return 1;
 	}
+	catch (VulkanException &e)
+	{
+		printf(e.msg().c_str());
+		MessageBoxA(hwnd, e.msg().c_str(), NULL, MB_SYSTEMMODAL);
+		system("pause");
+		return 1;
+	}
 	catch (std::exception &e)
 	{
 		printf(e.what());

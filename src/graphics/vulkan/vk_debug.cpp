@@ -30,6 +30,8 @@ VkBool32 DebugCallback(
 	void *pUserData)
 {
 	Log(pCallbackData->pMessage);
+	OutputDebugStringA(pCallbackData->pMessage);
+	OutputDebugStringA("\n");
 
 	return VK_TRUE;
 }

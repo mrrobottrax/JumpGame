@@ -78,8 +78,18 @@ void CreateInstance()
 	delete[] extensions;
 #pragma warning (pop)
 
+	VkApplicationInfo appInfo{
+		.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
+		.pApplicationName = "Jump Game",
+		.applicationVersion = 0,
+		.pEngineName = "MAGE",
+		.engineVersion = 0,
+		.apiVersion = VK_MAKE_API_VERSION(0, 1, 3, 0),
+	};
+
 	VkInstanceCreateInfo createInfo{
 		.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
+		.pApplicationInfo = &appInfo,
 		.enabledLayerCount = _countof(REQUIRED_LAYERS),
 		.ppEnabledLayerNames = REQUIRED_LAYERS,
 		.enabledExtensionCount = _countof(REQUIRED_EXTENSIONS),
