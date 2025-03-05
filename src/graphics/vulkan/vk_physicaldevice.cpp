@@ -4,11 +4,11 @@
 #include "console/console.h"
 
 #include <cassert>
-VkPhysicalDevice device;
+VkPhysicalDevice vk_physicaldevice;
 
 struct DeviceEntry
 {
-	VkPhysicalDevice device;
+	VkPhysicalDevice vk_physicaldevice;
 	int score;
 };
 
@@ -29,11 +29,11 @@ void PickPhysicalDevice()
 	{
 #pragma warning (push)
 #pragma warning (disable:6385)
-		VkPhysicalDevice &device = devices[i];
+		VkPhysicalDevice &vk_physicaldevice = devices[i];
 #pragma warning (pop)
 
 		VkPhysicalDeviceProperties properties;
-		vkGetPhysicalDeviceProperties(device, &properties);
+		vkGetPhysicalDeviceProperties(vk_physicaldevice, &properties);
 
 		int score = 0;
 		switch (properties.deviceType)
@@ -55,16 +55,16 @@ void PickPhysicalDevice()
 		if (i == 0 || score > bestDevice.score)
 		{
 			bestDevice = {
-				.device = device,
+				.vk_physicaldevice = vk_physicaldevice,
 				.score = score,
 			};
 		}
 	}
 
-	device = bestDevice.device;
+	vk_physicaldevice = bestDevice.vk_physicaldevice;
 
 	VkPhysicalDeviceProperties properties;
-	vkGetPhysicalDeviceProperties(bestDevice.device, &properties);
+	vkGetPhysicalDeviceProperties(bestDevice.vk_physicaldevice, &properties);
 
 	Log("USING DEVICE: %s", properties.deviceName);
 

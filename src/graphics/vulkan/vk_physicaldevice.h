@@ -1,5 +1,5 @@
 #pragma once
 
-extern VkPhysicalDevice device;
+extern VkPhysicalDevice vk_physicaldevice;
 
 void PickPhysicalDevice();

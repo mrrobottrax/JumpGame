@@ -3,15 +3,18 @@
 #include "vk_physicaldevice.h"
 #include "vulkan.h"
 #include "exceptions/exceptions.h"
+#include "vk_device.h"
 
 void InitVulkan()
 {
 	CreateInstance();
 	PickPhysicalDevice();
+	CreateDevice();
 }
 
 void EndVulkan()
 {
+	DestroyDevice();
 	DestroyInstance();
 }
 
