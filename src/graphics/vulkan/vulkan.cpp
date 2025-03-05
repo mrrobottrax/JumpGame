@@ -36,11 +36,22 @@ void RenderFrameVulkan()
 		.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT,
 	};
 
-	vkResetCommandPool(vk_device, vk_commandbufferpool_perframe, 0);
-	vkBeginCommandBuffer(vk_commandbuffer, &beginInfo);
+	vkResetCommandPool(vk_device, vk_commandpool_main, 0);
+	vkBeginCommandBuffer(vk_commandbuffer_main, &beginInfo);
 
-	vkEndCommandBuffer(vk_commandbuffer);
-	vkQueueSubmit2(vk_mainqueue)*/
+	vkEndCommandBuffer(vk_commandbuffer_main);
+
+	VkCommandBufferSubmitInfo commandBufferSubmitInfo{
+		.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO,
+		.commandBuffer = vk_commandbuffer_main
+	};
+
+	VkSubmitInfo2 submitInfo{
+		.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO_2,
+		.commandBufferInfoCount = 1,
+		.pCommandBufferInfos = &commandBufferSubmitInfo
+	};
+	vkQueueSubmit2(vk_queue_main, 1, &submitInfo, VK_NULL_HANDLE);*/
 }
 
 void VkAssert(VkResult result)
