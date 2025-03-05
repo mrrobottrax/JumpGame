@@ -13,6 +13,8 @@ constexpr const char *REQUIRED_LAYERS[] = {
 
 constexpr const char *REQUIRED_EXTENSIONS[] = {
 	"VK_EXT_debug_utils",
+	"VK_KHR_surface",
+	"VK_KHR_win32_surface",
 };
 #else
 constexpr const char *REQUIRED_LAYERS[] = {
@@ -20,6 +22,8 @@ constexpr const char *REQUIRED_LAYERS[] = {
 };
 
 constexpr const char *REQUIRED_EXTENSIONS[] = {
+	"VK_KHR_surface",
+	"VK_KHR_win32_surface",
 };
 #endif // DEBUG
 

@@ -5,12 +5,14 @@
 #include "vk_physicaldevice.h"
 #include "vk_device.h"
 #include "vk_debug.h"
+#include "vk_surface.h"
 
 void InitVulkan()
 {
 	CreateInstance();
 	PickPhysicalDevice();
 	CreateDevice();
+	CreateSurface();
 }
 
 void EndVulkan()

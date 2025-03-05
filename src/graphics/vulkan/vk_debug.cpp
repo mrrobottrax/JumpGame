@@ -4,7 +4,7 @@
 #include "vk_instance.h"
 #include <console/console.h>
 
-VkDebugUtilsMessengerEXT reportCallback;
+static VkDebugUtilsMessengerEXT vk_reportCallback;
 
 void CreateDebugCallbacks()
 {
@@ -15,12 +15,12 @@ void CreateDebugCallbacks()
 		.pfnUserCallback = &DebugCallback,
 	};
 
-	VkAssert(vkCreateDebugUtilsMessengerEXT(vk_instance, &createInfo, nullptr, &reportCallback));
+	VkAssert(vkCreateDebugUtilsMessengerEXT(vk_instance, &createInfo, nullptr, &vk_reportCallback));
 }
 
 void DestroyDebugCallbacks()
 {
-	vkDestroyDebugUtilsMessengerEXT(vk_instance, reportCallback, nullptr);
+	vkDestroyDebugUtilsMessengerEXT(vk_instance, vk_reportCallback, nullptr);
 }
 
 VkBool32 DebugCallback(

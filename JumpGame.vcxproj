@@ -142,6 +142,7 @@
     <ClCompile Include="src\graphics\vulkan\vk_ext_debugutils.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_instance.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_physicaldevice.cpp" />
+    <ClCompile Include="src\graphics\vulkan\vk_surface.cpp" />
     <ClCompile Include="src\graphics\vulkan\vulkan.cpp" />
     <ClCompile Include="src\input\input.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="src\graphics\vulkan\vk_ext_debugutils.h" />
     <ClInclude Include="src\graphics\vulkan\vk_instance.h" />
     <ClInclude Include="src\graphics\vulkan\vk_physicaldevice.h" />
+    <ClInclude Include="src\graphics\vulkan\vk_surface.h" />
     <ClInclude Include="src\graphics\vulkan\vulkan.h" />
     <ClInclude Include="src\input\input.h" />
     <ClInclude Include="src\pch.h" />
