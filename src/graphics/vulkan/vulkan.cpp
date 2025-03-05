@@ -4,7 +4,6 @@
 #include "vk_instance.h"
 #include "vk_physicaldevice.h"
 #include "vk_device.h"
-#include "vk_debug.h"
 #include "vk_surface.h"
 #include "vk_queuefamilies.h"
 #include "vk_queues.h"
@@ -47,7 +46,7 @@ void RenderFrameVulkan()
 	vkResetFences(vk_device, 1, &vk_fence_main);
 
 	uint32_t imageIndex = 0;
-	vkAcquireNextImageKHR(vk_device, vk_swapchain, UINT64_MAX, vk_semaphore_aquireimage, VK_NULL_HANDLE, &imageIndex);
+	vkAcquireNextImageKHR(vk_device, vk_swapchain, UINT64_MAX, vk_semaphore_acquireimage, VK_NULL_HANDLE, &imageIndex);
 
 	VkCommandBufferBeginInfo beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -65,7 +64,7 @@ void RenderFrameVulkan()
 		.renderPass = vk_render_pass,
 		.framebuffer = vk_swapchain_framebuffers[imageIndex],
 		.renderArea = {
-			.extent = {.width = vk_width,.height = vk_height},
+			.extent = {.width = vk_width, .height = vk_height},
 		},
 		.clearValueCount = 1,
 		.pClearValues = &clear,
@@ -76,12 +75,11 @@ void RenderFrameVulkan()
 		.contents = VK_SUBPASS_CONTENTS_INLINE,
 	};
 
-	vkCmdBeginRenderPass2(vk_commandbuffer_main, &begin, &subBegin);
-
 	VkSubpassEndInfo subEnd{
-		.sType = VK_STRUCTURE_TYPE_SUBPASS_END_INFO,
+	.sType = VK_STRUCTURE_TYPE_SUBPASS_END_INFO,
 	};
 
+	vkCmdBeginRenderPass2(vk_commandbuffer_main, &begin, &subBegin);
 	vkCmdEndRenderPass2(vk_commandbuffer_main, &subEnd);
 
 	VkAssert(vkEndCommandBuffer(vk_commandbuffer_main));
@@ -97,7 +95,7 @@ void RenderFrameVulkan()
 
 	const VkSemaphoreSubmitInfo waitInfo{
 		.sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
-		.semaphore = vk_semaphore_aquireimage,
+		.semaphore = vk_semaphore_acquireimage,
 	};
 
 	VkSubmitInfo2 submitInfo{

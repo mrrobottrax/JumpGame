@@ -17,12 +17,12 @@ void CreateSyncObjects()
 	};
 
 	VkAssert(vkCreateSemaphore(vk_device, &semaphoreInfo, nullptr, &vk_semaphore_rendering));
-	VkAssert(vkCreateSemaphore(vk_device, &semaphoreInfo, nullptr, &vk_semaphore_aquireimage));
+	VkAssert(vkCreateSemaphore(vk_device, &semaphoreInfo, nullptr, &vk_semaphore_acquireimage));
 }
 
 void DestroySyncObjects()
 {
 	vkDestroySemaphore(vk_device, vk_semaphore_rendering, nullptr);
-	vkDestroySemaphore(vk_device, vk_semaphore_aquireimage, nullptr);
+	vkDestroySemaphore(vk_device, vk_semaphore_acquireimage, nullptr);
 	vkDestroyFence(vk_device, vk_fence_main, nullptr);
 }
