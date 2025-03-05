@@ -137,6 +137,7 @@
     <ClCompile Include="src\console\console.cpp" />
     <ClCompile Include="src\exceptions\exceptions.cpp" />
     <ClCompile Include="src\graphics\graphics.cpp" />
+    <ClCompile Include="src\graphics\vulkan\vk_renderpass.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_commandbuffers.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_debug.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_device.cpp" />
@@ -161,6 +162,7 @@
     <ClInclude Include="src\console\console.h" />
     <ClInclude Include="src\exceptions\exceptions.h" />
     <ClInclude Include="src\graphics\graphics.h" />
+    <ClInclude Include="src\graphics\vulkan\vk_renderpass.h" />
     <ClInclude Include="src\graphics\vulkan\vk_commandbuffers.h" />
     <ClInclude Include="src\graphics\vulkan\vk_debug.h" />
     <ClInclude Include="src\graphics\vulkan\vk_device.h" />

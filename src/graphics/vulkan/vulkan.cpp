@@ -11,6 +11,7 @@
 #include "vk_commandbuffers.h"
 #include "vk_sync.h"
 #include "vk_swapchain.h"
+#include "vk_renderpass.h"
 
 void InitVulkan()
 {
@@ -22,6 +23,8 @@ void InitVulkan()
 	CreateSurface();
 	CreateCommandBuffers();
 	CreateSyncObjects();
+	GetSwapchainFormat();
+	CreateRenderPass();
 	CreateSwapchain();
 }
 
@@ -29,6 +32,7 @@ void EndVulkan()
 {
 	vkQueueWaitIdle(vk_queue_main);
 
+	DestroyRenderPass();
 	DestroySwapchain();
 	DestroySyncObjects();
 	DestroyCommandBuffers();
@@ -42,6 +46,9 @@ void RenderFrameVulkan()
 	if (vkGetFenceStatus(vk_device, vk_fence_main) != VK_SUCCESS) return;
 	vkResetFences(vk_device, 1, &vk_fence_main);
 
+	uint32_t imageIndex = 0;
+	vkAcquireNextImageKHR(vk_device, vk_swapchain, UINT64_MAX, vk_semaphore_aquireimage, VK_NULL_HANDLE, &imageIndex);
+
 	VkCommandBufferBeginInfo beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
@@ -49,16 +56,19 @@ void RenderFrameVulkan()
 	VkAssert(vkResetCommandPool(vk_device, vk_commandpool_main, 0));
 	VkAssert(vkBeginCommandBuffer(vk_commandbuffer_main, &beginInfo));
 
-	/*VkClearValue clear{
+	VkClearValue clear{
 		.color = {.float32 = {0, 0.5f, 1, 1}}
 	};
 
 	VkRenderPassBeginInfo begin{
 		.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+		.renderPass = vk_render_pass,
+		.framebuffer = vk_swapchain_framebuffers[imageIndex],
+		.renderArea = {
+			.extent = {.width = vk_width,.height = vk_height},
+		},
 		.clearValueCount = 1,
 		.pClearValues = &clear,
-		.renderPass = vk_renderpass_main,
-		.framebuffer =
 	};
 
 	VkSubpassBeginInfo subBegin{
@@ -72,22 +82,28 @@ void RenderFrameVulkan()
 		.sType = VK_STRUCTURE_TYPE_SUBPASS_END_INFO,
 	};
 
-	vkCmdEndRenderPass2(vk_commandbuffer_main, &subEnd);*/
+	vkCmdEndRenderPass2(vk_commandbuffer_main, &subEnd);
 
 	VkAssert(vkEndCommandBuffer(vk_commandbuffer_main));
 
-	/*VkCommandBufferSubmitInfo commandBufferSubmitInfo{};
+	VkCommandBufferSubmitInfo commandBufferSubmitInfo{};
 	commandBufferSubmitInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO;
 	commandBufferSubmitInfo.commandBuffer = vk_commandbuffer_main;
 
 	const VkSemaphoreSubmitInfo semaphoreSubmitInfo{
 		.sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
 		.semaphore = vk_semaphore_rendering,
-		.value = 1,
+	};
+
+	const VkSemaphoreSubmitInfo waitInfo{
+		.sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
+		.semaphore = vk_semaphore_aquireimage,
 	};
 
 	VkSubmitInfo2 submitInfo{
 		.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO_2,
+		.waitSemaphoreInfoCount = 1,
+		.pWaitSemaphoreInfos = &waitInfo,
 		.commandBufferInfoCount = 1,
 		.pCommandBufferInfos = &commandBufferSubmitInfo,
 		.signalSemaphoreInfoCount = 1,
@@ -101,9 +117,10 @@ void RenderFrameVulkan()
 		.pWaitSemaphores = &vk_semaphore_rendering,
 		.swapchainCount = 1,
 		.pSwapchains = &vk_swapchain,
+		.pImageIndices = &imageIndex,
 	};
 
-	vkQueuePresentKHR(vk_queue_main, &present);*/
+	vkQueuePresentKHR(vk_queue_main, &present);
 }
 
 void VkAssert(VkResult result)
