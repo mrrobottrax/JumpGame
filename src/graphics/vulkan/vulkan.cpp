@@ -1,9 +1,10 @@
 #include "pch.h"
+#include "exceptions/exceptions.h"
+#include "vulkan.h"
 #include "vk_instance.h"
 #include "vk_physicaldevice.h"
-#include "vulkan.h"
-#include "exceptions/exceptions.h"
 #include "vk_device.h"
+#include "vk_debug.h"
 
 void InitVulkan()
 {

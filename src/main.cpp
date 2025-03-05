@@ -18,7 +18,6 @@ int WINAPI wWinMain(
 		MAGE_Init();
 		MAGE_FrameLoop();
 		MAGE_End();
-		
 	}
 	catch (WindowsException &e)
 	{

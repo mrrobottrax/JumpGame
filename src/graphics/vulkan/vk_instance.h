@@ -1,6 +1,6 @@
 #pragma once
 
-extern VkInstance vk_instance;
+inline VkInstance vk_instance;
 
 void CreateInstance();
 void DestroyInstance();
