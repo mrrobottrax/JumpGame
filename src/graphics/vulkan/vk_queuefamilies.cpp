@@ -11,7 +11,7 @@ void GetQueueFamilies()
 	VkQueueFamilyProperties *queueFamilies = new VkQueueFamilyProperties[queueFamilyCount];
 	vkGetPhysicalDeviceQueueFamilyProperties(vk_physicaldevice, &queueFamilyCount, queueFamilies);
 
-	vk_queuefamilyindices.mainQueueFamily = -1;
+	vk_queue_family_indices.mainQueueFamily = -1;
 
 	Log("Queues:");
 	for (uint32_t i = 0; i < queueFamilyCount; ++i)
@@ -28,9 +28,9 @@ void GetQueueFamilies()
 		{
 			Log("  -Graphics");
 
-			if (vk_queuefamilyindices.mainQueueFamily == -1)
+			if (vk_queue_family_indices.mainQueueFamily == -1)
 			{
-				vk_queuefamilyindices.mainQueueFamily = i;
+				vk_queue_family_indices.mainQueueFamily = i;
 			}
 		}
 
@@ -59,5 +59,5 @@ void GetQueueFamilies()
 	delete[] queueFamilies;
 
 	Log("PICKED QUEUES:");
-	Log("Main Queue: %i", vk_queuefamilyindices.mainQueueFamily);
+	Log("Main Queue: %i", vk_queue_family_indices.mainQueueFamily);
 }

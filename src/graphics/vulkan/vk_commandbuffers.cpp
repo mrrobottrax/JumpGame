@@ -7,7 +7,7 @@ void CreateCommandBuffers()
 {
 	VkCommandPoolCreateInfo createInfo{
 		.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
-		.queueFamilyIndex = vk_queuefamilyindices.mainQueueFamily,
+		.queueFamilyIndex = vk_queue_family_indices.mainQueueFamily,
 	};
 
 	vkCreateCommandPool(vk_device, &createInfo, nullptr, &vk_commandpool_main);

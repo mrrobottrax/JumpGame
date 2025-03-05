@@ -4,6 +4,6 @@ struct QueueFamilyIndices
 {
 	uint32_t mainQueueFamily;
 };
-inline QueueFamilyIndices vk_queuefamilyindices;
+inline QueueFamilyIndices vk_queue_family_indices;
 
 void GetQueueFamilies();

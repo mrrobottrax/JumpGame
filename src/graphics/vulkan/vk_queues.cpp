@@ -7,7 +7,7 @@ void GetDeviceQueues()
 {
 	VkDeviceQueueInfo2 queueInfo{
 		.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2,
-		.queueFamilyIndex = vk_queuefamilyindices.mainQueueFamily,
+		.queueFamilyIndex = vk_queue_family_indices.mainQueueFamily,
 		.queueIndex = 0
 	};
 	vkGetDeviceQueue2(vk_device, &queueInfo, &vk_queue_main);

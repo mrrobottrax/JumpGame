@@ -11,12 +11,15 @@
 #include "vk_sync.h"
 #include "vk_swapchain.h"
 #include "vk_renderpass.h"
+#include "vk_vertexbuffer.h"
+#include "vk_memory.h"
 
 void InitVulkan()
 {
 	CreateInstance();
 	PickPhysicalDevice();
 	GetQueueFamilies();
+	GetMemoryTypes();
 	CreateDevice();
 	GetDeviceQueues();
 	CreateSurface();
@@ -25,12 +28,14 @@ void InitVulkan()
 	GetSwapchainFormat();
 	CreateRenderPass();
 	CreateSwapchain();
+	CreateVertexBuffer();
 }
 
 void EndVulkan()
 {
 	vkQueueWaitIdle(vk_queue_main);
 
+	DestroyVertexBuffer();
 	DestroyRenderPass();
 	DestroySwapchain();
 	DestroySyncObjects();
@@ -80,6 +85,12 @@ void RenderFrameVulkan()
 	};
 
 	vkCmdBeginRenderPass2(vk_commandbuffer_main, &begin, &subBegin);
+
+	// Draw
+	VkDeviceSize offset = 0;
+	vkCmdBindVertexBuffers2(vk_commandbuffer_main, 0, 1, &vk_tri_vertexbuffer, &offset, nullptr, nullptr);
+	//vkCmdDraw(vk_commandbuffer_main, 3, 1, 0, 0);
+
 	vkCmdEndRenderPass2(vk_commandbuffer_main, &subEnd);
 
 	VkAssert(vkEndCommandBuffer(vk_commandbuffer_main));

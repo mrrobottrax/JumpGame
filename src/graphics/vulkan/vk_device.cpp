@@ -34,7 +34,7 @@ void CreateDevice()
 
 	VkDeviceQueueCreateInfo queueInfo{
 		.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
-		.queueFamilyIndex = vk_queuefamilyindices.mainQueueFamily,
+		.queueFamilyIndex = vk_queue_family_indices.mainQueueFamily,
 		.queueCount = 1,
 		.pQueuePriorities = &queuePriority,
 	};

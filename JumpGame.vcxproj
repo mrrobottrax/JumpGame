@@ -137,6 +137,7 @@
     <ClCompile Include="src\console\console.cpp" />
     <ClCompile Include="src\exceptions\exceptions.cpp" />
     <ClCompile Include="src\graphics\graphics.cpp" />
+    <ClCompile Include="src\graphics\vulkan\vk_memory.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_renderpass.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_commandbuffers.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_debug.cpp" />
@@ -149,6 +150,7 @@
     <ClCompile Include="src\graphics\vulkan\vk_surface.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_swapchain.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_sync.cpp" />
+    <ClCompile Include="src\graphics\vulkan\vk_vertexbuffer.cpp" />
     <ClCompile Include="src\graphics\vulkan\vulkan.cpp" />
     <ClCompile Include="src\input\input.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -162,6 +164,7 @@
     <ClInclude Include="src\console\console.h" />
     <ClInclude Include="src\exceptions\exceptions.h" />
     <ClInclude Include="src\graphics\graphics.h" />
+    <ClInclude Include="src\graphics\vulkan\vk_memory.h" />
     <ClInclude Include="src\graphics\vulkan\vk_renderpass.h" />
     <ClInclude Include="src\graphics\vulkan\vk_commandbuffers.h" />
     <ClInclude Include="src\graphics\vulkan\vk_debug.h" />
@@ -174,6 +177,7 @@
     <ClInclude Include="src\graphics\vulkan\vk_surface.h" />
     <ClInclude Include="src\graphics\vulkan\vk_swapchain.h" />
     <ClInclude Include="src\graphics\vulkan\vk_sync.h" />
+    <ClInclude Include="src\graphics\vulkan\vk_vertexbuffer.h" />
     <ClInclude Include="src\graphics\vulkan\vulkan.h" />
     <ClInclude Include="src\input\input.h" />
     <ClInclude Include="src\pch.h" />
