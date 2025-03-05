@@ -14,3 +14,8 @@ void CreateSurface()
 
 	vkCreateWin32SurfaceKHR(vk_instance, &createInfo, nullptr, &vk_surface);
 }
+
+void DestroySurface()
+{
+	vkDestroySurfaceKHR(vk_instance, vk_surface, nullptr);
+}

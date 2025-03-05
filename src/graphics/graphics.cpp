@@ -11,3 +11,8 @@ void MAGE_EndGraphics()
 {
 	EndVulkan();
 }
+
+void MAGE_Render()
+{
+	RenderFrameVulkan();
+}

@@ -54,5 +54,12 @@ void MAGE_FrameLoop()
 				return;
 			}
 		}
+
+		MAGE_Frame();
 	}
+}
+
+void MAGE_Frame()
+{
+	MAGE_Render();
 }
