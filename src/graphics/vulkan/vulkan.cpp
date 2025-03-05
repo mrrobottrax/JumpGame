@@ -10,6 +10,7 @@
 #include "vk_queues.h"
 #include "vk_commandbuffers.h"
 #include "vk_sync.h"
+#include "vk_swapchain.h"
 
 void InitVulkan()
 {
@@ -21,12 +22,14 @@ void InitVulkan()
 	CreateSurface();
 	CreateCommandBuffers();
 	CreateSyncObjects();
+	CreateSwapchain();
 }
 
 void EndVulkan()
 {
 	vkQueueWaitIdle(vk_queue_main);
 
+	DestroySwapchain();
 	DestroySyncObjects();
 	DestroyCommandBuffers();
 	DestroySurface();
@@ -46,17 +49,61 @@ void RenderFrameVulkan()
 	VkAssert(vkResetCommandPool(vk_device, vk_commandpool_main, 0));
 	VkAssert(vkBeginCommandBuffer(vk_commandbuffer_main, &beginInfo));
 
+	/*VkClearValue clear{
+		.color = {.float32 = {0, 0.5f, 1, 1}}
+	};
+
+	VkRenderPassBeginInfo begin{
+		.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+		.clearValueCount = 1,
+		.pClearValues = &clear,
+		.renderPass = vk_renderpass_main,
+		.framebuffer =
+	};
+
+	VkSubpassBeginInfo subBegin{
+		.sType = VK_STRUCTURE_TYPE_SUBPASS_BEGIN_INFO,
+		.contents = VK_SUBPASS_CONTENTS_INLINE,
+	};
+
+	vkCmdBeginRenderPass2(vk_commandbuffer_main, &begin, &subBegin);
+
+	VkSubpassEndInfo subEnd{
+		.sType = VK_STRUCTURE_TYPE_SUBPASS_END_INFO,
+	};
+
+	vkCmdEndRenderPass2(vk_commandbuffer_main, &subEnd);*/
+
 	VkAssert(vkEndCommandBuffer(vk_commandbuffer_main));
 
-	VkCommandBufferSubmitInfo commandBufferSubmitInfo{};
+	/*VkCommandBufferSubmitInfo commandBufferSubmitInfo{};
 	commandBufferSubmitInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO;
 	commandBufferSubmitInfo.commandBuffer = vk_commandbuffer_main;
 
-	VkSubmitInfo2 submitInfo{};
-	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO_2;
-	submitInfo.commandBufferInfoCount = 1;
-	submitInfo.pCommandBufferInfos = &commandBufferSubmitInfo;
+	const VkSemaphoreSubmitInfo semaphoreSubmitInfo{
+		.sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
+		.semaphore = vk_semaphore_rendering,
+		.value = 1,
+	};
+
+	VkSubmitInfo2 submitInfo{
+		.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO_2,
+		.commandBufferInfoCount = 1,
+		.pCommandBufferInfos = &commandBufferSubmitInfo,
+		.signalSemaphoreInfoCount = 1,
+		.pSignalSemaphoreInfos = &semaphoreSubmitInfo,
+	};
 	VkAssert(vkQueueSubmit2(vk_queue_main, 1, &submitInfo, vk_fence_main));
+
+	VkPresentInfoKHR present{
+		.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
+		.waitSemaphoreCount = 1,
+		.pWaitSemaphores = &vk_semaphore_rendering,
+		.swapchainCount = 1,
+		.pSwapchains = &vk_swapchain,
+	};
+
+	vkQueuePresentKHR(vk_queue_main, &present);*/
 }
 
 void VkAssert(VkResult result)

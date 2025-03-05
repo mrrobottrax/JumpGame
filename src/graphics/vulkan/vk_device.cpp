@@ -5,6 +5,10 @@
 #include "console/console.h"
 #include "vk_queuefamilies.h"
 
+constexpr const char *REQUIRED_EXTENSIONS[] = {
+	VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+};
+
 void CreateDevice()
 {
 	uint32_t propertyCount;
@@ -51,6 +55,8 @@ void CreateDevice()
 		.pNext = &features,
 		.queueCreateInfoCount = 1,
 		.pQueueCreateInfos = &queueInfo,
+		.enabledExtensionCount = _countof(REQUIRED_EXTENSIONS),
+		.ppEnabledExtensionNames = REQUIRED_EXTENSIONS
 	};
 
 	VkAssert(vkCreateDevice(vk_physicaldevice, &createInfo, nullptr, &vk_device));

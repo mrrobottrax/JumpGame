@@ -11,6 +11,12 @@ void CreateSyncObjects()
 	};
 
 	VkAssert(vkCreateFence(vk_device, &fenceInfo, nullptr, &vk_fence_main));
+
+	VkSemaphoreCreateInfo semaphoreInfo{
+		.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
+	};
+
+	VkAssert(vkCreateSemaphore(vk_device, &semaphoreInfo, nullptr, &vk_semaphore_rendering));
 }
 
 void DestroySyncObjects()
