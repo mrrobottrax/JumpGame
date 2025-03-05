@@ -3,6 +3,7 @@
 #include "vk_instance.h"
 #include "console/console.h"
 
+#include <cassert>
 VkPhysicalDevice device;
 
 struct DeviceEntry
@@ -18,6 +19,8 @@ void PickPhysicalDevice()
 
 	VkPhysicalDevice *devices = new VkPhysicalDevice[physicalDeviceCount];
 	vkEnumeratePhysicalDevices(vk_instance, &physicalDeviceCount, devices);
+
+	assert(physicalDeviceCount > 0);
 
 	DeviceEntry bestDevice;
 
