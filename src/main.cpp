@@ -16,9 +16,7 @@ int WINAPI wWinMain(
 	try
 	{
 		MAGE_Init();
-
 		MAGE_FrameLoop();
-
 		MAGE_End();
 		
 	}

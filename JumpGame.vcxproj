@@ -107,11 +107,13 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(VK_SDK_PATH)\Include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>vulkan-1.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(VK_SDK_PATH)\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -133,6 +135,7 @@
   <ItemGroup>
     <ClCompile Include="src\application\application.cpp" />
     <ClCompile Include="src\exceptions\exceptions.cpp" />
+    <ClCompile Include="src\graphics\graphics.cpp" />
     <ClCompile Include="src\input\input.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\pch.cpp">
@@ -143,6 +146,7 @@
   <ItemGroup>
     <ClInclude Include="src\application\application.h" />
     <ClInclude Include="src\exceptions\exceptions.h" />
+    <ClInclude Include="src\graphics\graphics.h" />
     <ClInclude Include="src\input\input.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\window\window.h" />

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "window/window.h"
 #include "application.h"
+#include "graphics/graphics.h"
 
 void MAGE_Init()
 {
@@ -19,10 +20,13 @@ void MAGE_Init()
 #endif // DEBUG
 
 	MAGE_CreateWindow();
+	MAGE_InitGraphics();
 }
 
 void MAGE_End()
 {
+	MAGE_EndGraphics();
+
 #ifdef DEBUG
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDOUT);
