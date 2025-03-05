@@ -11,5 +11,16 @@ public:
 	std::string msg() const;
 };
 
+class VulkanException : private std::exception
+{
+	VkResult result;
+
+public:
+	inline VulkanException(const char c[], VkResult result) noexcept : std::exception(c), result(result)
+	{}
+
+	std::string msg() const;
+};
+
 void ThrowIfFailed(HRESULT hr);
 void ThrowIfFailed(HRESULT hr, const char message[]);

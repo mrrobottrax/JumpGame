@@ -11,7 +11,10 @@
 
 // Vulkan
 #include <vulkan/vulkan.h>
+#include <vulkan/vk_enum_string_helper.h>
 
 // STD
 #include <stdexcept>
 #include <format>
+
+using namespace std; // I know people hate this

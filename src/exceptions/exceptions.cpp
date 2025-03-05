@@ -30,6 +30,13 @@ std::string WindowsException::msg() const
 	return format("{}\n{}", exception::what(), str);
 }
 
+std::string VulkanException::msg() const
+{
+	std::string str = string_VkResult(result);
+
+	return format("{}\n{}", exception::what(), str);
+}
+
 void ThrowIfFailed(HRESULT hr)
 {
 	if (FAILED(hr))
