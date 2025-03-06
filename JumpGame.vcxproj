@@ -136,6 +136,7 @@
     <ClCompile Include="src\application\application.cpp" />
     <ClCompile Include="src\console\console.cpp" />
     <ClCompile Include="src\exceptions\exceptions.cpp" />
+    <ClCompile Include="src\file\file.cpp" />
     <ClCompile Include="src\graphics\graphics.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_pipeline.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_memory.cpp" />
@@ -164,6 +165,7 @@
     <ClInclude Include="src\application\application.h" />
     <ClInclude Include="src\console\console.h" />
     <ClInclude Include="src\exceptions\exceptions.h" />
+    <ClInclude Include="src\file\file.h" />
     <ClInclude Include="src\graphics\graphics.h" />
     <ClInclude Include="src\graphics\vulkan\vk_pipeline.h" />
     <ClInclude Include="src\graphics\vulkan\vk_memory.h" />
@@ -184,6 +186,10 @@
     <ClInclude Include="src\input\input.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\window\window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="data\tri.frag" />
+    <None Include="data\tri.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
