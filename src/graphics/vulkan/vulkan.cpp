@@ -15,6 +15,8 @@
 #include "vk_memory.h"
 #include "vk_pipeline.h"
 
+static void DrawSprite(float posX, float posY);
+
 void InitVulkan()
 {
 	CreateInstance();
@@ -48,15 +50,24 @@ void EndVulkan()
 	DestroyInstance();
 }
 
-extern float posX, posY;
-
 void RenderFrameVulkan()
 {
 	if (vkGetFenceStatus(vk_device, vk_fence_main) != VK_SUCCESS) return;
 	vkResetFences(vk_device, 1, &vk_fence_main);
 
 	uint32_t imageIndex = 0;
-	vkAcquireNextImageKHR(vk_device, vk_swapchain, UINT64_MAX, vk_semaphore_acquireimage, VK_NULL_HANDLE, &imageIndex);
+	VkResult result;
+	while (true)
+	{
+		result = vkAcquireNextImageKHR(vk_device, vk_swapchain, UINT64_MAX, vk_semaphore_acquireimage, VK_NULL_HANDLE, &imageIndex);
+		if (result == VK_ERROR_OUT_OF_DATE_KHR)
+		{
+			RecreateSwapchain();
+			continue;
+		}
+
+		break;
+	}
 
 	VkCommandBufferBeginInfo beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -74,7 +85,7 @@ void RenderFrameVulkan()
 		.renderPass = vk_render_pass,
 		.framebuffer = vk_swapchain_framebuffers[imageIndex],
 		.renderArea = {
-			.extent = {.width = vk_width, .height = vk_height},
+			.extent = {.width = vk_swapchain_width, .height = vk_swapchain_height},
 		},
 		.clearValueCount = 1,
 		.pClearValues = &clear,
@@ -94,8 +105,8 @@ void RenderFrameVulkan()
 		// Set viewport
 	VkViewport viewport{
 		.x = 0, .y = 0,
-		.width = (float)vk_width,
-		.height = (float)vk_height,
+		.width = (float)vk_swapchain_width,
+		.height = (float)vk_swapchain_height,
 		.minDepth = 0,
 		.maxDepth = 1,
 	};
@@ -104,8 +115,8 @@ void RenderFrameVulkan()
 	VkRect2D scissor{
 		.offset = { 0, 0 },
 		.extent = {
-			.width = vk_width,
-			.height = vk_height
+			.width = vk_swapchain_width,
+			.height = vk_swapchain_height
 		},
 	};
 	vkCmdSetScissor(vk_commandbuffer_main, 0, 1, &scissor);
@@ -113,14 +124,8 @@ void RenderFrameVulkan()
 	// Set shader
 	vkCmdBindPipeline(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_pipeline);
 
-	// Draw object
-	float pushData[] = { posX, posY, 0 };
-	vkCmdPushConstants(vk_commandbuffer_main, vk_pipeline_layout, VK_SHADER_STAGE_VERTEX_BIT, 0, 12, &pushData);
-
-	VkDeviceSize offset = 0;
-	vkCmdBindVertexBuffers2(vk_commandbuffer_main, 0, 1, &vk_tri_vertexbuffer, &offset, nullptr, nullptr);
-
-	vkCmdDraw(vk_commandbuffer_main, 6, 1, 0, 0);
+	// Draw all objects
+	DrawSprite(0, 0);
 
 	vkCmdEndRenderPass2(vk_commandbuffer_main, &subEnd);
 
@@ -160,7 +165,12 @@ void RenderFrameVulkan()
 		.pImageIndices = &imageIndex,
 	};
 
-	vkQueuePresentKHR(vk_queue_main, &present);
+	result = vkQueuePresentKHR(vk_queue_main, &present);
+	if (result == VK_SUBOPTIMAL_KHR || result == VK_ERROR_OUT_OF_DATE_KHR)
+	{
+		VkAssert(vkWaitForFences(vk_device, 1, &vk_fence_main, VK_TRUE, UINT64_MAX));
+		RecreateSwapchain();
+	}
 }
 
 void VkAssert(VkResult result)
@@ -169,4 +179,16 @@ void VkAssert(VkResult result)
 	{
 		throw VulkanException("Vulkan Error:", result);
 	}
+}
+
+void DrawSprite(float posX, float posY)
+{
+	// Draw object
+	float pushData[] = { posX, posY, 0 };
+	vkCmdPushConstants(vk_commandbuffer_main, vk_pipeline_layout, VK_SHADER_STAGE_VERTEX_BIT, 0, 12, &pushData);
+
+	VkDeviceSize offset = 0;
+	vkCmdBindVertexBuffers2(vk_commandbuffer_main, 0, 1, &vk_tri_vertexbuffer, &offset, nullptr, nullptr);
+
+	vkCmdDraw(vk_commandbuffer_main, 6, 1, 0, 0);
 }

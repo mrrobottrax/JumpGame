@@ -6,24 +6,15 @@
 #include "vulkan.h"
 #include "vk_render_pass.h"
 
-void CreateSwapchain()
+static void CreateSwapchainObjects()
 {
-	VkSurfaceCapabilitiesKHR capabilities;
-	VkAssert(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(vk_physicaldevice, vk_surface, &capabilities));
-
-	vk_swapchain_image_count = capabilities.minImageCount + 1;
-	if (vk_swapchain_image_count > capabilities.maxImageCount) vk_swapchain_image_count = capabilities.maxImageCount;
-
-	vk_width = capabilities.currentExtent.width;
-	vk_height = capabilities.currentExtent.height;
-
 	VkSwapchainCreateInfoKHR createInfo{
 		.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
 		.surface = vk_surface,
 		.minImageCount = vk_swapchain_image_count,
 		.imageFormat = vk_swapchain_format,
 		.imageColorSpace = VK_COLORSPACE_SRGB_NONLINEAR_KHR,
-		.imageExtent = {.width = vk_width, .height = vk_height},
+		.imageExtent = {.width = vk_swapchain_width, .height = vk_swapchain_height},
 		.imageArrayLayers = 1,
 		.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
 		.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE,
@@ -35,12 +26,7 @@ void CreateSwapchain()
 
 	VkAssert(vkCreateSwapchainKHR(vk_device, &createInfo, nullptr, &vk_swapchain));
 
-	vk_swapchain_images = new VkImage[vk_swapchain_image_count];
-	vk_swapchain_framebuffers = new VkFramebuffer[vk_swapchain_image_count];
-
 	VkAssert(vkGetSwapchainImagesKHR(vk_device, vk_swapchain, &vk_swapchain_image_count, vk_swapchain_images));
-
-	vk_swapchain_image_views = new VkImageView[vk_swapchain_image_count];
 
 	for (uint32_t i = 0; i < vk_swapchain_image_count; ++i)
 	{
@@ -63,8 +49,8 @@ void CreateSwapchain()
 			.renderPass = vk_render_pass,
 			.attachmentCount = 1,
 			.pAttachments = &vk_swapchain_image_views[i],
-			.width = vk_width,
-			.height = vk_height,
+			.width = vk_swapchain_width,
+			.height = vk_swapchain_height,
 			.layers = 1,
 		};
 
@@ -72,22 +58,57 @@ void CreateSwapchain()
 	}
 }
 
-void DestroySwapchain()
+static void DestroySwapchainObjects()
 {
 	for (uint32_t i = 0; i < vk_swapchain_image_count; ++i)
 	{
-		vkDestroyImageView(vk_device, vk_swapchain_image_views[i], nullptr);
 		vkDestroyFramebuffer(vk_device, vk_swapchain_framebuffers[i], nullptr);
+		vkDestroyImageView(vk_device, vk_swapchain_image_views[i], nullptr);
 	}
+
+	vkDestroySwapchainKHR(vk_device, vk_swapchain, nullptr);
+}
+
+void CreateSwapchain()
+{
+	VkSurfaceCapabilitiesKHR capabilities;
+	VkAssert(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(vk_physicaldevice, vk_surface, &capabilities));
+
+	vk_swapchain_width = capabilities.currentExtent.width;
+	vk_swapchain_height = capabilities.currentExtent.height;
+
+	vk_swapchain_image_count = capabilities.minImageCount + 1;
+	if (vk_swapchain_image_count > capabilities.maxImageCount) vk_swapchain_image_count = capabilities.maxImageCount;
+
+	vk_swapchain_images = new VkImage[vk_swapchain_image_count];
+	vk_swapchain_framebuffers = new VkFramebuffer[vk_swapchain_image_count];
+	vk_swapchain_image_views = new VkImageView[vk_swapchain_image_count];
+
+	CreateSwapchainObjects();
+}
+
+void DestroySwapchain()
+{
+	DestroySwapchainObjects();
 
 	delete[] vk_swapchain_images;
 	delete[] vk_swapchain_framebuffers;
 	delete[] vk_swapchain_image_views;
-
-	vkDestroySwapchainKHR(vk_device, vk_swapchain, nullptr);
 }
 
 void GetSwapchainFormat()
 {
 	vk_swapchain_format = VK_FORMAT_R8G8B8A8_SRGB;
+}
+
+void RecreateSwapchain()
+{
+	VkSurfaceCapabilitiesKHR capabilities;
+	VkAssert(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(vk_physicaldevice, vk_surface, &capabilities));
+
+	vk_swapchain_width = capabilities.currentExtent.width;
+	vk_swapchain_height = capabilities.currentExtent.height;
+
+	DestroySwapchainObjects();
+	CreateSwapchainObjects();
 }
