@@ -90,11 +90,29 @@ void RenderFrameVulkan()
 	vkCmdBeginRenderPass2(vk_commandbuffer_main, &begin, &subBegin);
 
 	// Draw
-	//vkCmdBindPipeline(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_pipeline);
+	vkCmdBindPipeline(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_pipeline);
+
+	VkViewport viewport{
+		.x = 0, .y = 0,
+		.width = (float)vk_width,
+		.height = (float)vk_height,
+		.minDepth = 0,
+		.maxDepth = 1,
+	};
+	vkCmdSetViewport(vk_commandbuffer_main, 0, 1, &viewport);
+
+	VkRect2D scissor{
+		.offset = { 0, 0 },
+		.extent = {
+			.width = vk_width,
+			.height = vk_height
+		},
+	};
+	vkCmdSetScissor(vk_commandbuffer_main, 0, 1, &scissor);
 
 	VkDeviceSize offset = 0;
 	vkCmdBindVertexBuffers2(vk_commandbuffer_main, 0, 1, &vk_tri_vertexbuffer, &offset, nullptr, nullptr);
-	//vkCmdDraw(vk_commandbuffer_main, 3, 1, 0, 0);
+	vkCmdDraw(vk_commandbuffer_main, 3, 1, 0, 0);
 
 	vkCmdEndRenderPass2(vk_commandbuffer_main, &subEnd);
 

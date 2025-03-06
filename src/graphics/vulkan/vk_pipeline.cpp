@@ -3,13 +3,30 @@
 #include "vk_device.h"
 #include "vulkan.h"
 #include "vk_render_pass.h"
+#include "file/file.h"
 
-//static VkShaderModule CreateShaderModule(const char name[]);
+class ShaderModuleWrapper
+{
+	VkShaderModule module;
+
+public:
+	ShaderModuleWrapper(VkShaderModule module) : module(module)
+	{}
+
+	~ShaderModuleWrapper()
+	{
+		vkDestroyShaderModule(vk_device, module, nullptr);
+	}
+
+	operator VkShaderModule &() { return module; }
+};
+
+static ShaderModuleWrapper CreateShaderModule(const wchar_t name[]);
 
 void CreatePipeline()
 {
 	// Create layout
-	/*VkPipelineLayoutCreateInfo layoutInfo{
+	VkPipelineLayoutCreateInfo layoutInfo{
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
 	};
 
@@ -17,29 +34,46 @@ void CreatePipeline()
 
 	// Shader stages
 
-	VkShaderModule vertexModule = CreateShaderModule();
-	VkShaderModule fragmentModule = CreateShaderModule();
+	ShaderModuleWrapper vertexModule = CreateShaderModule(L"tri.vert.spv");
+	ShaderModuleWrapper fragmentModule = CreateShaderModule(L"tri.frag.spv");
 
 	VkPipelineShaderStageCreateInfo fragmentStage{
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
 		.stage = VK_SHADER_STAGE_FRAGMENT_BIT,
 		.module = fragmentModule,
-		.pName = "frag",
+		.pName = "main",
 	};
 
 	VkPipelineShaderStageCreateInfo vertexStage{
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
 		.stage = VK_SHADER_STAGE_VERTEX_BIT,
 		.module = vertexModule,
-		.pName = "vert",
+		.pName = "main",
 	};
 
 	VkPipelineShaderStageCreateInfo stages[] = { fragmentStage, vertexStage };
 
 	// Create pipeline state
 
+	VkVertexInputBindingDescription vertexBindingDescription{
+		.binding = 0,
+		.stride = 12,
+		.inputRate = VK_VERTEX_INPUT_RATE_VERTEX,
+	};
+
+	VkVertexInputAttributeDescription vertexAttributeDescription{
+		.location = 0,
+		.binding = 0,
+		.format = VK_FORMAT_R32G32B32_SFLOAT,
+		.offset = 0,
+	};
+
 	VkPipelineVertexInputStateCreateInfo vertexState{
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
+		.vertexBindingDescriptionCount = 1,
+		.pVertexBindingDescriptions = &vertexBindingDescription,
+		.vertexAttributeDescriptionCount = 1,
+		.pVertexAttributeDescriptions = &vertexAttributeDescription,
 	};
 
 	VkPipelineInputAssemblyStateCreateInfo inputState{
@@ -81,14 +115,17 @@ void CreatePipeline()
 
 	VkPipelineColorBlendAttachmentState attachments[] = {
 		{
-			.blendEnable = VK_FALSE
+			.blendEnable = VK_FALSE,
+			.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT,
 		},
 	};
 
 	VkPipelineColorBlendStateCreateInfo colorBlendState{
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO,
+		.logicOpEnable = VK_FALSE,
 		.attachmentCount = _countof(attachments),
 		.pAttachments = attachments,
+		.blendConstants = {1, 1, 1, 1},
 	};
 
 	VkDynamicState dynamicStates[] = {
@@ -121,27 +158,27 @@ void CreatePipeline()
 		.renderPass = vk_render_pass,
 	};
 
-	VkAssert(vkCreateGraphicsPipelines(vk_device, VK_NULL_HANDLE, 1, &createInfo, nullptr, &vk_pipeline));*/
+	VkAssert(vkCreateGraphicsPipelines(vk_device, VK_NULL_HANDLE, 1, &createInfo, nullptr, &vk_pipeline));
 }
 
 void DestroyPipeline()
 {
-	/*vkDestroyPipelineLayout(vk_device, vk_pipeline_layout, nullptr);
-	vkDestroyPipeline(vk_device, vk_pipeline, nullptr);*/
+	vkDestroyPipelineLayout(vk_device, vk_pipeline_layout, nullptr);
+	vkDestroyPipeline(vk_device, vk_pipeline, nullptr);
 }
 
-//VkShaderModule CreateShaderModule(const char name[])
-//{
-//	FileHandle file = LoadEntireFile(name);
-//
-//	VkShaderModule module;
-//	VkShaderModuleCreateInfo createInfo{
-//		.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
-//		.codeSize = file.size,
-//		.pCode = file.pData,
-//	};
-//
-//	VkAssert(vkCreateShaderModule(vk_device, &createInfo, nullptr, &module));
-//
-//	return module;
-//}
+ShaderModuleWrapper CreateShaderModule(const wchar_t name[])
+{
+	FileHandle file = LoadEntireFile(name);
+
+	VkShaderModule module;
+	VkShaderModuleCreateInfo createInfo{
+		.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
+		.codeSize = file.Size(),
+		.pCode = (uint32_t *)file.Data(),
+	};
+
+	VkAssert(vkCreateShaderModule(vk_device, &createInfo, nullptr, &module));
+
+	return ShaderModuleWrapper(module);
+}

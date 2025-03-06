@@ -20,7 +20,15 @@ public:
 	inline ~FileHandle()
 	{
 		--pFile->refCount;
+		if (pFile->refCount <= 0)
+		{
+			free(pFile->pData);
+			delete pFile;
+		}
 	}
+
+	inline size_t Size() { return pFile->size; }
+	inline const void *Data() { return pFile->pData; }
 };
 
-FileHandle LoadEntireFile(const char name[]);
+FileHandle LoadEntireFile(const wchar_t name[]);

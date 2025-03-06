@@ -6,9 +6,9 @@
 #include "vk_memory.h"
 
 constexpr float tri_verts[] = {
-	-0.5f, -0.5f, 0,
-	 0.5f, -0.5f, 0,
-	 0.0f,  0.5f, 0,
+	-0.5f, -0.5f, 0.5f,
+	 0.0f,  0.5f, 0.5f,
+	 0.5f, -0.5f, 0.5f,
 };
 
 void CreateVertexBuffer()
@@ -36,7 +36,7 @@ void CreateVertexBuffer()
 		.memoryTypeIndex = vk_memory_types.local_hostvisible,
 	};
 
-	vkAllocateMemory(vk_device, &memInfo, nullptr, &vk_tri_vertexbuffer_memory);
+	VkAssert(vkAllocateMemory(vk_device, &memInfo, nullptr, &vk_tri_vertexbuffer_memory));
 
 	VkBindBufferMemoryInfo bindInfo{
 		.sType = VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO,
@@ -44,7 +44,11 @@ void CreateVertexBuffer()
 		.memory = vk_tri_vertexbuffer_memory,
 		.memoryOffset = 0,
 	};
-	vkBindBufferMemory2(vk_device, 1, &bindInfo);
+	VkAssert(vkBindBufferMemory2(vk_device, 1, &bindInfo));
+
+	void *pData;
+	VkAssert(vkMapMemory(vk_device, vk_tri_vertexbuffer_memory, 0, size, 0, &pData));
+	memcpy(pData, tri_verts, sizeof(tri_verts));
 }
 
 void DestroyVertexBuffer()
