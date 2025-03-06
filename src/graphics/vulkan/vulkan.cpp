@@ -48,6 +48,8 @@ void EndVulkan()
 	DestroyInstance();
 }
 
+extern float posX, posY;
+
 void RenderFrameVulkan()
 {
 	if (vkGetFenceStatus(vk_device, vk_fence_main) != VK_SUCCESS) return;
@@ -89,9 +91,7 @@ void RenderFrameVulkan()
 
 	vkCmdBeginRenderPass2(vk_commandbuffer_main, &begin, &subBegin);
 
-	// Draw
-	vkCmdBindPipeline(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_pipeline);
-
+		// Set viewport
 	VkViewport viewport{
 		.x = 0, .y = 0,
 		.width = (float)vk_width,
@@ -110,8 +110,16 @@ void RenderFrameVulkan()
 	};
 	vkCmdSetScissor(vk_commandbuffer_main, 0, 1, &scissor);
 
+	// Set shader
+	vkCmdBindPipeline(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_pipeline);
+
+	// Draw object
+	float pushData[] = { posX, posY, 0 };
+	vkCmdPushConstants(vk_commandbuffer_main, vk_pipeline_layout, VK_SHADER_STAGE_VERTEX_BIT, 0, 12, &pushData);
+
 	VkDeviceSize offset = 0;
 	vkCmdBindVertexBuffers2(vk_commandbuffer_main, 0, 1, &vk_tri_vertexbuffer, &offset, nullptr, nullptr);
+
 	vkCmdDraw(vk_commandbuffer_main, 3, 1, 0, 0);
 
 	vkCmdEndRenderPass2(vk_commandbuffer_main, &subEnd);

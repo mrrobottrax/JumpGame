@@ -2,6 +2,7 @@
 #include "window/window.h"
 #include "application.h"
 #include "graphics/graphics.h"
+#include "time/time.h"
 
 void MAGE_Init()
 {
@@ -61,5 +62,6 @@ void MAGE_FrameLoop()
 
 void MAGE_Frame()
 {
+	MAGE_UpdateTime();
 	MAGE_Render();
 }

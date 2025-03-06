@@ -26,6 +26,14 @@ static void SetKey(unsigned long long key, bool value)
 			key_s = value;
 			break;
 
+		case 'A':
+			key_a = value;
+			break;
+
+		case 'D':
+			key_d = value;
+			break;
+
 		case 'R':
 			if (key_ctrl && value && !key_r)
 			{

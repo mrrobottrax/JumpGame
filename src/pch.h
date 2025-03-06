@@ -17,5 +17,6 @@
 // STD
 #include <stdexcept>
 #include <format>
+#include <chrono>
 
 using namespace std; // I know people hate this

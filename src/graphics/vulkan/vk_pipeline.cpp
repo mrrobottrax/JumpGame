@@ -26,8 +26,16 @@ static ShaderModuleWrapper CreateShaderModule(const wchar_t name[]);
 void CreatePipeline()
 {
 	// Create layout
+	VkPushConstantRange pushConstantRange{
+		.stageFlags = VK_SHADER_STAGE_VERTEX_BIT,
+		.offset = 0,
+		.size = 12,
+	};
+
 	VkPipelineLayoutCreateInfo layoutInfo{
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
+		.pushConstantRangeCount = 1,
+		.pPushConstantRanges = &pushConstantRange
 	};
 
 	VkAssert(vkCreatePipelineLayout(vk_device, &layoutInfo, nullptr, &vk_pipeline_layout));
