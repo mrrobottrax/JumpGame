@@ -2,8 +2,8 @@
 #include "vk_pipeline.h"
 #include "vk_device.h"
 #include "vulkan.h"
-#include "vk_render_pass.h"
 #include "file/file.h"
+#include "renderpasses/vk_objects_pass.h"
 
 class ShaderModuleWrapper
 {
@@ -163,7 +163,7 @@ void CreatePipeline()
 		.pColorBlendState = &colorBlendState,
 		.pDynamicState = &dynamicState,
 		.layout = vk_pipeline_layout,
-		.renderPass = vk_render_pass,
+		.renderPass = vk_objects_pass,
 	};
 
 	VkAssert(vkCreateGraphicsPipelines(vk_device, VK_NULL_HANDLE, 1, &createInfo, nullptr, &vk_pipeline));

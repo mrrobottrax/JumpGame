@@ -10,11 +10,12 @@
 #include "vk_commandbuffers.h"
 #include "vk_sync.h"
 #include "vk_swapchain.h"
-#include "vk_render_pass.h"
 #include "vk_vertexbuffer.h"
 #include "vk_memory.h"
 #include "vk_pipeline.h"
-#include "draw.h"
+#include "renderpasses/vk_renderpasses.h"
+#include "vk_draw.h"
+#include "vk_renderimage.h"
 
 void InitVulkan()
 {
@@ -28,19 +29,21 @@ void InitVulkan()
 	CreateCommandBuffers();
 	CreateSyncObjects();
 	GetSwapchainFormat();
-	CreateRenderPass();
+	CreateRenderPasses();
 	CreateSwapchain();
 	CreateVertexBuffer();
 	CreatePipeline();
+	CreateRenderImage();
 }
 
 void EndVulkan()
 {
 	vkQueueWaitIdle(vk_queue_main);
 
+	DestroyRenderImage();
 	DestroyPipeline();
 	DestroyVertexBuffer();
-	DestroyRenderPass();
+	DestroyRenderPasses();
 	DestroySwapchain();
 	DestroySyncObjects();
 	DestroyCommandBuffers();

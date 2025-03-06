@@ -4,7 +4,6 @@
 #include "vk_surface.h"
 #include "vk_physicaldevice.h"
 #include "vulkan.h"
-#include "vk_render_pass.h"
 
 static void CreateSwapchainObjects()
 {
@@ -16,7 +15,7 @@ static void CreateSwapchainObjects()
 		.imageColorSpace = VK_COLORSPACE_SRGB_NONLINEAR_KHR,
 		.imageExtent = {.width = vk_swapchain_width, .height = vk_swapchain_height},
 		.imageArrayLayers = 1,
-		.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+		.imageUsage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
 		.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE,
 		.preTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR,
 		.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
@@ -44,17 +43,17 @@ static void CreateSwapchainObjects()
 
 		VkAssert(vkCreateImageView(vk_device, &viewInfo, nullptr, &vk_swapchain_image_views[i]));
 
-		VkFramebufferCreateInfo framebufferInfo{
-			.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
-			.renderPass = vk_render_pass,
-			.attachmentCount = 1,
-			.pAttachments = &vk_swapchain_image_views[i],
-			.width = vk_swapchain_width,
-			.height = vk_swapchain_height,
-			.layers = 1,
-		};
+		//VkFramebufferCreateInfo framebufferInfo{
+		//	.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
+		//	.renderPass = vk_objects_pass,
+		//	.attachmentCount = 1,
+		//	.pAttachments = &vk_swapchain_image_views[i],
+		//	.width = vk_swapchain_width,
+		//	.height = vk_swapchain_height,
+		//	.layers = 1,
+		//};
 
-		vkCreateFramebuffer(vk_device, &framebufferInfo, nullptr, &vk_swapchain_framebuffers[i]);
+		//vkCreateFramebuffer(vk_device, &framebufferInfo, nullptr, &vk_swapchain_framebuffers[i]);
 	}
 }
 
@@ -62,7 +61,7 @@ static void DestroySwapchainObjects()
 {
 	for (uint32_t i = 0; i < vk_swapchain_image_count; ++i)
 	{
-		vkDestroyFramebuffer(vk_device, vk_swapchain_framebuffers[i], nullptr);
+		//vkDestroyFramebuffer(vk_device, vk_swapchain_framebuffers[i], nullptr);
 		vkDestroyImageView(vk_device, vk_swapchain_image_views[i], nullptr);
 	}
 
@@ -81,7 +80,7 @@ void CreateSwapchain()
 	if (vk_swapchain_image_count > capabilities.maxImageCount) vk_swapchain_image_count = capabilities.maxImageCount;
 
 	vk_swapchain_images = new VkImage[vk_swapchain_image_count];
-	vk_swapchain_framebuffers = new VkFramebuffer[vk_swapchain_image_count];
+	//vk_swapchain_framebuffers = new VkFramebuffer[vk_swapchain_image_count];
 	vk_swapchain_image_views = new VkImageView[vk_swapchain_image_count];
 
 	CreateSwapchainObjects();
@@ -92,7 +91,7 @@ void DestroySwapchain()
 	DestroySwapchainObjects();
 
 	delete[] vk_swapchain_images;
-	delete[] vk_swapchain_framebuffers;
+	//delete[] vk_swapchain_framebuffers;
 	delete[] vk_swapchain_image_views;
 }
 

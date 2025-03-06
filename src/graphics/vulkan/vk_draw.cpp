@@ -1,14 +1,16 @@
 #include "pch.h"
-#include "draw.h"
+#include "vk_draw.h"
 #include "vulkan.h"
 #include "vk_commandbuffers.h"
 #include "vk_device.h"
-#include "vk_render_pass.h"
 #include "vk_swapchain.h"
 #include "vk_pipeline.h"
 #include "vk_queues.h"
 #include "vk_sync.h"
 #include "vk_vertexbuffer.h"
+#include "renderpasses/vk_objects_pass.h"
+#include "game/screen.h"
+#include "vk_renderimage.h"
 
 static void DrawSprite(float posX, float posY)
 {
@@ -37,10 +39,10 @@ void DrawFrame(int swapchainImageIndex)
 
 	VkRenderPassBeginInfo begin{
 		.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
-		.renderPass = vk_render_pass,
-		.framebuffer = vk_swapchain_framebuffers[swapchainImageIndex],
+		.renderPass = vk_objects_pass,
+		.framebuffer = vk_render_framebuffer,
 		.renderArea = {
-			.extent = {.width = vk_swapchain_width, .height = vk_swapchain_height},
+			.extent = {.width = game_screen_width, .height = game_screen_height},
 		},
 		.clearValueCount = 1,
 		.pClearValues = &clear,
@@ -60,8 +62,8 @@ void DrawFrame(int swapchainImageIndex)
 	// Set viewport
 	VkViewport viewport{
 		.x = 0, .y = 0,
-		.width = (float)vk_swapchain_width,
-		.height = (float)vk_swapchain_height,
+		.width = (float)game_screen_width,
+		.height = (float)game_screen_height,
 		.minDepth = 0,
 		.maxDepth = 1,
 	};
@@ -70,8 +72,8 @@ void DrawFrame(int swapchainImageIndex)
 	VkRect2D scissor{
 		.offset = { 0, 0 },
 		.extent = {
-			.width = vk_swapchain_width,
-			.height = vk_swapchain_height
+			.width = game_screen_width,
+			.height = game_screen_height
 		},
 	};
 	vkCmdSetScissor(vk_commandbuffer_main, 0, 1, &scissor);
@@ -83,6 +85,41 @@ void DrawFrame(int swapchainImageIndex)
 	DrawSprite(0, 0);
 
 	vkCmdEndRenderPass2(vk_commandbuffer_main, &subEnd);
+
+	VkImageBlit2 region{
+		.sType = VK_STRUCTURE_TYPE_IMAGE_BLIT_2,
+		.srcSubresource = {
+			.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
+			.mipLevel = 0,
+			.layerCount = 1,
+		},
+		.srcOffsets = {
+			{0, 0, 0},
+			{game_screen_width, game_screen_height, 1},
+		},
+		.dstSubresource = {
+			.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
+			.mipLevel = 0,
+			.layerCount = 1,
+		},
+		.dstOffsets = {
+			{0, 0, 0},
+			{(int)vk_swapchain_width , (int)vk_swapchain_height, 1},
+		},
+	};
+
+	VkBlitImageInfo2 blitInfo{
+		.sType = VK_STRUCTURE_TYPE_BLIT_IMAGE_INFO_2,
+		.srcImage = vk_render_image,
+		.srcImageLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+		.dstImage = vk_swapchain_images[swapchainImageIndex],
+		.dstImageLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+		.regionCount = 1,
+		.pRegions = &region,
+		.filter = VK_FILTER_NEAREST,
+	};
+
+	vkCmdBlitImage2(vk_commandbuffer_main, &blitInfo);
 
 	VkAssert(vkEndCommandBuffer(vk_commandbuffer_main));
 

@@ -139,10 +139,11 @@
     <ClCompile Include="src\file\file.cpp" />
     <ClCompile Include="src\game\game.cpp" />
     <ClCompile Include="src\graphics\graphics.cpp" />
-    <ClCompile Include="src\graphics\vulkan\draw.cpp" />
+    <ClCompile Include="src\graphics\vulkan\vk_draw.cpp" />
+    <ClCompile Include="src\graphics\vulkan\renderpasses\vk_renderpasses.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_pipeline.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_memory.cpp" />
-    <ClCompile Include="src\graphics\vulkan\vk_render_pass.cpp" />
+    <ClCompile Include="src\graphics\vulkan\renderpasses\vk_objects_pass.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_commandbuffers.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_debug.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_device.cpp" />
@@ -151,6 +152,7 @@
     <ClCompile Include="src\graphics\vulkan\vk_physicaldevice.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_queuefamilies.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_queues.cpp" />
+    <ClCompile Include="src\graphics\vulkan\vk_renderimage.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_surface.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_swapchain.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_sync.cpp" />
@@ -170,11 +172,13 @@
     <ClInclude Include="src\exceptions\exceptions.h" />
     <ClInclude Include="src\file\file.h" />
     <ClInclude Include="src\game\game.h" />
+    <ClInclude Include="src\game\screen.h" />
     <ClInclude Include="src\graphics\graphics.h" />
-    <ClInclude Include="src\graphics\vulkan\draw.h" />
+    <ClInclude Include="src\graphics\vulkan\vk_draw.h" />
+    <ClInclude Include="src\graphics\vulkan\renderpasses\vk_renderpasses.h" />
     <ClInclude Include="src\graphics\vulkan\vk_pipeline.h" />
     <ClInclude Include="src\graphics\vulkan\vk_memory.h" />
-    <ClInclude Include="src\graphics\vulkan\vk_render_pass.h" />
+    <ClInclude Include="src\graphics\vulkan\renderpasses\vk_objects_pass.h" />
     <ClInclude Include="src\graphics\vulkan\vk_commandbuffers.h" />
     <ClInclude Include="src\graphics\vulkan\vk_debug.h" />
     <ClInclude Include="src\graphics\vulkan\vk_device.h" />
@@ -183,6 +187,7 @@
     <ClInclude Include="src\graphics\vulkan\vk_physicaldevice.h" />
     <ClInclude Include="src\graphics\vulkan\vk_queuefamilies.h" />
     <ClInclude Include="src\graphics\vulkan\vk_queues.h" />
+    <ClInclude Include="src\graphics\vulkan\vk_renderimage.h" />
     <ClInclude Include="src\graphics\vulkan\vk_surface.h" />
     <ClInclude Include="src\graphics\vulkan\vk_swapchain.h" />
     <ClInclude Include="src\graphics\vulkan\vk_sync.h" />
