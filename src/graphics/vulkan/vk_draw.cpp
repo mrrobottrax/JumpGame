@@ -13,6 +13,8 @@
 #include "vk_renderimage.h"
 #include "vk_queuefamilies.h"
 
+extern float posX, posY;
+
 static void DrawSprite(float posX, float posY)
 {
 	// Draw object
@@ -57,7 +59,7 @@ static void DrawObjectsPass()
 	vkCmdBindPipeline(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_pipeline);
 
 	// Draw all objects
-	DrawSprite(0, 0);
+	DrawSprite(posX, posY);
 
 	vkCmdEndRenderPass2(vk_commandbuffer_main, &subEnd);
 }
