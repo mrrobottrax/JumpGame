@@ -10,9 +10,10 @@
 #include "vk_commandbuffers.h"
 #include "vk_sync.h"
 #include "vk_swapchain.h"
-#include "vk_renderpass.h"
+#include "vk_render_pass.h"
 #include "vk_vertexbuffer.h"
 #include "vk_memory.h"
+#include "vk_pipeline.h"
 
 void InitVulkan()
 {
@@ -29,12 +30,14 @@ void InitVulkan()
 	CreateRenderPass();
 	CreateSwapchain();
 	CreateVertexBuffer();
+	CreatePipeline();
 }
 
 void EndVulkan()
 {
 	vkQueueWaitIdle(vk_queue_main);
 
+	DestroyPipeline();
 	DestroyVertexBuffer();
 	DestroyRenderPass();
 	DestroySwapchain();
@@ -87,6 +90,8 @@ void RenderFrameVulkan()
 	vkCmdBeginRenderPass2(vk_commandbuffer_main, &begin, &subBegin);
 
 	// Draw
+	//vkCmdBindPipeline(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_pipeline);
+
 	VkDeviceSize offset = 0;
 	vkCmdBindVertexBuffers2(vk_commandbuffer_main, 0, 1, &vk_tri_vertexbuffer, &offset, nullptr, nullptr);
 	//vkCmdDraw(vk_commandbuffer_main, 3, 1, 0, 0);
