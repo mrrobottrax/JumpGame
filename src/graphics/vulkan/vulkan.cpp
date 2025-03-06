@@ -120,7 +120,7 @@ void RenderFrameVulkan()
 	VkDeviceSize offset = 0;
 	vkCmdBindVertexBuffers2(vk_commandbuffer_main, 0, 1, &vk_tri_vertexbuffer, &offset, nullptr, nullptr);
 
-	vkCmdDraw(vk_commandbuffer_main, 3, 1, 0, 0);
+	vkCmdDraw(vk_commandbuffer_main, 6, 1, 0, 0);
 
 	vkCmdEndRenderPass2(vk_commandbuffer_main, &subEnd);
 
