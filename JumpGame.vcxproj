@@ -172,7 +172,6 @@
     <ClInclude Include="src\exceptions\exceptions.h" />
     <ClInclude Include="src\file\file.h" />
     <ClInclude Include="src\game\game.h" />
-    <ClInclude Include="src\game\screen.h" />
     <ClInclude Include="src\graphics\graphics.h" />
     <ClInclude Include="src\graphics\vulkan\vk_draw.h" />
     <ClInclude Include="src\graphics\vulkan\renderpasses\vk_renderpasses.h" />

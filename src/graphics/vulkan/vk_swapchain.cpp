@@ -4,6 +4,17 @@
 #include "vk_surface.h"
 #include "vk_physicaldevice.h"
 #include "vulkan.h"
+#include "window/window.h"
+
+static void CalculateRenderScale()
+{
+	int scaleX = vk_swapchain_width / SCREEN_WIDTH;
+	int scaleY = vk_swapchain_height / SCREEN_HEIGHT;
+	int minScale = scaleX;
+	if (scaleY < minScale) minScale = scaleY;
+
+	vk_render_scale = minScale;
+}
 
 static void CreateSwapchainObjects()
 {
@@ -84,6 +95,7 @@ void CreateSwapchain()
 	vk_swapchain_image_views = new VkImageView[vk_swapchain_image_count];
 
 	CreateSwapchainObjects();
+	CalculateRenderScale();
 }
 
 void DestroySwapchain()
@@ -110,4 +122,5 @@ void RecreateSwapchain()
 
 	DestroySwapchainObjects();
 	CreateSwapchainObjects();
+	CalculateRenderScale();
 }

@@ -2,6 +2,7 @@
 
 inline VkFormat vk_swapchain_format;
 inline uint32_t vk_swapchain_width, vk_swapchain_height;
+inline int vk_render_scale;
 
 inline uint32_t vk_swapchain_image_count;
 inline VkSwapchainKHR vk_swapchain;

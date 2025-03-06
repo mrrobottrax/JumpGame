@@ -3,9 +3,9 @@
 #include "vk_device.h"
 #include "vulkan.h"
 #include "vk_queuefamilies.h"
-#include "game/screen.h"
 #include "renderpasses/vk_objects_pass.h"
 #include "vk_memory.h"
+#include "window/window.h"
 
 void CreateRenderImage()
 {
@@ -16,8 +16,8 @@ void CreateRenderImage()
 		.imageType = VK_IMAGE_TYPE_2D,
 		.format = format,
 		.extent = {
-			.width = game_screen_width,
-			.height = game_screen_height,
+			.width = SCREEN_WIDTH,
+			.height = SCREEN_HEIGHT,
 			.depth = 1,
 		},
 		.mipLevels = 1,
@@ -35,7 +35,7 @@ void CreateRenderImage()
 
 	VkMemoryAllocateInfo allocateInfo{
 		.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
-		.allocationSize = game_screen_width * game_screen_height * 4 * 4,
+		.allocationSize = SCREEN_WIDTH * SCREEN_HEIGHT * 4 * 4,
 		.memoryTypeIndex = vk_memory_types.local,
 	};
 
@@ -70,8 +70,8 @@ void CreateRenderImage()
 		.renderPass = vk_objects_pass,
 		.attachmentCount = 1,
 		.pAttachments = &vk_render_image_view,
-		.width = game_screen_width,
-		.height = game_screen_height,
+		.width = SCREEN_WIDTH,
+		.height = SCREEN_HEIGHT,
 		.layers = 1,
 	};
 

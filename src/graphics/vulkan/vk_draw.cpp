@@ -9,9 +9,9 @@
 #include "vk_sync.h"
 #include "vk_vertexbuffer.h"
 #include "renderpasses/vk_objects_pass.h"
-#include "game/screen.h"
 #include "vk_renderimage.h"
 #include "vk_queuefamilies.h"
+#include "window/window.h"
 
 extern float posX, posY;
 
@@ -38,7 +38,7 @@ static void DrawObjectsPass()
 		.renderPass = vk_objects_pass,
 		.framebuffer = vk_render_framebuffer,
 		.renderArea = {
-			.extent = {.width = game_screen_width, .height = game_screen_height},
+			.extent = {.width = SCREEN_WIDTH, .height = SCREEN_HEIGHT},
 		},
 		.clearValueCount = 1,
 		.pClearValues = &clear,
@@ -81,7 +81,7 @@ static void BlitImage(int swapchainImageIndex)
 			.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
 			.levelCount = 1,
 			.layerCount = 1,
-        },
+		},
 	};
 
 	VkDependencyInfo toTransferDstDependency{
@@ -92,6 +92,10 @@ static void BlitImage(int swapchainImageIndex)
 
 	vkCmdPipelineBarrier2(vk_commandbuffer_main, &toTransferDstDependency);
 
+	int xSize = (int)SCREEN_WIDTH * vk_render_scale;
+	int ySize = (int)SCREEN_HEIGHT * vk_render_scale;
+	int xOffset = (vk_swapchain_width - xSize) / 2;
+	int yOffset = (vk_swapchain_height - ySize) / 2;
 	VkImageBlit2 region{
 		.sType = VK_STRUCTURE_TYPE_IMAGE_BLIT_2,
 		.srcSubresource = {
@@ -101,7 +105,7 @@ static void BlitImage(int swapchainImageIndex)
 		},
 		.srcOffsets = {
 			{0, 0, 0},
-			{game_screen_width, game_screen_height, 1},
+			{SCREEN_WIDTH, SCREEN_HEIGHT, 1},
 		},
 		.dstSubresource = {
 			.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
@@ -109,8 +113,8 @@ static void BlitImage(int swapchainImageIndex)
 			.layerCount = 1,
 		},
 		.dstOffsets = {
-			{0, 0, 0},
-			{(int)vk_swapchain_width , (int)vk_swapchain_height, 1},
+			{xOffset, yOffset, 0},
+			{xOffset + xSize, yOffset + ySize, 1},
 		},
 	};
 
@@ -166,8 +170,8 @@ void DrawFrame(int swapchainImageIndex)
 	// Set viewport
 	VkViewport viewport{
 		.x = 0, .y = 0,
-		.width = (float)game_screen_width,
-		.height = (float)game_screen_height,
+		.width = (float)SCREEN_WIDTH,
+		.height = (float)SCREEN_HEIGHT,
 		.minDepth = 0,
 		.maxDepth = 1,
 	};
@@ -176,8 +180,8 @@ void DrawFrame(int swapchainImageIndex)
 	VkRect2D scissor{
 		.offset = { 0, 0 },
 		.extent = {
-			.width = game_screen_width,
-			.height = game_screen_height
+			.width = SCREEN_WIDTH,
+			.height = SCREEN_HEIGHT
 		},
 	};
 	vkCmdSetScissor(vk_commandbuffer_main, 0, 1, &scissor);

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "window.h"
 #include "input/input.h"
+#include "application/application.h"
 
 extern HINSTANCE hInstance;
 
@@ -114,11 +115,11 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			break;
 
 		case WM_PAINT:
-			if (resizing)
-			{
-				// Continue rendering while resizing
-				//MAGE_Frame();
-			}
+			//if (resizing)
+			//{
+			//	// Continue rendering while resizing
+			//	MAGE_Frame();
+			//}
 			return DefWindowProc(hwnd, uMsg, wParam, lParam);
 
 		case WM_SETCURSOR:
