@@ -24,9 +24,15 @@ void CreateVertexBuffer()
 
 	VkAssert(vkCreateBuffer(vk_device, &createInfo, nullptr, &vk_tri_vertexbuffer));
 
+	VkMemoryRequirements requirements;
+	vkGetBufferMemoryRequirements(vk_device, vk_tri_vertexbuffer, &requirements);
+
+	size_t size = sizeof(tri_verts);
+	if (size < requirements.size) size = requirements.size;
+
 	VkMemoryAllocateInfo memInfo{
 		.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
-		.allocationSize = sizeof(tri_verts),
+		.allocationSize = size,
 		.memoryTypeIndex = vk_memory_types.local_hostvisible,
 	};
 
