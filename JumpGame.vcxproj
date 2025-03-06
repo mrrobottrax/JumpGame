@@ -139,6 +139,7 @@
     <ClCompile Include="src\file\file.cpp" />
     <ClCompile Include="src\game\game.cpp" />
     <ClCompile Include="src\graphics\graphics.cpp" />
+    <ClCompile Include="src\graphics\vulkan\draw.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_pipeline.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_memory.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_render_pass.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="src\file\file.h" />
     <ClInclude Include="src\game\game.h" />
     <ClInclude Include="src\graphics\graphics.h" />
+    <ClInclude Include="src\graphics\vulkan\draw.h" />
     <ClInclude Include="src\graphics\vulkan\vk_pipeline.h" />
     <ClInclude Include="src\graphics\vulkan\vk_memory.h" />
     <ClInclude Include="src\graphics\vulkan\vk_render_pass.h" />
