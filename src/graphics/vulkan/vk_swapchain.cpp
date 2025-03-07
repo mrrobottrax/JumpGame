@@ -30,7 +30,7 @@ static void CreateSwapchainObjects()
 		.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE,
 		.preTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR,
 		.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
-		.presentMode = VK_PRESENT_MODE_IMMEDIATE_KHR,
+		.presentMode = VK_PRESENT_MODE_FIFO_RELAXED_KHR,
 		.clipped = VK_TRUE,
 	};
 

@@ -8,6 +8,7 @@ inline bool key_s;
 inline bool key_a;
 inline bool key_d;
 inline bool key_r;
+inline bool key_space;
 inline bool key_ctrl;
 inline bool key_up;
 inline bool key_down;

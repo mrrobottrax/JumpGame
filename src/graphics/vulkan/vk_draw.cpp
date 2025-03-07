@@ -16,6 +16,8 @@
 
 static void DrawTile(float posX, float posY)
 {
+	posX = (int)(posX * TILE_SIZE) / (float)TILE_SIZE;
+
 	// Draw object
 	float pushData[] = { posX, posY, LEVEL_WIDTH, LEVEL_HEIGHT };
 	vkCmdPushConstants(vk_commandbuffer_main, vk_pipeline_layout, VK_SHADER_STAGE_VERTEX_BIT, 0, 16, &pushData);

@@ -54,6 +54,10 @@ static void SetKey(unsigned long long key, bool value)
 			key_down = value;
 			break;
 
+		case VK_SPACE:
+			key_space = value;
+			break;
+
 		case VK_F11:
 			if (value)
 				MAGE_ToggleFullscreen();

@@ -2,9 +2,8 @@
 #include "player.h"
 #include "input/input.h"
 #include "time/time.h"
-#include "console/console.h"
 
-constexpr float acceleration = 80;
+constexpr float acceleration = 100;
 constexpr float maxspeed = 10;
 
 void Player::Tick()
@@ -25,6 +24,11 @@ void Player::Tick()
 
 	if (wishSpeed < velocityX)
 	{
+		if (wishSpeed < 0 && velocityX > 0)
+		{
+			velocityX = 0;
+		}
+
 		float sub = acceleration * tickDelta;
 		float maxSub = velocityX - wishSpeed;
 
@@ -32,6 +36,11 @@ void Player::Tick()
 	}
 	else if (wishSpeed > velocityX)
 	{
+		if (wishSpeed > 0 && velocityX < 0)
+		{
+			velocityX = 0;
+		}
+
 		float add = acceleration * tickDelta;
 		float maxAdd = wishSpeed - velocityX;
 
@@ -39,6 +48,19 @@ void Player::Tick()
 	}
 
 	velocityX = fmaxf(fminf(velocityX, maxspeed), -maxspeed);
-
 	positionX += velocityX * tickDelta;
+
+	velocityY -= 80 * tickDelta;
+	positionY += velocityY * tickDelta;
+
+	if (positionY < 0)
+	{
+		positionY = 0;
+		velocityY = 0;
+
+		if (key_space)
+		{
+			velocityY = 30;
+		}
+	}
 }
