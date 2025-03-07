@@ -18,8 +18,8 @@ extern float posX, posY;
 static void DrawSprite(float posX, float posY)
 {
 	// Draw object
-	float pushData[] = { posX, posY, 0 };
-	vkCmdPushConstants(vk_commandbuffer_main, vk_pipeline_layout, VK_SHADER_STAGE_VERTEX_BIT, 0, 12, &pushData);
+	float pushData[] = { posX, posY, 0, 0 };
+	vkCmdPushConstants(vk_commandbuffer_main, vk_pipeline_layout, VK_SHADER_STAGE_VERTEX_BIT, 0, 16, &pushData);
 
 	VkDeviceSize offset = 0;
 	vkCmdBindVertexBuffers2(vk_commandbuffer_main, 0, 1, &vk_tri_vertexbuffer, &offset, nullptr, nullptr);
@@ -169,9 +169,9 @@ void DrawFrame(int swapchainImageIndex)
 
 	// Set viewport
 	VkViewport viewport{
-		.x = 0, .y = 0,
+		.x = 0, .y = (float)SCREEN_HEIGHT,
 		.width = (float)SCREEN_WIDTH,
-		.height = (float)SCREEN_HEIGHT,
+		.height = -(float)SCREEN_HEIGHT,
 		.minDepth = 0,
 		.maxDepth = 1,
 	};
