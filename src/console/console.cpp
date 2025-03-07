@@ -1,20 +1,6 @@
 #include "pch.h"
 #include "console.h"
 
-void Log(unsigned int n)
-{
-#ifdef DEBUG
-	printf("[LOG] %u\n", n);
-#endif // DEBUG
-}
-
-void Log(void *p)
-{
-#ifdef DEBUG
-	printf("[LOG] %p\n", p);
-#endif // DEBUG
-}
-
 void Log(const char message[], ...)
 {
 #ifdef DEBUG
@@ -44,5 +30,26 @@ void LogWarn(const char message[], ...)
 	va_end(args);
 
 	printf("\n");
+#endif // DEBUG
+}
+
+void Log(unsigned int n)
+{
+#ifdef DEBUG
+	Log("%u", n);
+#endif // DEBUG
+}
+
+void Log(void *p)
+{
+#ifdef DEBUG
+	Log("%p", p);
+#endif // DEBUG
+}
+
+void Log(float f)
+{
+#ifdef DEBUG
+	Log("%f", f);
 #endif // DEBUG
 }

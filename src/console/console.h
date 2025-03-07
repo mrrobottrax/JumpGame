@@ -5,3 +5,4 @@ void LogWarn(const char message[], ...);
 
 void Log(unsigned int n);
 void Log(void *p);
+void Log(float f);

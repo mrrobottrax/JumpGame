@@ -12,13 +12,12 @@
 #include "vk_renderimage.h"
 #include "vk_queuefamilies.h"
 #include "window/window.h"
+#include "game/player.h"
 
-extern float posX, posY;
-
-static void DrawSprite(float posX, float posY)
+static void DrawTile(float posX, float posY)
 {
 	// Draw object
-	float pushData[] = { posX, posY, 0, 0 };
+	float pushData[] = { posX, posY, LEVEL_WIDTH, LEVEL_HEIGHT };
 	vkCmdPushConstants(vk_commandbuffer_main, vk_pipeline_layout, VK_SHADER_STAGE_VERTEX_BIT, 0, 16, &pushData);
 
 	VkDeviceSize offset = 0;
@@ -59,7 +58,7 @@ static void DrawObjectsPass()
 	vkCmdBindPipeline(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_pipeline);
 
 	// Draw all objects
-	DrawSprite(posX, posY);
+	DrawTile(g_player.positionX, g_player.positionY);
 
 	vkCmdEndRenderPass2(vk_commandbuffer_main, &subEnd);
 }

@@ -9,7 +9,8 @@ layout(push_constant) uniform PushConstants {
 void main()
 {
     vec2 pos = aPos.xy + pc.position;
-    pos -= vec2(20, 13.5);
-    pos /= vec2(20, 13.5);
+    vec2 halfScale = pc.scaling / 2;
+    pos -= halfScale;
+    pos /= halfScale;
     gl_Position = vec4(pos.xy, aPos.z, 1.0);
 }

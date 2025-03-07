@@ -1,19 +1,8 @@
 #include "pch.h"
 #include "game.h"
-#include "input/input.h"
-#include "time/time.h"
+#include "player.h"
 
-float posX, posY;
-
-void Game_Update()
+void Game_Tick()
 {
-	if (key_a)
-	{
-		posX -= tickDelta;
-	}
-
-	if (key_d)
-	{
-		posX += tickDelta;
-	}
+	g_player.Tick();
 }

@@ -14,6 +14,6 @@ void MAGE_UpdateTime()
 		constexpr system_clock::duration delta((int)(10000000.0 / ticksPerSecond + 0.5));
 		nextTick += delta;
 
-		Game_Update();
+		Game_Tick();
 	}
 }
