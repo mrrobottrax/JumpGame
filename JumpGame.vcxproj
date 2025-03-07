@@ -140,6 +140,7 @@
     <ClCompile Include="src\game\game.cpp" />
     <ClCompile Include="src\game\player.cpp" />
     <ClCompile Include="src\graphics\graphics.cpp" />
+    <ClCompile Include="src\graphics\vulkan\vk_descriptor_set.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_draw.cpp" />
     <ClCompile Include="src\graphics\vulkan\renderpasses\vk_renderpasses.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_pipeline.cpp" />
@@ -157,6 +158,7 @@
     <ClCompile Include="src\graphics\vulkan\vk_surface.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_swapchain.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_sync.cpp" />
+    <ClCompile Include="src\graphics\vulkan\vk_unform_buffer.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_vertexbuffer.cpp" />
     <ClCompile Include="src\graphics\vulkan\vulkan.cpp" />
     <ClCompile Include="src\input\input.cpp" />
@@ -175,6 +177,7 @@
     <ClInclude Include="src\game\game.h" />
     <ClInclude Include="src\game\player.h" />
     <ClInclude Include="src\graphics\graphics.h" />
+    <ClInclude Include="src\graphics\vulkan\vk_descriptor_set.h" />
     <ClInclude Include="src\graphics\vulkan\vk_draw.h" />
     <ClInclude Include="src\graphics\vulkan\renderpasses\vk_renderpasses.h" />
     <ClInclude Include="src\graphics\vulkan\vk_pipeline.h" />
@@ -192,9 +195,11 @@
     <ClInclude Include="src\graphics\vulkan\vk_surface.h" />
     <ClInclude Include="src\graphics\vulkan\vk_swapchain.h" />
     <ClInclude Include="src\graphics\vulkan\vk_sync.h" />
+    <ClInclude Include="src\graphics\vulkan\vk_unform_buffer.h" />
     <ClInclude Include="src\graphics\vulkan\vk_vertexbuffer.h" />
     <ClInclude Include="src\graphics\vulkan\vulkan.h" />
     <ClInclude Include="src\input\input.h" />
+    <ClInclude Include="src\level\level.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\time\time.h" />
     <ClInclude Include="src\window\window.h" />

@@ -4,6 +4,7 @@
 #include "vulkan.h"
 #include "file/file.h"
 #include "renderpasses/vk_objects_pass.h"
+#include "vk_descriptor_set.h"
 
 class ShaderModuleWrapper
 {
@@ -26,16 +27,19 @@ static ShaderModuleWrapper CreateShaderModule(const wchar_t name[]);
 void CreatePipeline()
 {
 	// Create layout
+
 	VkPushConstantRange pushConstantRange{
 		.stageFlags = VK_SHADER_STAGE_VERTEX_BIT,
 		.offset = 0,
-		.size = 16,
+		.size = 8,
 	};
 
 	VkPipelineLayoutCreateInfo layoutInfo{
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
+		.setLayoutCount = 1,
+		.pSetLayouts = &vk_set_layout,
 		.pushConstantRangeCount = 1,
-		.pPushConstantRanges = &pushConstantRange
+		.pPushConstantRanges = &pushConstantRange,
 	};
 
 	VkAssert(vkCreatePipelineLayout(vk_device, &layoutInfo, nullptr, &vk_pipeline_layout));
@@ -65,23 +69,27 @@ void CreatePipeline()
 
 	VkVertexInputBindingDescription vertexBindingDescription{
 		.binding = 0,
-		.stride = 12,
+		.stride = 8,
 		.inputRate = VK_VERTEX_INPUT_RATE_VERTEX,
 	};
+
+	VkVertexInputBindingDescription bindings[] = { vertexBindingDescription };
 
 	VkVertexInputAttributeDescription vertexAttributeDescription{
 		.location = 0,
 		.binding = 0,
-		.format = VK_FORMAT_R32G32B32_SFLOAT,
+		.format = VK_FORMAT_R32G32_SFLOAT,
 		.offset = 0,
 	};
 
+	VkVertexInputAttributeDescription attributes[] = { vertexAttributeDescription };
+
 	VkPipelineVertexInputStateCreateInfo vertexState{
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
-		.vertexBindingDescriptionCount = 1,
-		.pVertexBindingDescriptions = &vertexBindingDescription,
-		.vertexAttributeDescriptionCount = 1,
-		.pVertexAttributeDescriptions = &vertexAttributeDescription,
+		.vertexBindingDescriptionCount = _countof(bindings),
+		.pVertexBindingDescriptions = bindings,
+		.vertexAttributeDescriptionCount = _countof(attributes),
+		.pVertexAttributeDescriptions = attributes,
 	};
 
 	VkPipelineInputAssemblyStateCreateInfo inputState{

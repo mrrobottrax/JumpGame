@@ -16,6 +16,8 @@
 #include "renderpasses/vk_renderpasses.h"
 #include "vk_draw.h"
 #include "vk_renderimage.h"
+#include "vk_descriptor_set.h"
+#include "vk_unform_buffer.h"
 
 void InitVulkan()
 {
@@ -32,6 +34,8 @@ void InitVulkan()
 	CreateRenderPasses();
 	CreateSwapchain();
 	CreateVertexBuffer();
+	CreateUniformBuffer();
+	CreateDescriptorSet();
 	CreatePipeline();
 	CreateRenderImage();
 }
@@ -42,6 +46,8 @@ void EndVulkan()
 
 	DestroyRenderImage();
 	DestroyPipeline();
+	DestroyDescriptorSet();
+	DestroyUniformBuffer();
 	DestroyVertexBuffer();
 	DestroyRenderPasses();
 	DestroySwapchain();

@@ -13,56 +13,36 @@
 #include "vk_queuefamilies.h"
 #include "window/window.h"
 #include "game/player.h"
+#include "vk_descriptor_set.h"
+#include "vk_unform_buffer.h"
 
-static void DrawTile(float posX, float posY)
+static void DrawPlayer()
 {
-	posX = (int)(posX * TILE_SIZE) / (float)TILE_SIZE;
-
-	// Draw object
-	float pushData[] = { posX, posY, LEVEL_WIDTH, LEVEL_HEIGHT };
-	vkCmdPushConstants(vk_commandbuffer_main, vk_pipeline_layout, VK_SHADER_STAGE_VERTEX_BIT, 0, 16, &pushData);
-
-	VkDeviceSize offset = 0;
-	vkCmdBindVertexBuffers2(vk_commandbuffer_main, 0, 1, &vk_tri_vertexbuffer, &offset, nullptr, nullptr);
-
-	vkCmdDraw(vk_commandbuffer_main, 6, 1, 0, 0);
-}
-
-static void DrawObjectsPass()
-{
-	VkClearValue clear{
-		.color = {.float32 = {0, 0.5f, 1, 1}}
-	};
-
-	VkRenderPassBeginInfo begin{
-		.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
-		.renderPass = vk_objects_pass,
-		.framebuffer = vk_render_framebuffer,
-		.renderArea = {
-			.extent = {.width = SCREEN_WIDTH, .height = SCREEN_HEIGHT},
-		},
-		.clearValueCount = 1,
-		.pClearValues = &clear,
-	};
-
-	VkSubpassBeginInfo subBegin{
-		.sType = VK_STRUCTURE_TYPE_SUBPASS_BEGIN_INFO,
-		.contents = VK_SUBPASS_CONTENTS_INLINE,
-	};
-
-	VkSubpassEndInfo subEnd{
-		.sType = VK_STRUCTURE_TYPE_SUBPASS_END_INFO,
-	};
-
-	vkCmdBeginRenderPass2(vk_commandbuffer_main, &begin, &subBegin);
-
 	// Set shader
 	vkCmdBindPipeline(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_pipeline);
 
-	// Draw all objects
-	DrawTile(g_player.positionX, g_player.positionY);
+	// Set push constants
+	float pushData[] = { LEVEL_WIDTH, LEVEL_HEIGHT };
+	vkCmdPushConstants(vk_commandbuffer_main, vk_pipeline_layout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(pushData), &pushData);
 
-	vkCmdEndRenderPass2(vk_commandbuffer_main, &subEnd);
+
+	// Fill objects buffer
+	float posX = g_player.positionX;
+	float posY = g_player.positionY;
+
+	posX = (int)(posX * TILE_SIZE) / (float)TILE_SIZE;
+	*vk_uniform_buffer_map = {
+		.positionX = posX,
+		.positionY = posY,
+		.positionZ = 0.5f,
+		.spriteIndex = 0,
+	};
+	vkCmdBindDescriptorSets(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_pipeline_layout, 0, 1, &vk_descriptor_set, 0, nullptr);
+
+	VkDeviceSize offset = 0;
+	vkCmdBindVertexBuffers2(vk_commandbuffer_main, 0, 1, &vk_quad_vertexbuffer, &offset, nullptr, nullptr);
+
+	vkCmdDraw(vk_commandbuffer_main, 6, 1, 0, 0);
 }
 
 static void BlitImage(int swapchainImageIndex)
@@ -187,7 +167,36 @@ void DrawFrame(int swapchainImageIndex)
 	};
 	vkCmdSetScissor(vk_commandbuffer_main, 0, 1, &scissor);
 
-	DrawObjectsPass();
+	VkClearValue clear{
+		.color = {.float32 = {0, 0.5f, 1, 1}}
+	};
+
+	VkRenderPassBeginInfo begin{
+		.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+		.renderPass = vk_objects_pass,
+		.framebuffer = vk_render_framebuffer,
+		.renderArea = {
+			.extent = {.width = SCREEN_WIDTH, .height = SCREEN_HEIGHT},
+		},
+		.clearValueCount = 1,
+		.pClearValues = &clear,
+	};
+
+	VkSubpassBeginInfo subBegin{
+		.sType = VK_STRUCTURE_TYPE_SUBPASS_BEGIN_INFO,
+		.contents = VK_SUBPASS_CONTENTS_INLINE,
+	};
+
+	vkCmdBeginRenderPass2(vk_commandbuffer_main, &begin, &subBegin);
+
+	DrawPlayer();
+
+	VkSubpassEndInfo subEnd{
+		.sType = VK_STRUCTURE_TYPE_SUBPASS_END_INFO,
+	};
+
+	vkCmdEndRenderPass2(vk_commandbuffer_main, &subEnd);
+
 	BlitImage(swapchainImageIndex);
 
 	VkAssert(vkEndCommandBuffer(vk_commandbuffer_main));
