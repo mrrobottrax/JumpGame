@@ -6,23 +6,26 @@
 
 void CreateTilesSet()
 {
-	VkDescriptorSetLayoutBinding binding{
+	VkDescriptorSetLayoutBinding samplerBinding{
 		.binding = 0,
-		.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,
+		.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
 		.descriptorCount = 1,
 		.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT,
+		.pImmutableSamplers = &vk_atlas_sampler,
 	};
+
+	VkDescriptorSetLayoutBinding bindings[] = { samplerBinding };
 
 	VkDescriptorSetLayoutCreateInfo layoutInfo{
 		.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
-		.bindingCount = 1,
-		.pBindings = &binding,
+		.bindingCount = _countof(bindings),
+		.pBindings = bindings,
 	};
 
 	VkAssert(vkCreateDescriptorSetLayout(vk_device, &layoutInfo, nullptr, &vk_tiles_set_layout));
 
 	VkDescriptorPoolSize poolSize{
-		.type = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE,
+		.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
 		.descriptorCount = 1,
 	};
 
@@ -45,9 +48,9 @@ void CreateTilesSet()
 	VkAssert(vkAllocateDescriptorSets(vk_device, &allocInfo, &vk_tiles_set));
 
 	VkDescriptorImageInfo imageInfo{
-		.sampler = VK_NULL_HANDLE,
+		.sampler = vk_atlas_sampler,
 		.imageView = vk_atlas_view,
-		.imageLayout = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL,
+		.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
 	};
 
 	VkWriteDescriptorSet write{
@@ -56,7 +59,7 @@ void CreateTilesSet()
 		.dstBinding = 0,
 		.dstArrayElement = 0,
 		.descriptorCount = 1,
-		.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,
+		.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
 		.pImageInfo = &imageInfo,
 	};
 

@@ -43,6 +43,11 @@ void CreateAtlas()
 	VkAssert(vkMapMemory(vk_device, vk_atlas_memory, 0, size, 0, &vk_atlas_map));
 
 	// Fill image - todo
+	uint8_t *pData = (uint8_t *)vk_atlas_map;
+	pData[0] = 255;
+	pData[1] = 0;
+	pData[2] = 0;
+	pData[3] = 255;
 
 	VkImageViewCreateInfo viewInfo{
 	.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
@@ -104,10 +109,27 @@ void CreateAtlas()
 	};
 	VkAssert(vkQueueSubmit2(vk_queue_main, 1, &submit, VK_NULL_HANDLE));
 	VkAssert(vkQueueWaitIdle(vk_queue_main));
+
+	VkSamplerCreateInfo samplerInfo{
+		.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
+		.magFilter = VK_FILTER_NEAREST,
+		.minFilter = VK_FILTER_NEAREST,
+		.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST,
+		.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT,
+		.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT,
+		.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT,
+		.anisotropyEnable = VK_FALSE,
+		.compareEnable = VK_FALSE,
+		.borderColor = VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK,
+		.unnormalizedCoordinates = VK_FALSE,
+	};
+
+	VkAssert(vkCreateSampler(vk_device, &samplerInfo, nullptr, &vk_atlas_sampler));
 }
 
 void DestroyAtlas()
 {
+	vkDestroySampler(vk_device, vk_atlas_sampler, nullptr);
 	vkFreeMemory(vk_device, vk_atlas_memory, nullptr);
 	vkDestroyImage(vk_device, vk_atlas_image, nullptr);
 	vkDestroyImageView(vk_device, vk_atlas_view, nullptr);
