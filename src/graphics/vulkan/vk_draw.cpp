@@ -24,9 +24,15 @@ static void DrawPlayer()
 	float pushData[] = { LEVEL_WIDTH, LEVEL_HEIGHT };
 	vkCmdPushConstants(vk_commandbuffer_main, vk_pipeline_layout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(pushData), &pushData);
 
-	*vk_objects_instancebuffer_map = {
+	vk_objects_instancebuffer_map[0] = {
 		.positionX = g_player.positionX,
 		.positionY = g_player.positionY,
+		.positionZ = 0.5f,
+	};
+
+	vk_objects_instancebuffer_map[1] = {
+		.positionX = 10,
+		.positionY = 10,
 		.positionZ = 0.5f,
 	};
 
@@ -34,7 +40,7 @@ static void DrawPlayer()
 	VkBuffer vertexBuffers[] = { vk_quad_vertexbuffer, vk_objects_instancebuffer };
 	vkCmdBindVertexBuffers2(vk_commandbuffer_main, 0, _countof(vertexBuffers), vertexBuffers, offsets, nullptr, nullptr);
 
-	vkCmdDraw(vk_commandbuffer_main, 6, 1, 0, 0);
+	vkCmdDraw(vk_commandbuffer_main, 6, 2, 0, 0);
 }
 
 static void BlitImage(int swapchainImageIndex)
