@@ -1,8 +1,8 @@
 #version 450
 
-layout (location = 0) in vec2 aPos;
-layout (location = 1) in vec3 position;
-layout (location = 2) in uint spriteIndex;
+layout(location = 0) in vec2 aPos;
+layout(location = 1) in vec3 position;
+layout(location = 2) in uint spriteIndex;
 
 layout(push_constant) uniform PushConstants {
     vec2 scaling;

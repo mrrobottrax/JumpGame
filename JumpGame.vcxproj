@@ -140,10 +140,13 @@
     <ClCompile Include="src\game\game.cpp" />
     <ClCompile Include="src\game\player.cpp" />
     <ClCompile Include="src\graphics\graphics.cpp" />
+    <ClCompile Include="src\graphics\vulkan\pipelines\vk_shadermodule.cpp" />
+    <ClCompile Include="src\graphics\vulkan\pipelines\vk_tiles_pipeline.cpp" />
+    <ClCompile Include="src\graphics\vulkan\vk_atlas.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_draw.cpp" />
     <ClCompile Include="src\graphics\vulkan\renderpasses\vk_renderpasses.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_objects_instancebuffer.cpp" />
-    <ClCompile Include="src\graphics\vulkan\vk_pipeline.cpp" />
+    <ClCompile Include="src\graphics\vulkan\pipelines\vk_sprite_pipeline.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_memory.cpp" />
     <ClCompile Include="src\graphics\vulkan\renderpasses\vk_objects_pass.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_commandbuffers.cpp" />
@@ -158,6 +161,7 @@
     <ClCompile Include="src\graphics\vulkan\vk_surface.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_swapchain.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_sync.cpp" />
+    <ClCompile Include="src\graphics\vulkan\vk_tiles_set.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_vertexbuffer.cpp" />
     <ClCompile Include="src\graphics\vulkan\vulkan.cpp" />
     <ClCompile Include="src\input\input.cpp" />
@@ -176,10 +180,13 @@
     <ClInclude Include="src\game\game.h" />
     <ClInclude Include="src\game\player.h" />
     <ClInclude Include="src\graphics\graphics.h" />
+    <ClInclude Include="src\graphics\vulkan\pipelines\vk_shadermodule.h" />
+    <ClInclude Include="src\graphics\vulkan\pipelines\vk_tiles_pipeline.h" />
+    <ClInclude Include="src\graphics\vulkan\vk_atlas.h" />
     <ClInclude Include="src\graphics\vulkan\vk_draw.h" />
     <ClInclude Include="src\graphics\vulkan\renderpasses\vk_renderpasses.h" />
     <ClInclude Include="src\graphics\vulkan\vk_objects_instancebuffer.h" />
-    <ClInclude Include="src\graphics\vulkan\vk_pipeline.h" />
+    <ClInclude Include="src\graphics\vulkan\pipelines\vk_sprite_pipeline.h" />
     <ClInclude Include="src\graphics\vulkan\vk_memory.h" />
     <ClInclude Include="src\graphics\vulkan\renderpasses\vk_objects_pass.h" />
     <ClInclude Include="src\graphics\vulkan\vk_commandbuffers.h" />
@@ -194,6 +201,7 @@
     <ClInclude Include="src\graphics\vulkan\vk_surface.h" />
     <ClInclude Include="src\graphics\vulkan\vk_swapchain.h" />
     <ClInclude Include="src\graphics\vulkan\vk_sync.h" />
+    <ClInclude Include="src\graphics\vulkan\vk_tiles_set.h" />
     <ClInclude Include="src\graphics\vulkan\vk_vertexbuffer.h" />
     <ClInclude Include="src\graphics\vulkan\vulkan.h" />
     <ClInclude Include="src\input\input.h" />
@@ -203,8 +211,20 @@
     <ClInclude Include="src\window\window.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="data\tri.frag" />
-    <None Include="data\tri.vert" />
+    <None Include="data\sprite.frag" />
+    <None Include="data\sprite.vert" />
+    <None Include="data\tilerenderer.hlsl">
+      <SubType>
+      </SubType>
+    </None>
+    <None Include="data\tiles.frag">
+      <SubType>
+      </SubType>
+    </None>
+    <None Include="data\tiles.vert">
+      <SubType>
+      </SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

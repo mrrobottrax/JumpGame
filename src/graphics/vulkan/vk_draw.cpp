@@ -4,7 +4,7 @@
 #include "vk_commandbuffers.h"
 #include "vk_device.h"
 #include "vk_swapchain.h"
-#include "vk_pipeline.h"
+#include "pipelines/vk_sprite_pipeline.h"
 #include "vk_queues.h"
 #include "vk_sync.h"
 #include "vk_vertexbuffer.h"
@@ -14,15 +14,35 @@
 #include "window/window.h"
 #include "game/player.h"
 #include "vk_objects_instancebuffer.h"
+#include "pipelines/vk_tiles_pipeline.h"
+#include "vk_tiles_set.h"
 
-static void DrawPlayer()
+static void DrawTiles()
 {
-	// Set shader
-	vkCmdBindPipeline(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_pipeline);
+	// Set pipeline
+	vkCmdBindPipeline(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_tiles_pipeline);
+
+	//// Set push constants
+	float pushData[] = { LEVEL_WIDTH, LEVEL_HEIGHT };
+	vkCmdPushConstants(vk_commandbuffer_main, vk_tiles_pipeline_layout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(pushData), &pushData);
+
+	vkCmdBindDescriptorSets(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_tiles_pipeline_layout, 0, 1, &vk_tiles_set, 0, nullptr);
+
+	VkDeviceSize offsets[] = { 0, 0 };
+	VkBuffer vertexBuffers[] = { vk_quad_vertexbuffer };
+	vkCmdBindVertexBuffers2(vk_commandbuffer_main, 0, _countof(vertexBuffers), vertexBuffers, offsets, nullptr, nullptr);
+
+	vkCmdDraw(vk_commandbuffer_main, 6, 1, 0, 0);
+}
+
+static void DrawObjects()
+{
+	// Set pipeline
+	vkCmdBindPipeline(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_sprite_pipeline);
 
 	// Set push constants
 	float pushData[] = { LEVEL_WIDTH, LEVEL_HEIGHT };
-	vkCmdPushConstants(vk_commandbuffer_main, vk_pipeline_layout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(pushData), &pushData);
+	vkCmdPushConstants(vk_commandbuffer_main, vk_sprite_pipeline_layout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(pushData), &pushData);
 
 	vk_objects_instancebuffer_map[0] = {
 		.positionX = g_player.positionX,
@@ -187,7 +207,8 @@ void DrawFrame(int swapchainImageIndex)
 
 	vkCmdBeginRenderPass2(vk_commandbuffer_main, &begin, &subBegin);
 
-	DrawPlayer();
+	DrawTiles();
+	DrawObjects();
 
 	VkSubpassEndInfo subEnd{
 		.sType = VK_STRUCTURE_TYPE_SUBPASS_END_INFO,

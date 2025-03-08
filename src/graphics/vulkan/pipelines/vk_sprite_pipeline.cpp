@@ -1,29 +1,11 @@
 #include "pch.h"
-#include "vk_pipeline.h"
-#include "vk_device.h"
-#include "vulkan.h"
-#include "file/file.h"
-#include "renderpasses/vk_objects_pass.h"
+#include "vk_sprite_pipeline.h"
+#include "../vk_device.h"
+#include "../vulkan.h"
+#include "../renderpasses/vk_objects_pass.h"
+#include "vk_shadermodule.h"
 
-class ShaderModuleWrapper
-{
-	VkShaderModule module;
-
-public:
-	ShaderModuleWrapper(VkShaderModule module) : module(module)
-	{}
-
-	~ShaderModuleWrapper()
-	{
-		vkDestroyShaderModule(vk_device, module, nullptr);
-	}
-
-	operator VkShaderModule &() { return module; }
-};
-
-static ShaderModuleWrapper CreateShaderModule(const wchar_t name[]);
-
-void CreatePipeline()
+void CreateSpritePipeline()
 {
 	// Create layout
 
@@ -41,12 +23,12 @@ void CreatePipeline()
 		.pPushConstantRanges = &pushConstantRange,
 	};
 
-	VkAssert(vkCreatePipelineLayout(vk_device, &layoutInfo, nullptr, &vk_pipeline_layout));
+	VkAssert(vkCreatePipelineLayout(vk_device, &layoutInfo, nullptr, &vk_sprite_pipeline_layout));
 
 	// Shader stages
 
-	ShaderModuleWrapper vertexModule = CreateShaderModule(L"tri.vert.spv");
-	ShaderModuleWrapper fragmentModule = CreateShaderModule(L"tri.frag.spv");
+	ShaderModuleWrapper vertexModule = CreateShaderModule(L"sprite.vert.spv");
+	ShaderModuleWrapper fragmentModule = CreateShaderModule(L"sprite.frag.spv");
 
 	VkPipelineShaderStageCreateInfo fragmentStage{
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
@@ -191,31 +173,15 @@ void CreatePipeline()
 		.pDepthStencilState = &depthStencilState,
 		.pColorBlendState = &colorBlendState,
 		.pDynamicState = &dynamicState,
-		.layout = vk_pipeline_layout,
+		.layout = vk_sprite_pipeline_layout,
 		.renderPass = vk_objects_pass,
 	};
 
-	VkAssert(vkCreateGraphicsPipelines(vk_device, VK_NULL_HANDLE, 1, &createInfo, nullptr, &vk_pipeline));
+	VkAssert(vkCreateGraphicsPipelines(vk_device, VK_NULL_HANDLE, 1, &createInfo, nullptr, &vk_sprite_pipeline));
 }
 
-void DestroyPipeline()
+void DestroySpritePipeline()
 {
-	vkDestroyPipelineLayout(vk_device, vk_pipeline_layout, nullptr);
-	vkDestroyPipeline(vk_device, vk_pipeline, nullptr);
-}
-
-ShaderModuleWrapper CreateShaderModule(const wchar_t name[])
-{
-	FileHandle file = LoadEntireFile(name);
-
-	VkShaderModule module;
-	VkShaderModuleCreateInfo createInfo{
-		.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
-		.codeSize = file.Size(),
-		.pCode = (uint32_t *)file.Data(),
-	};
-
-	VkAssert(vkCreateShaderModule(vk_device, &createInfo, nullptr, &module));
-
-	return ShaderModuleWrapper(module);
+	vkDestroyPipelineLayout(vk_device, vk_sprite_pipeline_layout, nullptr);
+	vkDestroyPipeline(vk_device, vk_sprite_pipeline, nullptr);
 }

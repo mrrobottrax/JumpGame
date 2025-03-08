@@ -12,11 +12,14 @@
 #include "vk_swapchain.h"
 #include "vk_vertexbuffer.h"
 #include "vk_memory.h"
-#include "vk_pipeline.h"
+#include "pipelines/vk_sprite_pipeline.h"
 #include "renderpasses/vk_renderpasses.h"
 #include "vk_draw.h"
 #include "vk_renderimage.h"
 #include "vk_objects_instancebuffer.h"
+#include "pipelines/vk_tiles_pipeline.h"
+#include "vk_tiles_set.h"
+#include "vk_atlas.h"
 
 void InitVulkan()
 {
@@ -33,7 +36,10 @@ void InitVulkan()
 	CreateRenderPasses();
 	CreateSwapchain();
 	CreateVertexBuffer();
-	CreatePipeline();
+	CreateSpritePipeline();
+	CreateAtlas();
+	CreateTilesSet();
+	CreateTilesPipeline();
 	CreateRenderImage();
 	CreateObjectsBuffer();
 }
@@ -44,7 +50,10 @@ void EndVulkan()
 
 	DestroyObjectsBuffer();
 	DestroyRenderImage();
-	DestroyPipeline();
+	DestroyTilesPipeline();
+	DestroyTilesSet();
+	DestroyAtlas();
+	DestroySpritePipeline();
 	DestroyVertexBuffer();
 	DestroyRenderPasses();
 	DestroySwapchain();
