@@ -13,8 +13,7 @@
 #include "vk_queuefamilies.h"
 #include "window/window.h"
 #include "game/player.h"
-#include "vk_descriptor_set.h"
-#include "vk_unform_buffer.h"
+#include "vk_objects_instancebuffer.h"
 
 static void DrawPlayer()
 {
@@ -25,22 +24,15 @@ static void DrawPlayer()
 	float pushData[] = { LEVEL_WIDTH, LEVEL_HEIGHT };
 	vkCmdPushConstants(vk_commandbuffer_main, vk_pipeline_layout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(pushData), &pushData);
 
-
-	// Fill objects buffer
-	float posX = g_player.positionX;
-	float posY = g_player.positionY;
-
-	posX = (int)(posX * TILE_SIZE) / (float)TILE_SIZE;
-	*vk_uniform_buffer_map = {
-		.positionX = posX,
-		.positionY = posY,
+	*vk_objects_instancebuffer_map = {
+		.positionX = g_player.positionX,
+		.positionY = g_player.positionY,
 		.positionZ = 0.5f,
-		.spriteIndex = 0,
 	};
-	vkCmdBindDescriptorSets(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_pipeline_layout, 0, 1, &vk_descriptor_set, 0, nullptr);
 
-	VkDeviceSize offset = 0;
-	vkCmdBindVertexBuffers2(vk_commandbuffer_main, 0, 1, &vk_quad_vertexbuffer, &offset, nullptr, nullptr);
+	VkDeviceSize offsets[] = { 0, 0 };
+	VkBuffer vertexBuffers[] = { vk_quad_vertexbuffer, vk_objects_instancebuffer };
+	vkCmdBindVertexBuffers2(vk_commandbuffer_main, 0, _countof(vertexBuffers), vertexBuffers, offsets, nullptr, nullptr);
 
 	vkCmdDraw(vk_commandbuffer_main, 6, 1, 0, 0);
 }
