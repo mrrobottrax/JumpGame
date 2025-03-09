@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "vk_device.h"
 #include "vk_physicaldevice.h"
-#include "vulkan.h"
 #include "console/console.h"
 #include "vk_queuefamilies.h"
+#include <graphics/vulkan/vulkan.h>
 
 constexpr const char *REQUIRED_EXTENSIONS[] = {
 	VK_KHR_SWAPCHAIN_EXTENSION_NAME,

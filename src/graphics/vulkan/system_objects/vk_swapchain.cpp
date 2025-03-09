@@ -3,8 +3,8 @@
 #include "vk_device.h"
 #include "vk_surface.h"
 #include "vk_physicaldevice.h"
-#include "vulkan.h"
 #include "window/window.h"
+#include <graphics/vulkan/vulkan.h>
 
 static void CalculateRenderScale()
 {

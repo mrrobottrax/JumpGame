@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "vk_atlas_descriptor_set.h"
 #include "../vulkan.h"
-#include "../vk_device.h"
-#include "../vk_atlas.h"
+#include <graphics/vulkan/system_objects/vk_device.h>
+#include <graphics/vulkan/game_objects/vk_point_sampler.h>
+#include <graphics/vulkan/game_objects/vk_atlas_texture.h>
 
 void CreateAtlasDescriptorSet()
 {
@@ -11,7 +12,7 @@ void CreateAtlasDescriptorSet()
 		.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
 		.descriptorCount = 1,
 		.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT,
-		.pImmutableSamplers = &vk_atlas_sampler,
+		.pImmutableSamplers = &vk_point_sampler,
 	};
 
 	VkDescriptorSetLayoutBinding bindings[] = { samplerBinding };
@@ -48,7 +49,7 @@ void CreateAtlasDescriptorSet()
 	VkAssert(vkAllocateDescriptorSets(vk_device, &allocInfo, &vk_atlas_set));
 
 	VkDescriptorImageInfo imageInfo{
-		.sampler = vk_atlas_sampler,
+		.sampler = vk_point_sampler,
 		.imageView = vk_atlas_view,
 		.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
 	};

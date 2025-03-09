@@ -38,6 +38,8 @@ void MAGE_End()
 	_CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDOUT);
 	_CrtDumpMemoryLeaks();
 	system("pause");
+
+	FreeConsole();
 #endif // DEBUG
 }
 

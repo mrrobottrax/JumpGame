@@ -1,7 +1,12 @@
 #include "pch.h"
 #include "vk_memory.h"
-#include "vk_physicaldevice.h"
 #include "console/console.h"
+#include <graphics/vulkan/game_objects/vk_atlas_texture.h>
+#include <graphics/vulkan/vulkan.h>
+#include "system_objects/vk_physicaldevice.h"
+#include "system_objects/vk_device.h"
+#include "game_objects/vk_objects_instancebuffer.h"
+#include "game_objects/vk_vertexbuffer.h"
 
 void GetMemoryTypes()
 {
@@ -73,4 +78,105 @@ void GetMemoryTypes()
 			}
 		}
 	}
+}
+
+struct MemoryEntry
+{
+	enum EntryType
+	{
+		Image,
+		Buffer
+	} type;
+
+	VkMemoryRequirements requirements;
+	MemoryAllocation &allocation;
+
+	union
+	{
+		VkImage *pImage;
+		VkBuffer *pBuffer;
+	};
+
+	MemoryEntry(MemoryAllocation &allocation, VkImage &image) : allocation(allocation), pImage(&image), type(Image)
+	{
+		vkGetImageMemoryRequirements(vk_device, image, &requirements);
+	}
+
+	MemoryEntry(MemoryAllocation &allocation, VkBuffer &buffer) : allocation(allocation), pBuffer(&buffer), type(Buffer)
+	{
+		vkGetBufferMemoryRequirements(vk_device, buffer, &requirements);
+	}
+
+	void BindMemory()
+	{
+		switch (type)
+		{
+			case MemoryEntry::Image:
+				VkAssert(vkBindImageMemory(vk_device, *pImage, allocation.memory, allocation.offset));
+				break;
+			case MemoryEntry::Buffer:
+				VkAssert(vkBindBufferMemory(vk_device, *pBuffer, allocation.memory, allocation.offset));
+				break;
+			default:
+				break;
+		}
+	}
+};
+
+static void AllocateHostVisibleMemory()
+{
+	MemoryEntry entries[] = {
+		{vk_atlas_memory, vk_atlas_image},
+		{vk_objects_instancebuffer_memory, vk_objects_instancebuffer},
+		{vk_quad_vertexbuffer_memory, vk_quad_vertexbuffer}
+	};
+
+	VkDeviceSize offset = 0;
+	for (int i = 0; i < _countof(entries); ++i)
+	{
+		offset = (VkDeviceSize)ceilf((float)offset / entries[i].requirements.alignment) * entries[i].requirements.alignment;
+
+		entries[i].allocation.offset = offset;
+		offset += entries[i].requirements.size;
+	}
+
+	VkMemoryAllocateInfo allocateInfo
+	{
+		.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
+		.allocationSize = offset,
+		.memoryTypeIndex = vk_memory_types.local_hostvisible
+	};
+
+	VkAssert(vkAllocateMemory(vk_device, &allocateInfo, nullptr, &vk_static_host_memory));
+
+	VkAssert(vkMapMemory(vk_device, vk_static_host_memory, 0, offset, 0, &vk_static_host_memory_map));
+
+	offset = 0;
+	for (int i = 0; i < _countof(entries); ++i)
+	{
+		offset = (VkDeviceSize)ceilf((float)offset / entries[i].requirements.alignment) * entries[i].requirements.alignment;
+
+		entries[i].allocation.map = (char *)vk_static_host_memory_map + offset;
+		offset += entries[i].requirements.size;
+
+		entries[i].allocation.memory = vk_static_host_memory;
+		entries[i].BindMemory();
+	}
+}
+
+static void AllocateDeviceLocalMemory()
+{
+
+}
+
+
+void AllocateStaticMemory()
+{
+	AllocateHostVisibleMemory();
+	AllocateDeviceLocalMemory();
+}
+
+void FreeStaticMemory()
+{
+	vkFreeMemory(vk_device, vk_static_host_memory, nullptr);
 }

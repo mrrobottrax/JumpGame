@@ -1,21 +1,21 @@
 #include "pch.h"
 #include "vk_draw.h"
 #include "vulkan.h"
-#include "vk_commandbuffers.h"
-#include "vk_device.h"
-#include "vk_swapchain.h"
 #include "pipelines/vk_sprite_pipeline.h"
-#include "vk_queues.h"
-#include "vk_sync.h"
-#include "vk_vertexbuffer.h"
 #include "renderpasses/vk_objects_pass.h"
-#include "vk_renderimage.h"
-#include "vk_queuefamilies.h"
 #include "window/window.h"
 #include "game/player.h"
-#include "vk_objects_instancebuffer.h"
 #include "pipelines/vk_tiles_pipeline.h"
 #include <graphics/vulkan/descriptor_sets/vk_atlas_descriptor_set.h>
+#include "system_objects/vk_commandbuffers.h"
+#include "game_objects/vk_vertexbuffer.h"
+#include "game_objects/vk_objects_instancebuffer.h"
+#include "system_objects/vk_queuefamilies.h"
+#include "system_objects/vk_swapchain.h"
+#include "game_objects/vk_renderimage.h"
+#include "system_objects/vk_device.h"
+#include "system_objects/vk_sync.h"
+#include "system_objects/vk_queues.h"
 
 static void DrawTiles()
 {
@@ -38,13 +38,15 @@ static void DrawObjects()
 
 	vkCmdBindDescriptorSets(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_sprite_pipeline_layout, 0, 1, &vk_atlas_set, 0, nullptr);
 
-	vk_objects_instancebuffer_map[0] = {
+	ObjectData *const &objectData = (ObjectData *)vk_objects_instancebuffer_memory.map;
+
+	objectData[0] = {
 		.positionX = g_player.positionX,
 		.positionY = g_player.positionY,
 		.positionZ = 0.5f,
 	};
 
-	vk_objects_instancebuffer_map[1] = {
+	objectData[1] = {
 		.positionX = 10,
 		.positionY = 10,
 		.positionZ = 0.5f,

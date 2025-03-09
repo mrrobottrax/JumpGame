@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "vk_sprite_pipeline.h"
-#include "../vk_device.h"
 #include "../vulkan.h"
 #include "../renderpasses/vk_objects_pass.h"
 #include "vk_shadermodule.h"

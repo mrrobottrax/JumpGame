@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "vk_objects_pass.h"
-#include "..\vk_device.h"
-#include "..\vk_swapchain.h"
+#include <graphics/vulkan/system_objects/vk_swapchain.h>
+#include <graphics/vulkan/system_objects/vk_device.h>
 
 void CreateObjectsPass()
 {

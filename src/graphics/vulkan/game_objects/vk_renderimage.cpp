@@ -1,11 +1,11 @@
 #include "pch.h"
 #include "vk_renderimage.h"
-#include "vk_device.h"
-#include "vulkan.h"
-#include "vk_queuefamilies.h"
-#include "renderpasses/vk_objects_pass.h"
-#include "vk_memory.h"
 #include "window/window.h"
+#include <graphics/vulkan/system_objects/vk_queuefamilies.h>
+#include <graphics/vulkan/vulkan.h>
+#include <graphics/vulkan/system_objects/vk_device.h>
+#include <graphics/vulkan/renderpasses/vk_objects_pass.h>
+#include <graphics/vulkan/vk_memory.h>
 
 void CreateRenderImage()
 {

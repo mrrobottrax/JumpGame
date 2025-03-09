@@ -1,23 +1,23 @@
 #include "pch.h"
-#include "vk_atlas.h"
-#include "vk_device.h"
-#include "vulkan.h"
-#include "vk_queuefamilies.h"
-#include "vk_memory.h"
-#include "vk_commandbuffers.h"
-#include "vk_queues.h"
+#include "vk_atlas_texture.h"
 #include <console/console.h>
+#include <graphics/vulkan/system_objects/vk_queuefamilies.h>
+#include <graphics/vulkan/vulkan.h>
+#include <graphics/vulkan/system_objects/vk_device.h>
+#include <graphics/vulkan/system_objects/vk_commandbuffers.h>
+#include <graphics/vulkan/system_objects/vk_queues.h>
 
-void CreateAtlas()
+static UncompressedImage atlasImage;
+
+void CreateAtlasTexture()
 {
-	UncompressedImage image = LoadAndUncompressPNG(L"data/tilemap.png");
-	const uint32_t size = image.width * image.height * 4;
+	atlasImage = (UncompressedImage &&)LoadAndUncompressPNG(L"data/tilemap.png");
 
 	VkImageCreateInfo imageInfo{
 		.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
 		.imageType = VK_IMAGE_TYPE_2D,
 		.format = VK_FORMAT_R8G8B8A8_SRGB,
-		.extent = {.width = image.width, .height = image.height, .depth = 1},
+		.extent = {.width = atlasImage.width, .height = atlasImage.height, .depth = 1},
 		.mipLevels = 1,
 		.arrayLayers = 1,
 		.samples = VK_SAMPLE_COUNT_1_BIT,
@@ -30,41 +30,33 @@ void CreateAtlas()
 	};
 
 	VkAssert(vkCreateImage(vk_device, &imageInfo, nullptr, &vk_atlas_image));
+}
 
-	VkMemoryRequirements requirements;
-	vkGetImageMemoryRequirements(vk_device, vk_atlas_image, &requirements);
+void LoadAtlasTexture()
+{
+	// Copy data
+	const uint32_t size = atlasImage.width * atlasImage.height * 4;
 
-	const VkDeviceSize memorySize = requirements.size;
+	memcpy(vk_atlas_memory.map, atlasImage.pData, size);
+	atlasImage.~UncompressedImage();
 
-	VkMemoryAllocateInfo allocateInfo
-	{
-		.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
-		.allocationSize = memorySize,
-		.memoryTypeIndex = vk_memory_types.local_hostvisible,
-	};
-
-	VkAssert(vkAllocateMemory(vk_device, &allocateInfo, nullptr, &vk_atlas_memory));
-	VkAssert(vkBindImageMemory(vk_device, vk_atlas_image, vk_atlas_memory, 0));
-	VkAssert(vkMapMemory(vk_device, vk_atlas_memory, 0, size, 0, &vk_atlas_map));
-
-	// Fill image
-	memcpy(vk_atlas_map, image.pData, (size_t)image.width * image.height * 4);
-
+	// Create image view
 	VkImageViewCreateInfo viewInfo{
-	.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
-	.image = vk_atlas_image,
-	.viewType = VK_IMAGE_VIEW_TYPE_2D,
-	.format = VK_FORMAT_R8G8B8A8_SRGB,
-	.components = {VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY},
-	.subresourceRange = {
-		.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
-		.levelCount = 1,
-		.layerCount = 1,
-	},
+		.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+		.image = vk_atlas_image,
+		.viewType = VK_IMAGE_VIEW_TYPE_2D,
+		.format = VK_FORMAT_R8G8B8A8_SRGB,
+		.components = {VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY},
+		.subresourceRange = {
+			.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
+			.levelCount = 1,
+			.layerCount = 1,
+		},
 	};
 
 	VkAssert(vkCreateImageView(vk_device, &viewInfo, nullptr, &vk_atlas_view));
 
+	// Transition layout
 	VkCommandBufferBeginInfo beginInfo{
 		.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
 		.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT,
@@ -110,28 +102,10 @@ void CreateAtlas()
 	};
 	VkAssert(vkQueueSubmit2(vk_queue_main, 1, &submit, VK_NULL_HANDLE));
 	VkAssert(vkQueueWaitIdle(vk_queue_main));
-
-	VkSamplerCreateInfo samplerInfo{
-		.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
-		.magFilter = VK_FILTER_NEAREST,
-		.minFilter = VK_FILTER_NEAREST,
-		.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST,
-		.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT,
-		.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT,
-		.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT,
-		.anisotropyEnable = VK_FALSE,
-		.compareEnable = VK_FALSE,
-		.borderColor = VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK,
-		.unnormalizedCoordinates = VK_FALSE,
-	};
-
-	VkAssert(vkCreateSampler(vk_device, &samplerInfo, nullptr, &vk_atlas_sampler));
 }
 
-void DestroyAtlas()
+void DestroyAtlasTexture()
 {
-	vkDestroySampler(vk_device, vk_atlas_sampler, nullptr);
-	vkFreeMemory(vk_device, vk_atlas_memory, nullptr);
 	vkDestroyImage(vk_device, vk_atlas_image, nullptr);
 	vkDestroyImageView(vk_device, vk_atlas_view, nullptr);
 }

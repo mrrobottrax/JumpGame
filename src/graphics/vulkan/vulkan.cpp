@@ -1,26 +1,26 @@
 #include "pch.h"
 #include "exceptions/exceptions.h"
 #include "vulkan.h"
-#include "vk_instance.h"
-#include "vk_physicaldevice.h"
-#include "vk_device.h"
-#include "vk_surface.h"
-#include "vk_queuefamilies.h"
-#include "vk_queues.h"
-#include "vk_commandbuffers.h"
-#include "vk_sync.h"
-#include "vk_swapchain.h"
-#include "vk_vertexbuffer.h"
-#include "vk_memory.h"
 #include "pipelines/vk_sprite_pipeline.h"
 #include "renderpasses/vk_renderpasses.h"
 #include "vk_draw.h"
-#include "vk_renderimage.h"
-#include "vk_objects_instancebuffer.h"
 #include "pipelines/vk_tiles_pipeline.h"
 #include <graphics/vulkan/descriptor_sets/vk_atlas_descriptor_set.h>
-#include "vk_atlas.h"
 #include <console/console.h>
+#include "system_objects/vk_instance.h"
+#include "system_objects/vk_physicaldevice.h"
+#include "system_objects/vk_queuefamilies.h"
+#include "system_objects/vk_device.h"
+#include "system_objects/vk_queues.h"
+#include "system_objects/vk_surface.h"
+#include "system_objects/vk_commandbuffers.h"
+#include "system_objects/vk_sync.h"
+#include "system_objects/vk_swapchain.h"
+#include "game_objects/vk_vertexbuffer.h"
+#include "game_objects/vk_renderimage.h"
+#include "game_objects/vk_objects_instancebuffer.h"
+#include "game_objects/vk_atlas_texture.h"
+#include "game_objects/vk_point_sampler.h"
 
 void InitVulkan()
 {
@@ -44,23 +44,34 @@ void InitVulkan()
 	GetSwapchainFormat();
 	CreateRenderPasses();
 	CreateSwapchain();
+	CreatePointSampler();
+
 	CreateVertexBuffer();
-	CreateAtlas();
+	CreateObjectsBuffer();
+	CreateAtlasTexture();
+
+	AllocateStaticMemory();
+
+	LoadAtlasTexture();
+	LoadVertexBuffer();
+
 	CreateAtlasDescriptorSet();
 	CreateSpritePipeline();
 	CreateTilesPipeline();
 	CreateRenderImage();
-	CreateObjectsBuffer();
 }
 
 void EndVulkan()
 {
 	VkAssert(vkQueueWaitIdle(vk_queue_main));
 
+	FreeStaticMemory();
+
+	DestroyPointSampler();
 	DestroyObjectsBuffer();
 	DestroyRenderImage();
 	DestroyAtlasDescriptorSet();
-	DestroyAtlas();
+	DestroyAtlasTexture();
 	DestroyTilesPipeline();
 	DestroySpritePipeline();
 	DestroyVertexBuffer();

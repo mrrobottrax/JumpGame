@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "vk_sync.h"
 #include "vk_device.h"
-#include "vulkan.h"
+#include <graphics/vulkan/vulkan.h>
 
 void CreateSyncObjects()
 {

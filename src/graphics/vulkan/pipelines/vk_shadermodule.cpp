@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "vk_shadermodule.h"
 #include <file/file.h>
-#include <graphics/vulkan/vk_device.h>
 #include <graphics/vulkan/vulkan.h>
 
 ShaderModuleWrapper CreateShaderModule(const wchar_t name[])

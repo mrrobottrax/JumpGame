@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "vk_instance.h"
 #include "console/console.h"
-#include "vulkan.h"
-#include "vk_debug.h"
-#include "vk_ext_debugutils.h"
+#include <graphics/vulkan/vk_ext_debugutils.h>
+#include <graphics/vulkan/vk_debug.h>
+#include <graphics/vulkan/vulkan.h>
 
 #ifdef DEBUG
 constexpr const char *REQUIRED_LAYERS[] = {
