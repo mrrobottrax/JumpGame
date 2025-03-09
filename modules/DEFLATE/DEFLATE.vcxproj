@@ -37,8 +37,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{10e39c56-2ac3-438d-8f6d-588ae15bb4b1}</ProjectGuid>
-    <RootNamespace>JumpGame</RootNamespace>
+    <ProjectGuid>{f5f74d65-9bf2-4434-be65-47041df6c9cd}</ProjectGuid>
+    <RootNamespace>DEFLATE</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -62,20 +62,20 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Sanitizer|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <EnableASAN>true</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -155,37 +155,30 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)modules\ShaderCompiler\include;$(ProjectDir)modules\PNG\include;$(ProjectDir)src;$(VK_SDK_PATH)\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>vulkan-1.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(VK_SDK_PATH)\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Sanitizer|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)modules\ShaderCompiler\include;$(ProjectDir)modules\PNG\include;$(ProjectDir)src;$(VK_SDK_PATH)\Include</AdditionalIncludeDirectories>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>vulkan-1.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(VK_SDK_PATH)\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -194,8 +187,11 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -205,106 +201,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\application\application.cpp" />
-    <ClCompile Include="src\console\console.cpp" />
-    <ClCompile Include="src\exceptions\exceptions.cpp" />
-    <ClCompile Include="src\file\file.cpp" />
-    <ClCompile Include="src\game\game.cpp" />
-    <ClCompile Include="src\game\player.cpp" />
-    <ClCompile Include="src\graphics\graphics.cpp" />
-    <ClCompile Include="src\graphics\vulkan\pipelines\vk_shadermodule.cpp" />
-    <ClCompile Include="src\graphics\vulkan\pipelines\vk_tiles_pipeline.cpp" />
-    <ClCompile Include="src\graphics\vulkan\vk_atlas.cpp" />
-    <ClCompile Include="src\graphics\vulkan\vk_draw.cpp" />
-    <ClCompile Include="src\graphics\vulkan\renderpasses\vk_renderpasses.cpp" />
-    <ClCompile Include="src\graphics\vulkan\vk_objects_instancebuffer.cpp" />
-    <ClCompile Include="src\graphics\vulkan\pipelines\vk_sprite_pipeline.cpp" />
-    <ClCompile Include="src\graphics\vulkan\vk_memory.cpp" />
-    <ClCompile Include="src\graphics\vulkan\renderpasses\vk_objects_pass.cpp" />
-    <ClCompile Include="src\graphics\vulkan\vk_commandbuffers.cpp" />
-    <ClCompile Include="src\graphics\vulkan\vk_debug.cpp" />
-    <ClCompile Include="src\graphics\vulkan\vk_device.cpp" />
-    <ClCompile Include="src\graphics\vulkan\vk_ext_debugutils.cpp" />
-    <ClCompile Include="src\graphics\vulkan\vk_instance.cpp" />
-    <ClCompile Include="src\graphics\vulkan\vk_physicaldevice.cpp" />
-    <ClCompile Include="src\graphics\vulkan\vk_queuefamilies.cpp" />
-    <ClCompile Include="src\graphics\vulkan\vk_queues.cpp" />
-    <ClCompile Include="src\graphics\vulkan\vk_renderimage.cpp" />
-    <ClCompile Include="src\graphics\vulkan\vk_surface.cpp" />
-    <ClCompile Include="src\graphics\vulkan\vk_swapchain.cpp" />
-    <ClCompile Include="src\graphics\vulkan\vk_sync.cpp" />
-    <ClCompile Include="src\graphics\vulkan\descriptor_sets\vk_atlas_descriptor_set.cpp" />
-    <ClCompile Include="src\graphics\vulkan\vk_vertexbuffer.cpp" />
-    <ClCompile Include="src\graphics\vulkan\vulkan.cpp" />
-    <ClCompile Include="src\input\input.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\pch.cpp">
+    <ClInclude Include="include\Deflater.h" />
+    <ClInclude Include="src\Huffman.h" />
+    <ClInclude Include="src\InStream.h" />
+    <ClInclude Include="include\OutStream.h" />
+    <ClInclude Include="src\stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Deflater.cpp" />
+    <ClCompile Include="src\Huffman.cpp" />
+    <ClCompile Include="src\InStream.cpp" />
+    <ClCompile Include="src\OutStream.cpp" />
+    <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Sanitizer|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\time\time.cpp" />
-    <ClCompile Include="src\window\window.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\application\application.h" />
-    <ClInclude Include="src\console\console.h" />
-    <ClInclude Include="src\exceptions\exceptions.h" />
-    <ClInclude Include="src\file\file.h" />
-    <ClInclude Include="src\game\game.h" />
-    <ClInclude Include="src\game\player.h" />
-    <ClInclude Include="src\graphics\graphics.h" />
-    <ClInclude Include="src\graphics\vulkan\pipelines\vk_shadermodule.h" />
-    <ClInclude Include="src\graphics\vulkan\pipelines\vk_tiles_pipeline.h" />
-    <ClInclude Include="src\graphics\vulkan\vk_atlas.h" />
-    <ClInclude Include="src\graphics\vulkan\vk_draw.h" />
-    <ClInclude Include="src\graphics\vulkan\renderpasses\vk_renderpasses.h" />
-    <ClInclude Include="src\graphics\vulkan\vk_objects_instancebuffer.h" />
-    <ClInclude Include="src\graphics\vulkan\pipelines\vk_sprite_pipeline.h" />
-    <ClInclude Include="src\graphics\vulkan\vk_memory.h" />
-    <ClInclude Include="src\graphics\vulkan\renderpasses\vk_objects_pass.h" />
-    <ClInclude Include="src\graphics\vulkan\vk_commandbuffers.h" />
-    <ClInclude Include="src\graphics\vulkan\vk_debug.h" />
-    <ClInclude Include="src\graphics\vulkan\vk_device.h" />
-    <ClInclude Include="src\graphics\vulkan\vk_ext_debugutils.h" />
-    <ClInclude Include="src\graphics\vulkan\vk_instance.h" />
-    <ClInclude Include="src\graphics\vulkan\vk_physicaldevice.h" />
-    <ClInclude Include="src\graphics\vulkan\vk_queuefamilies.h" />
-    <ClInclude Include="src\graphics\vulkan\vk_queues.h" />
-    <ClInclude Include="src\graphics\vulkan\vk_renderimage.h" />
-    <ClInclude Include="src\graphics\vulkan\vk_surface.h" />
-    <ClInclude Include="src\graphics\vulkan\vk_swapchain.h" />
-    <ClInclude Include="src\graphics\vulkan\vk_sync.h" />
-    <ClInclude Include="src\graphics\vulkan\descriptor_sets\vk_atlas_descriptor_set.h" />
-    <ClInclude Include="src\graphics\vulkan\vk_vertexbuffer.h" />
-    <ClInclude Include="src\graphics\vulkan\vulkan.h" />
-    <ClInclude Include="src\input\input.h" />
-    <ClInclude Include="src\pch.h" />
-    <ClInclude Include="src\time\time.h" />
-    <ClInclude Include="src\window\window.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="data\sprite.frag" />
-    <None Include="data\sprite.vert" />
-    <None Include="data\tilerenderer.hlsl">
-      <SubType>
-      </SubType>
-    </None>
-    <None Include="data\tiles.frag">
-      <SubType>
-      </SubType>
-    </None>
-    <None Include="data\tiles.vert">
-      <SubType>
-      </SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="modules\PNG\PNG.vcxproj">
-      <Project>{8313fd6f-202b-4c2f-a300-eb6c4cf6cbd2}</Project>
-    </ProjectReference>
-    <ProjectReference Include="modules\ShaderCompiler\ShaderCompiler.vcxproj">
-      <Project>{bc20ac55-35f1-4784-9f93-b3f518cb0e83}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

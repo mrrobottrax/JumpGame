@@ -5,22 +5,24 @@
 #include "file/file.h"
 #include "../renderpasses/vk_objects_pass.h"
 #include "vk_shadermodule.h"
-#include <graphics/vulkan/vk_tiles_set.h>
+#include <graphics/vulkan/descriptor_sets/vk_atlas_descriptor_set.h>
 
 void CreateTilesPipeline()
 {
 	// Create layout
 
 	VkPushConstantRange pushConstantRange{
-		.stageFlags = VK_SHADER_STAGE_VERTEX_BIT,
+		.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
 		.offset = 0,
-		.size = 8,
+		.size = 12,
 	};
+
+	VkDescriptorSetLayout sets[] = { vk_atlas_set_layout };
 
 	VkPipelineLayoutCreateInfo layoutInfo{
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
-		.setLayoutCount = 1,
-		.pSetLayouts = &vk_tiles_set_layout,
+		.setLayoutCount = _countof(sets),
+		.pSetLayouts = sets,
 		.pushConstantRangeCount = 1,
 		.pPushConstantRanges = &pushConstantRange,
 	};

@@ -12,6 +12,7 @@ struct ObjectData
 };
 
 inline ObjectData *vk_objects_instancebuffer_map;
+inline constexpr size_t vk_objects_instancebuffer_maxobjects = vk_objects_instancebuffer_size / sizeof(ObjectData);
 
 void CreateObjectsBuffer();
 void DestroyObjectsBuffer();

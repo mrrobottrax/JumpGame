@@ -2,6 +2,7 @@
 #include "window/window.h"
 #include "exceptions/exceptions.h"
 #include "application/application.h"
+#include <console/console.h>
 
 int WINAPI wWinMain(
 	_In_ HINSTANCE hInstance,
@@ -45,6 +46,8 @@ int WINAPI wWinMain(
 		system("pause");
 		return 1;
 	}
+
+	Log("FinalEnd");
 
 	return 0;
 }

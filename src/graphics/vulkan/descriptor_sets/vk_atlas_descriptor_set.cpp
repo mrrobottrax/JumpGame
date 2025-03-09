@@ -1,10 +1,10 @@
 #include "pch.h"
-#include "vk_tiles_set.h"
-#include "vulkan.h"
-#include "vk_device.h"
-#include "vk_atlas.h"
+#include "vk_atlas_descriptor_set.h"
+#include "../vulkan.h"
+#include "../vk_device.h"
+#include "../vk_atlas.h"
 
-void CreateTilesSet()
+void CreateAtlasDescriptorSet()
 {
 	VkDescriptorSetLayoutBinding samplerBinding{
 		.binding = 0,
@@ -22,7 +22,7 @@ void CreateTilesSet()
 		.pBindings = bindings,
 	};
 
-	VkAssert(vkCreateDescriptorSetLayout(vk_device, &layoutInfo, nullptr, &vk_tiles_set_layout));
+	VkAssert(vkCreateDescriptorSetLayout(vk_device, &layoutInfo, nullptr, &vk_atlas_set_layout));
 
 	VkDescriptorPoolSize poolSize{
 		.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
@@ -36,16 +36,16 @@ void CreateTilesSet()
 		.pPoolSizes = &poolSize,
 	};
 
-	VkAssert(vkCreateDescriptorPool(vk_device, &poolInfo, nullptr, &vk_tiles_set_pool));
+	VkAssert(vkCreateDescriptorPool(vk_device, &poolInfo, nullptr, &vk_atlas_set_pool));
 
 	VkDescriptorSetAllocateInfo allocInfo{
 		.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
-		.descriptorPool = vk_tiles_set_pool,
+		.descriptorPool = vk_atlas_set_pool,
 		.descriptorSetCount = 1,
-		.pSetLayouts = &vk_tiles_set_layout,
+		.pSetLayouts = &vk_atlas_set_layout,
 	};
 
-	VkAssert(vkAllocateDescriptorSets(vk_device, &allocInfo, &vk_tiles_set));
+	VkAssert(vkAllocateDescriptorSets(vk_device, &allocInfo, &vk_atlas_set));
 
 	VkDescriptorImageInfo imageInfo{
 		.sampler = vk_atlas_sampler,
@@ -55,7 +55,7 @@ void CreateTilesSet()
 
 	VkWriteDescriptorSet write{
 		.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
-		.dstSet = vk_tiles_set,
+		.dstSet = vk_atlas_set,
 		.dstBinding = 0,
 		.dstArrayElement = 0,
 		.descriptorCount = 1,
@@ -66,8 +66,8 @@ void CreateTilesSet()
 	vkUpdateDescriptorSets(vk_device, 1, &write, 0, nullptr);
 }
 
-void DestroyTilesSet()
+void DestroyAtlasDescriptorSet()
 {
-	vkDestroyDescriptorPool(vk_device, vk_tiles_set_pool, nullptr);
-	vkDestroyDescriptorSetLayout(vk_device, vk_tiles_set_layout, nullptr);
+	vkDestroyDescriptorPool(vk_device, vk_atlas_set_pool, nullptr);
+	vkDestroyDescriptorSetLayout(vk_device, vk_atlas_set_layout, nullptr);
 }

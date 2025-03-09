@@ -4,6 +4,7 @@
 #include "../vulkan.h"
 #include "../renderpasses/vk_objects_pass.h"
 #include "vk_shadermodule.h"
+#include <graphics/vulkan/descriptor_sets/vk_atlas_descriptor_set.h>
 
 void CreateSpritePipeline()
 {
@@ -12,13 +13,15 @@ void CreateSpritePipeline()
 	VkPushConstantRange pushConstantRange{
 		.stageFlags = VK_SHADER_STAGE_VERTEX_BIT,
 		.offset = 0,
-		.size = 8,
+		.size = 12,
 	};
+
+	VkDescriptorSetLayout sets[] = { vk_atlas_set_layout };
 
 	VkPipelineLayoutCreateInfo layoutInfo{
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
-		.setLayoutCount = 0,
-		.pSetLayouts = nullptr,
+		.setLayoutCount = _countof(sets),
+		.pSetLayouts = sets,
 		.pushConstantRangeCount = 1,
 		.pPushConstantRanges = &pushConstantRange,
 	};
@@ -54,13 +57,13 @@ void CreateSpritePipeline()
 		.inputRate = VK_VERTEX_INPUT_RATE_VERTEX,
 	};
 
-	VkVertexInputBindingDescription instanceBindingDescription{
+	VkVertexInputBindingDescription objectDataBindingDescription{
 		.binding = 1,
-		.stride = 16,
+		.stride = 12,
 		.inputRate = VK_VERTEX_INPUT_RATE_INSTANCE,
 	};
 
-	VkVertexInputBindingDescription bindings[] = { vertexBindingDescription, instanceBindingDescription };
+	VkVertexInputBindingDescription bindings[] = { vertexBindingDescription, objectDataBindingDescription };
 
 	VkVertexInputAttributeDescription vertexAttributeDescription{
 		.location = 0,
@@ -72,19 +75,18 @@ void CreateSpritePipeline()
 	VkVertexInputAttributeDescription offsetAttributeDescription{
 		.location = 1,
 		.binding = 1,
-		.format = VK_FORMAT_R32G32B32_SFLOAT,
+		.format = VK_FORMAT_R32G32_SFLOAT,
 		.offset = 0,
 	};
 
-
-	VkVertexInputAttributeDescription spriteAttributeDescription{
+	VkVertexInputAttributeDescription spriteIndexAttributeDescription{
 		.location = 2,
 		.binding = 1,
 		.format = VK_FORMAT_R32_UINT,
-		.offset = 12,
+		.offset = 8,
 	};
 
-	VkVertexInputAttributeDescription attributes[] = { vertexAttributeDescription, offsetAttributeDescription, spriteAttributeDescription };
+	VkVertexInputAttributeDescription attributes[] = { vertexAttributeDescription, offsetAttributeDescription, spriteIndexAttributeDescription };
 
 	VkPipelineVertexInputStateCreateInfo vertexState{
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,

@@ -6,16 +6,18 @@
 #include "vk_memory.h"
 #include "vk_commandbuffers.h"
 #include "vk_queues.h"
+#include <console/console.h>
 
 void CreateAtlas()
 {
-	constexpr uint32_t width = 16, height = 16;
+	UncompressedImage image = LoadAndUncompressPNG(L"data/tilemap.png");
+	const uint32_t size = image.width * image.height * 4;
 
 	VkImageCreateInfo imageInfo{
 		.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
 		.imageType = VK_IMAGE_TYPE_2D,
 		.format = VK_FORMAT_R8G8B8A8_SRGB,
-		.extent = {.width = width, .height = height, .depth = 1},
+		.extent = {.width = image.width, .height = image.height, .depth = 1},
 		.mipLevels = 1,
 		.arrayLayers = 1,
 		.samples = VK_SAMPLE_COUNT_1_BIT,
@@ -29,12 +31,15 @@ void CreateAtlas()
 
 	VkAssert(vkCreateImage(vk_device, &imageInfo, nullptr, &vk_atlas_image));
 
-	constexpr uint32_t size = width * height * 4;
+	VkMemoryRequirements requirements;
+	vkGetImageMemoryRequirements(vk_device, vk_atlas_image, &requirements);
+
+	const VkDeviceSize memorySize = requirements.size;
 
 	VkMemoryAllocateInfo allocateInfo
 	{
 		.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
-		.allocationSize = size,
+		.allocationSize = memorySize,
 		.memoryTypeIndex = vk_memory_types.local_hostvisible,
 	};
 
@@ -42,12 +47,8 @@ void CreateAtlas()
 	VkAssert(vkBindImageMemory(vk_device, vk_atlas_image, vk_atlas_memory, 0));
 	VkAssert(vkMapMemory(vk_device, vk_atlas_memory, 0, size, 0, &vk_atlas_map));
 
-	// Fill image - todo
-	uint8_t *pData = (uint8_t *)vk_atlas_map;
-	pData[0] = 255;
-	pData[1] = 0;
-	pData[2] = 0;
-	pData[3] = 255;
+	// Fill image
+	memcpy(vk_atlas_map, image.pData, (size_t)image.width * image.height * 4);
 
 	VkImageViewCreateInfo viewInfo{
 	.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,

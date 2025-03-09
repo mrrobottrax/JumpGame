@@ -15,18 +15,14 @@
 #include "game/player.h"
 #include "vk_objects_instancebuffer.h"
 #include "pipelines/vk_tiles_pipeline.h"
-#include "vk_tiles_set.h"
+#include <graphics/vulkan/descriptor_sets/vk_atlas_descriptor_set.h>
 
 static void DrawTiles()
 {
 	// Set pipeline
 	vkCmdBindPipeline(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_tiles_pipeline);
 
-	//// Set push constants
-	float pushData[] = { LEVEL_WIDTH, LEVEL_HEIGHT };
-	vkCmdPushConstants(vk_commandbuffer_main, vk_tiles_pipeline_layout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(pushData), &pushData);
-
-	vkCmdBindDescriptorSets(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_tiles_pipeline_layout, 0, 1, &vk_tiles_set, 0, nullptr);
+	vkCmdBindDescriptorSets(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_tiles_pipeline_layout, 0, 1, &vk_atlas_set, 0, nullptr);
 
 	VkDeviceSize offsets[] = { 0, 0 };
 	VkBuffer vertexBuffers[] = { vk_quad_vertexbuffer };
@@ -39,10 +35,6 @@ static void DrawObjects()
 {
 	// Set pipeline
 	vkCmdBindPipeline(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_sprite_pipeline);
-
-	// Set push constants
-	float pushData[] = { LEVEL_WIDTH, LEVEL_HEIGHT };
-	vkCmdPushConstants(vk_commandbuffer_main, vk_sprite_pipeline_layout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(pushData), &pushData);
 
 	vk_objects_instancebuffer_map[0] = {
 		.positionX = g_player.positionX,
@@ -60,7 +52,7 @@ static void DrawObjects()
 	VkBuffer vertexBuffers[] = { vk_quad_vertexbuffer, vk_objects_instancebuffer };
 	vkCmdBindVertexBuffers2(vk_commandbuffer_main, 0, _countof(vertexBuffers), vertexBuffers, offsets, nullptr, nullptr);
 
-	vkCmdDraw(vk_commandbuffer_main, 6, 2, 0, 0);
+	vkCmdDraw(vk_commandbuffer_main, 6, 1, 0, 0);
 }
 
 static void BlitImage(int swapchainImageIndex)
@@ -206,6 +198,10 @@ void DrawFrame(int swapchainImageIndex)
 	};
 
 	vkCmdBeginRenderPass2(vk_commandbuffer_main, &begin, &subBegin);
+
+	// Set push constants
+	uint32_t pushData[] = { LEVEL_WIDTH, LEVEL_HEIGHT, TILE_SIZE };
+	vkCmdPushConstants(vk_commandbuffer_main, vk_tiles_pipeline_layout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(pushData), &pushData);
 
 	DrawTiles();
 	DrawObjects();

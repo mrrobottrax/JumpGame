@@ -18,11 +18,20 @@
 #include "vk_renderimage.h"
 #include "vk_objects_instancebuffer.h"
 #include "pipelines/vk_tiles_pipeline.h"
-#include "vk_tiles_set.h"
+#include <graphics/vulkan/descriptor_sets/vk_atlas_descriptor_set.h>
 #include "vk_atlas.h"
+#include <console/console.h>
 
 void InitVulkan()
 {
+#ifdef DEBUG
+	if (!CompileShaders())
+	{
+		Log("Error compiling shaders");
+		throw runtime_error("Shader compilation error");
+	}
+#endif // DEBUG
+
 	CreateInstance();
 	PickPhysicalDevice();
 	GetQueueFamilies();
@@ -36,9 +45,9 @@ void InitVulkan()
 	CreateRenderPasses();
 	CreateSwapchain();
 	CreateVertexBuffer();
-	CreateSpritePipeline();
 	CreateAtlas();
-	CreateTilesSet();
+	CreateAtlasDescriptorSet();
+	CreateSpritePipeline();
 	CreateTilesPipeline();
 	CreateRenderImage();
 	CreateObjectsBuffer();
@@ -46,22 +55,37 @@ void InitVulkan()
 
 void EndVulkan()
 {
-	vkQueueWaitIdle(vk_queue_main);
+	VkAssert(vkQueueWaitIdle(vk_queue_main));
+	Log("Waited");
 
 	DestroyObjectsBuffer();
+	Log("DestroyObjectsBuffer");
 	DestroyRenderImage();
-	DestroyTilesPipeline();
-	DestroyTilesSet();
+	Log("DestroyRenderImage");
+	DestroyAtlasDescriptorSet();
+	Log("DestroyTilesSet");
 	DestroyAtlas();
+	Log("DestroyAtlas");
+	DestroyTilesPipeline();
+	Log("DestroyTilesPipeline");
 	DestroySpritePipeline();
+	Log("DestroySpritePipeline");
 	DestroyVertexBuffer();
+	Log("DestroyVertexBuffer");
 	DestroyRenderPasses();
+	Log("DestroyRenderPasses");
 	DestroySwapchain();
+	Log("DestroySwapchain");
 	DestroySyncObjects();
+	Log("DestroySyncObjects");
 	DestroyCommandBuffers();
+	Log("DestroyCommandBuffers");
 	DestroySurface();
+	Log("DestroySurface");
 	DestroyDevice();
+	Log("DestroyDevice");
 	DestroyInstance();
+	Log("DestroyInstance");
 }
 
 void RenderFrameVulkan()

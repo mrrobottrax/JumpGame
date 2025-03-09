@@ -2,6 +2,7 @@
 #include "window.h"
 #include "input/input.h"
 #include "application/application.h"
+#include <exceptions/exceptions.h>
 
 extern HINSTANCE hInstance;
 
@@ -15,11 +16,11 @@ static void FullscreenEnable();
 void MAGE_CreateWindow()
 {
 	cursor = (HCURSOR)LoadImage(NULL,
-								IDC_ARROW,
-								IMAGE_CURSOR,
-								0,
-								0,
-								LR_DEFAULTSIZE | LR_SHARED);
+		IDC_ARROW,
+		IMAGE_CURSOR,
+		0,
+		0,
+		LR_DEFAULTSIZE | LR_SHARED);
 
 	/*icon = (HICON)LoadImage(hInstance,
 							MAKEINTRESOURCE(IDI_ICON1),
@@ -71,7 +72,7 @@ void MAGE_CreateWindow()
 	ShowWindow(hwnd, SW_SHOWNORMAL);
 	MAGE_SetFullscreen(g_WindowData.fullscreen);
 
-	//ThrowIfFailed(CoInitializeEx(nullptr, COINIT_MULTITHREADED));
+	ThrowIfFailed(CoInitializeEx(nullptr, COINIT_MULTITHREADED));
 }
 
 void MAGE_ToggleFullscreen()
@@ -86,7 +87,10 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 		case WM_CLOSE:
-			DestroyWindow(::hwnd);
+			if (!DestroyWindow(::hwnd))
+			{
+				throw WindowsException("Couldn't destroy window");
+			}
 			break;
 
 		case WM_DESTROY:

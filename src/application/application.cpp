@@ -3,6 +3,7 @@
 #include "application.h"
 #include "graphics/graphics.h"
 #include "time/time.h"
+#include <console/console.h>
 
 void MAGE_Init()
 {
@@ -28,6 +29,7 @@ void MAGE_End()
 {
 	MAGE_EndGraphics();
 
+	Log("End1");
 #ifdef DEBUG
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDOUT);
@@ -35,7 +37,9 @@ void MAGE_End()
 	_CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDOUT);
 	_CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDOUT);
+	Log("End2");
 	_CrtDumpMemoryLeaks();
+	Log("End3");
 	system("pause");
 #endif // DEBUG
 }
