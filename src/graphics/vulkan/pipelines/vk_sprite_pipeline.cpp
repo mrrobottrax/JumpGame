@@ -156,7 +156,7 @@ void CreateSpritePipeline()
 
 	VkPipelineDynamicStateCreateInfo dynamicState{
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO,
-		.dynamicStateCount = 2,
+		.dynamicStateCount = _countof(dynamicStates),
 		.pDynamicStates = dynamicStates,
 	};
 

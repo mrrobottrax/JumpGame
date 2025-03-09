@@ -56,36 +56,21 @@ void InitVulkan()
 void EndVulkan()
 {
 	VkAssert(vkQueueWaitIdle(vk_queue_main));
-	Log("Waited");
 
 	DestroyObjectsBuffer();
-	Log("DestroyObjectsBuffer");
 	DestroyRenderImage();
-	Log("DestroyRenderImage");
 	DestroyAtlasDescriptorSet();
-	Log("DestroyTilesSet");
 	DestroyAtlas();
-	Log("DestroyAtlas");
 	DestroyTilesPipeline();
-	Log("DestroyTilesPipeline");
 	DestroySpritePipeline();
-	Log("DestroySpritePipeline");
 	DestroyVertexBuffer();
-	Log("DestroyVertexBuffer");
 	DestroyRenderPasses();
-	Log("DestroyRenderPasses");
 	DestroySwapchain();
-	Log("DestroySwapchain");
 	DestroySyncObjects();
-	Log("DestroySyncObjects");
 	DestroyCommandBuffers();
-	Log("DestroyCommandBuffers");
 	DestroySurface();
-	Log("DestroySurface");
 	DestroyDevice();
-	Log("DestroyDevice");
 	DestroyInstance();
-	Log("DestroyInstance");
 }
 
 void RenderFrameVulkan()
