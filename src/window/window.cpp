@@ -72,7 +72,7 @@ void MAGE_CreateWindow()
 	ShowWindow(hwnd, SW_SHOWNORMAL);
 	MAGE_SetFullscreen(g_WindowData.fullscreen);
 
-	ThrowIfFailed(CoInitializeEx(nullptr, COINIT_MULTITHREADED));
+	//ThrowIfFailed(CoInitializeEx(nullptr, COINIT_MULTITHREADED));
 }
 
 void MAGE_ToggleFullscreen()

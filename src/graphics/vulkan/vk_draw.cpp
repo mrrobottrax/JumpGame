@@ -36,6 +36,8 @@ static void DrawObjects()
 	// Set pipeline
 	vkCmdBindPipeline(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_sprite_pipeline);
 
+	vkCmdBindDescriptorSets(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_sprite_pipeline_layout, 0, 1, &vk_atlas_set, 0, nullptr);
+
 	vk_objects_instancebuffer_map[0] = {
 		.positionX = g_player.positionX,
 		.positionY = g_player.positionY,
