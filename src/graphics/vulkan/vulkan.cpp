@@ -49,16 +49,17 @@ void InitVulkan()
 	CreateVertexBuffer();
 	CreateObjectsBuffer();
 	CreateAtlasTexture();
+	CreateRenderImage();
 
 	AllocateStaticMemory();
 
 	LoadAtlasTexture();
 	LoadVertexBuffer();
+	CreateRenderImageView();
 
 	CreateAtlasDescriptorSet();
 	CreateSpritePipeline();
 	CreateTilesPipeline();
-	CreateRenderImage();
 }
 
 void EndVulkan()

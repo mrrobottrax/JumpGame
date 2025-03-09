@@ -17,6 +17,8 @@ struct MemoryAllocation
 inline VkDeviceMemory vk_static_host_memory;
 inline void *vk_static_host_memory_map;
 
+inline VkDeviceMemory vk_static_local_memory;
+
 void GetMemoryTypes();
 void AllocateStaticMemory();
 void FreeStaticMemory();

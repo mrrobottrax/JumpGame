@@ -2,22 +2,36 @@
 #include "file.h"
 #include "exceptions/exceptions.h"
 
-static void OnFileReadComplete(_In_    DWORD dwErrorCode,
-							   _In_    DWORD dwNumberOfBytesTransfered,
-							   _Inout_ LPOVERLAPPED lpOverlapped
+struct MyOverlapped : OVERLAPPED
+{
+	DWORD errorCode;
+	MyOverlapped()
+	{
+		memset(static_cast<OVERLAPPED *>(this), 0, sizeof(OVERLAPPED));
+		errorCode = ERROR_SUCCESS;
+	}
+};
+
+static void OnFileReadComplete(
+	_In_    DWORD dwErrorCode,
+	_In_    DWORD dwNumberOfBytesTransfered,
+	_Inout_ LPOVERLAPPED lpOverlapped
 )
 {
-	if (!SetEvent(lpOverlapped->hEvent))
-	{
-		throw WindowsException("Failed to set event.");
-	}
+	MyOverlapped *myOverlapped = static_cast<MyOverlapped *>(lpOverlapped);
+	myOverlapped->errorCode = dwErrorCode;
+	SetEvent(myOverlapped->hEvent);
 }
 
 FileHandle LoadEntireFile(const wchar_t name[])
 {
 	wstring fullpath = wstring(L"data\\") + name;
 
-	HANDLE hFile = CreateFile2(fullpath.c_str(), GENERIC_READ, FILE_SHARE_READ, OPEN_EXISTING, NULL);
+	CREATEFILE2_EXTENDED_PARAMETERS params = { 0 };
+	params.dwSize = sizeof(params);
+	params.dwFileFlags = FILE_FLAG_OVERLAPPED;
+
+	HANDLE hFile = CreateFile2(fullpath.c_str(), GENERIC_READ, FILE_SHARE_READ, OPEN_EXISTING, &params);
 	if (hFile == NULL)
 	{
 		throw new WindowsException("Couldn't file handle.");
@@ -40,15 +54,16 @@ FileHandle LoadEntireFile(const wchar_t name[])
 	HANDLE hEvent = CreateEventEx(NULL, L"Open File Event", CREATE_EVENT_MANUAL_RESET, SYNCHRONIZE | EVENT_MODIFY_STATE);
 	if (hEvent == NULL)
 	{
-		throw new WindowsException("Couldn't create event");
+		throw WindowsException("Couldn't create event");
 	}
 
-	OVERLAPPED overlapped{
-		.hEvent = hEvent,
-	};
+	MyOverlapped overlapped{};
+	overlapped.hEvent = hEvent;
 
 	if (!ReadFileEx(hFile, pData, (DWORD)size.QuadPart, &overlapped, OnFileReadComplete))
 	{
+		CloseHandle(hEvent);
+		CloseHandle(hFile);
 		throw WindowsException("Couldn't read file.");
 	}
 
