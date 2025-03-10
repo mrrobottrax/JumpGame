@@ -72,7 +72,7 @@ void InitVulkan()
 
 void EndVulkan()
 {
-	VkAssert(vkQueueWaitIdle(vk_queue_main));
+	VkAssert(vkDeviceWaitIdle(vk_device));
 
 	FreeStaticMemory();
 
