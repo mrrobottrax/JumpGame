@@ -34,7 +34,7 @@ int WINAPI wWinMain(
 	}
 	catch (std::exception &e)
 	{
-		printf(e.what());
+		printf("%s\n", e.what());
 		MessageBoxA(hwnd, e.what(), NULL, MB_SYSTEMMODAL);
 		system("pause");
 		return 1;

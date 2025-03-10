@@ -45,13 +45,7 @@ static void DrawObjects()
 	objectData[0] = {
 		.positionX = g_player.positionX,
 		.positionY = g_player.positionY,
-		.positionZ = 0.5f,
-	};
-
-	objectData[1] = {
-		.positionX = 10,
-		.positionY = 10,
-		.positionZ = 0.5f,
+		.spriteIndex = 24,
 	};
 
 	VkDeviceSize offsets[] = { 0, 0 };

@@ -66,7 +66,7 @@ static void DecompressSTOREDBlock(InStream &stream, OutStream &out)
 
 	for (unsigned int i = 0; i < length; ++i)
 	{
-		out.AppendByte(stream.ReadBits(8));
+		out.AppendByte((unsigned char)stream.ReadBits(8));
 	}
 }
 

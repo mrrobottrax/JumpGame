@@ -177,6 +177,24 @@ static void DecompressImageData(UncompressedImage &image, void const *pData)
 
 		switch (mode)
 		{
+			// NONE
+			case 0:
+			{
+				for (unsigned int column = 0; column < image.width; ++column)
+				{
+					unsigned char r = outStream.ReadNextByte();
+					unsigned char g = outStream.ReadNextByte();
+					unsigned char b = outStream.ReadNextByte();
+					unsigned char a = outStream.ReadNextByte();
+
+					image.pData[index++] = r;
+					image.pData[index++] = g;
+					image.pData[index++] = b;
+					image.pData[index++] = a;
+				}
+			}
+			break;
+
 			// SUB
 			case 1:
 			{

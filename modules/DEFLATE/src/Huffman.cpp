@@ -237,9 +237,9 @@ static void ReadLengths(InStream &stream,
 
 void ReadTrees(InStream &stream, Tree<LITERAL_LENGTH_ALPHABET_SIZE> &literalLengthTree, Tree<DISTANCE_ALPHABET_SIZE> &distanceTree)
 {
-	unsigned char HLIT = stream.ReadBits(5);
-	unsigned char HDIST = stream.ReadBits(5);
-	unsigned char HCLEN = stream.ReadBits(4);
+	unsigned short HLIT = stream.ReadBits(5);
+	unsigned short HDIST = stream.ReadBits(5);
+	unsigned short HCLEN = stream.ReadBits(4);
 
 	// Init codelengths alphabet
 	Tree<CODELENGTHS_ALPHABET_SIZE, MAX_CODELENGTH_LENGTH> codelengthsTree{};
@@ -372,7 +372,7 @@ static unsigned int ReadLengthExtraBits(InStream &stream, unsigned int const &va
 		base = a * b + c + 11;
 	}
 
-	unsigned char extraBits = stream.ReadBits(bits);
+	unsigned short extraBits = stream.ReadBits(bits);
 
 	unsigned int length = base + extraBits;
 	return length;

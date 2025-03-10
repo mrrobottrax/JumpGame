@@ -8,7 +8,7 @@ inline MemoryAllocation vk_objects_instancebuffer_memory;
 
 struct ObjectData
 {
-	float positionX, positionY, positionZ;
+	float positionX, positionY;
 	uint32_t spriteIndex;
 };
 

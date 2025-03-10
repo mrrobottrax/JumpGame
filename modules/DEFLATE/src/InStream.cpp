@@ -35,17 +35,17 @@ unsigned int InStream::ReadUINT(unsigned char amt)
 	return integer;
 }
 
-unsigned char InStream::ReadBits(unsigned char amt)
+unsigned short InStream::ReadBits(unsigned short amt)
 {
-	if (amt > 8)
+	/*if (amt > 8)
 	{
 		throw std::runtime_error("Can't read more than 8 bits into byte");
-	}
+	}*/
 
-	unsigned char byte = 0;
+	unsigned short byte = 0;
 	bool bit;
 
-	for (unsigned char i = 0; i < amt; ++i)
+	for (unsigned short i = 0; i < amt; ++i)
 	{
 		bit = ReadNextBit();
 		byte |= bit << i;

@@ -10,6 +10,6 @@ public:
 	{}
 
 	bool ReadNextBit();
-	unsigned char ReadBits(unsigned char amt);
+	unsigned short ReadBits(unsigned short amt);
 	unsigned int ReadUINT(unsigned char amt);
 };

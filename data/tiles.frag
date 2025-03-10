@@ -23,11 +23,11 @@ void main()
     ivec2 texCoord = fine - ivec2(rough * pc.tileSize);
     texCoord.y = pc.tileSize - texCoord.y - 1;
 
-    ivec2 texSize = textureSize(atlas, 0) / pc.tileSize;
-    uint wrap = (tileIndex / texSize.x) * texSize.x;
-    ivec2 baseCoord = ivec2(tileIndex - wrap, wrap);
+    ivec2 atlasSize = textureSize(atlas, 0) / pc.tileSize;
+    uint atlasY = tileIndex / atlasSize.x;
 
-    colour = texelFetch(atlas, texCoord + baseCoord * pc.tileSize, 0);
+    ivec2 baseCoord = ivec2(tileIndex - atlasY * atlasSize.x, atlasY) * pc.tileSize;
 
-    colour = vec4(baseCoord * pc.tileSize, 0, 1);
+    colour = texelFetch(atlas, texCoord + baseCoord, 0);
+    if (colour.a < 0.5) discard;
 }
