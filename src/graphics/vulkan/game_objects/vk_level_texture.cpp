@@ -1,24 +1,21 @@
 #include "pch.h"
-#include "vk_atlas_texture.h"
-#include <console/console.h>
+#include "vk_level_texture.h"
+#include <window/window.h>
 #include <graphics/vulkan/system_objects/vk_queuefamilies.h>
 #include <graphics/vulkan/vulkan.h>
 #include <graphics/vulkan/system_objects/vk_device.h>
 #include <graphics/vulkan/system_objects/vk_commandbuffers.h>
 #include <graphics/vulkan/system_objects/vk_queues.h>
+#include <game/level.h>
 #include <graphics/vulkan/vk_image_util.h>
 
-static UncompressedImage atlasImage;
-
-void CreateAtlasTexture()
+void CreateLevelImage()
 {
-	atlasImage = (UncompressedImage &&)LoadAndUncompressPNG(L"data/tilemap.png");
-
 	VkImageCreateInfo imageInfo{
 		.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
 		.imageType = VK_IMAGE_TYPE_2D,
-		.format = VK_FORMAT_R8G8B8A8_SRGB,
-		.extent = {.width = atlasImage.width, .height = atlasImage.height, .depth = 1},
+		.format = VK_FORMAT_R16_UINT,
+		.extent = {.width = LEVEL_WIDTH, .height = LEVEL_HEIGHT, .depth = 1},
 		.mipLevels = 1,
 		.arrayLayers = 1,
 		.samples = VK_SAMPLE_COUNT_1_BIT,
@@ -30,17 +27,19 @@ void CreateAtlasTexture()
 		.initialLayout = VK_IMAGE_LAYOUT_PREINITIALIZED,
 	};
 
-	VkAssert(vkCreateImage(vk_device, &imageInfo, nullptr, &vk_atlas_image));
+	VkAssert(vkCreateImage(vk_device, &imageInfo, nullptr, &vk_level_image));
 }
 
-void LoadAtlasTexture()
+void CreateLevelImageView()
 {
+	memcpy(vk_level_memory.map, levelData, sizeof(levelData));
+
 	// Create image view
 	VkImageViewCreateInfo viewInfo{
 		.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
-		.image = vk_atlas_image,
+		.image = vk_level_image,
 		.viewType = VK_IMAGE_VIEW_TYPE_2D,
-		.format = VK_FORMAT_R8G8B8A8_SRGB,
+		.format = VK_FORMAT_R16_UINT,
 		.components = {VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY},
 		.subresourceRange = {
 			.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
@@ -49,7 +48,7 @@ void LoadAtlasTexture()
 		},
 	};
 
-	VkAssert(vkCreateImageView(vk_device, &viewInfo, nullptr, &vk_atlas_view));
+	VkAssert(vkCreateImageView(vk_device, &viewInfo, nullptr, &vk_level_view));
 
 	VkImageSubresource subResource{
 		.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
@@ -57,25 +56,23 @@ void LoadAtlasTexture()
 		.arrayLayer = 0,
 	};
 	VkSubresourceLayout layout;
-	vkGetImageSubresourceLayout(vk_device, vk_atlas_image, &subResource, &layout);
+	vkGetImageSubresourceLayout(vk_device, vk_level_image, &subResource, &layout);
 
 	// Copy data
-	for (uint32_t row = 0; row < atlasImage.height; ++row)
+	for (uint32_t row = 0; row < LEVEL_HEIGHT; ++row)
 	{
 		memcpy(
-			(char *)vk_atlas_memory.map + row * layout.rowPitch + layout.offset,
-			atlasImage.pData + row * atlasImage.width * 4,
-			(size_t)atlasImage.width * 4
+			(char *)vk_level_memory.map + row * layout.rowPitch + layout.offset,
+			levelData + row * LEVEL_WIDTH,
+			LEVEL_WIDTH
 		);
 	}
 
-	atlasImage.~UncompressedImage();
-
-	TransitionImage(VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, vk_atlas_image);
+	TransitionImage(VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, vk_level_image);
 }
 
-void DestroyAtlasTexture()
+void DestroyLevelImage()
 {
-	vkDestroyImage(vk_device, vk_atlas_image, nullptr);
-	vkDestroyImageView(vk_device, vk_atlas_view, nullptr);
+	vkDestroyImageView(vk_device, vk_level_view, nullptr);
+	vkDestroyImage(vk_device, vk_level_image, nullptr);
 }

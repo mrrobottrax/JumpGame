@@ -16,13 +16,15 @@
 #include "system_objects/vk_device.h"
 #include "system_objects/vk_sync.h"
 #include "system_objects/vk_queues.h"
+#include "descriptor_sets/vk_level_descriptor_set.h"
 
 static void DrawTiles()
 {
 	// Set pipeline
 	vkCmdBindPipeline(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_tiles_pipeline);
 
-	vkCmdBindDescriptorSets(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_tiles_pipeline_layout, 0, 1, &vk_atlas_set, 0, nullptr);
+	VkDescriptorSet sets[] = { vk_atlas_set , vk_level_set };
+	vkCmdBindDescriptorSets(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_tiles_pipeline_layout, 0, _countof(sets), sets, 0, nullptr);
 
 	VkDeviceSize offsets[] = { 0, 0 };
 	VkBuffer vertexBuffers[] = { vk_quad_vertexbuffer };
@@ -204,7 +206,7 @@ void DrawFrame(int swapchainImageIndex)
 	vkCmdBeginRenderPass2(vk_commandbuffer_main, &begin, &subBegin);
 
 	// Set push constants
-	uint32_t pushData[] = { LEVEL_WIDTH, LEVEL_HEIGHT, TILE_SIZE };
+	int32_t pushData[] = { LEVEL_WIDTH, LEVEL_HEIGHT, TILE_SIZE };
 	vkCmdPushConstants(vk_commandbuffer_main, vk_tiles_pipeline_layout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(pushData), &pushData);
 
 	DrawTiles();

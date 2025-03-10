@@ -212,6 +212,9 @@
     <ClCompile Include="src\game\game.cpp" />
     <ClCompile Include="src\game\player.cpp" />
     <ClCompile Include="src\graphics\graphics.cpp" />
+    <ClCompile Include="src\graphics\vulkan\descriptor_sets\vk_level_descriptor_set.cpp" />
+    <ClCompile Include="src\graphics\vulkan\descriptor_sets\vk_static_descriptor_pool.cpp" />
+    <ClCompile Include="src\graphics\vulkan\game_objects\vk_level_texture.cpp" />
     <ClCompile Include="src\graphics\vulkan\game_objects\vk_point_sampler.cpp" />
     <ClCompile Include="src\graphics\vulkan\pipelines\vk_shadermodule.cpp" />
     <ClCompile Include="src\graphics\vulkan\pipelines\vk_tiles_pipeline.cpp" />
@@ -220,6 +223,7 @@
     <ClCompile Include="src\graphics\vulkan\renderpasses\vk_renderpasses.cpp" />
     <ClCompile Include="src\graphics\vulkan\game_objects\vk_objects_instancebuffer.cpp" />
     <ClCompile Include="src\graphics\vulkan\pipelines\vk_sprite_pipeline.cpp" />
+    <ClCompile Include="src\graphics\vulkan\vk_image_util.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_memory.cpp" />
     <ClCompile Include="src\graphics\vulkan\renderpasses\vk_objects_pass.cpp" />
     <ClCompile Include="src\graphics\vulkan\system_objects\vk_commandbuffers.cpp" />
@@ -252,8 +256,12 @@
     <ClInclude Include="src\exceptions\exceptions.h" />
     <ClInclude Include="src\file\file.h" />
     <ClInclude Include="src\game\game.h" />
+    <ClInclude Include="src\game\level.h" />
     <ClInclude Include="src\game\player.h" />
     <ClInclude Include="src\graphics\graphics.h" />
+    <ClInclude Include="src\graphics\vulkan\descriptor_sets\vk_level_descriptor_set.h" />
+    <ClInclude Include="src\graphics\vulkan\descriptor_sets\vk_static_descriptor_pool.h" />
+    <ClInclude Include="src\graphics\vulkan\game_objects\vk_level_texture.h" />
     <ClInclude Include="src\graphics\vulkan\game_objects\vk_point_sampler.h" />
     <ClInclude Include="src\graphics\vulkan\pipelines\vk_shadermodule.h" />
     <ClInclude Include="src\graphics\vulkan\pipelines\vk_tiles_pipeline.h" />
@@ -262,6 +270,7 @@
     <ClInclude Include="src\graphics\vulkan\renderpasses\vk_renderpasses.h" />
     <ClInclude Include="src\graphics\vulkan\game_objects\vk_objects_instancebuffer.h" />
     <ClInclude Include="src\graphics\vulkan\pipelines\vk_sprite_pipeline.h" />
+    <ClInclude Include="src\graphics\vulkan\vk_image_util.h" />
     <ClInclude Include="src\graphics\vulkan\vk_memory.h" />
     <ClInclude Include="src\graphics\vulkan\renderpasses\vk_objects_pass.h" />
     <ClInclude Include="src\graphics\vulkan\system_objects\vk_commandbuffers.h" />

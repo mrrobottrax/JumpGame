@@ -9,6 +9,7 @@ inline MemoryTypes vk_memory_types;
 
 struct MemoryAllocation
 {
+	VkMappedMemoryRange range;
 	VkDeviceMemory memory;
 	VkDeviceSize offset;
 	void *map;

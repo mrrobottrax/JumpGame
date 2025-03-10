@@ -5,6 +5,7 @@
 #include "../renderpasses/vk_objects_pass.h"
 #include "vk_shadermodule.h"
 #include <graphics/vulkan/descriptor_sets/vk_atlas_descriptor_set.h>
+#include <graphics/vulkan/descriptor_sets/vk_level_descriptor_set.h>
 
 void CreateTilesPipeline()
 {
@@ -16,7 +17,7 @@ void CreateTilesPipeline()
 		.size = 12,
 	};
 
-	VkDescriptorSetLayout sets[] = { vk_atlas_set_layout };
+	VkDescriptorSetLayout sets[] = { vk_atlas_set_layout, vk_level_set_layout };
 
 	VkPipelineLayoutCreateInfo layoutInfo{
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,

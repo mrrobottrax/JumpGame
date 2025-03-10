@@ -1,8 +1,8 @@
 #version 450
 
 layout(push_constant) uniform PushConstants {
-    uvec2 levelSize;
-    uint tileSize;
+    ivec2 levelSize;
+    int tileSize;
 } pc;
 
 layout(location = 0) in vec2 aPos;

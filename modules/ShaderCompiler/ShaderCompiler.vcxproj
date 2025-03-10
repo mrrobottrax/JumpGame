@@ -201,7 +201,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\exceptions\exceptions.cpp" />
-    <ClCompile Include="src\file\file.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Sanitizer|x64'">Create</PrecompiledHeader>
@@ -211,7 +210,6 @@
   <ItemGroup>
     <ClInclude Include="include\shader_compiler.h" />
     <ClInclude Include="src\exceptions\exceptions.h" />
-    <ClInclude Include="src\file\file.h" />
     <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

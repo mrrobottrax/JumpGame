@@ -8,6 +8,7 @@
 #include "game_objects/vk_objects_instancebuffer.h"
 #include "game_objects/vk_vertexbuffer.h"
 #include "game_objects/vk_renderimage.h"
+#include "game_objects/vk_level_texture.h"
 
 void GetMemoryTypes()
 {
@@ -132,7 +133,11 @@ static VkDeviceSize AllocateMemory(MemoryEntry(&entries)[size], VkDeviceMemory &
 	{
 		offset = (VkDeviceSize)ceilf((float)offset / entries[i].requirements.alignment) * entries[i].requirements.alignment;
 
+		entries[i].allocation.range.offset = offset;
 		entries[i].allocation.offset = offset;
+		entries[i].allocation.range.size = entries[i].requirements.size;
+		entries[i].allocation.range.pNext = nullptr;
+		entries[i].allocation.range.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
 		offset += entries[i].requirements.size;
 	}
 
@@ -145,12 +150,12 @@ static VkDeviceSize AllocateMemory(MemoryEntry(&entries)[size], VkDeviceMemory &
 
 	VkAssert(vkAllocateMemory(vk_device, &allocateInfo, nullptr, &memory));
 
-
 	offset = 0;
 	for (int i = 0; i < _countof(entries); ++i)
 	{
 		offset = (VkDeviceSize)ceilf((float)offset / entries[i].requirements.alignment) * entries[i].requirements.alignment;
 
+		entries[i].allocation.range.memory = memory;
 		entries[i].allocation.memory = memory;
 		entries[i].BindMemory();
 
@@ -165,7 +170,8 @@ static void AllocateHostVisibleMemory()
 	MemoryEntry entries[] = {
 		{vk_atlas_memory, vk_atlas_image},
 		{vk_objects_instancebuffer_memory, vk_objects_instancebuffer},
-		{vk_quad_vertexbuffer_memory, vk_quad_vertexbuffer}
+		{vk_quad_vertexbuffer_memory, vk_quad_vertexbuffer},
+		{vk_level_memory, vk_level_image},
 	};
 
 	VkDeviceSize size = AllocateMemory(entries, vk_static_host_memory, vk_memory_types.local_hostvisible);

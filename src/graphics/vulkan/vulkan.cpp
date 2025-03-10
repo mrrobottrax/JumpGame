@@ -21,6 +21,9 @@
 #include "game_objects/vk_objects_instancebuffer.h"
 #include "game_objects/vk_atlas_texture.h"
 #include "game_objects/vk_point_sampler.h"
+#include "game_objects/vk_level_texture.h"
+#include "descriptor_sets/vk_level_descriptor_set.h"
+#include "descriptor_sets/vk_static_descriptor_pool.h"
 
 void InitVulkan()
 {
@@ -50,14 +53,19 @@ void InitVulkan()
 	CreateObjectsBuffer();
 	CreateAtlasTexture();
 	CreateRenderImage();
+	CreateLevelImage();
 
 	AllocateStaticMemory();
 
 	LoadAtlasTexture();
 	LoadVertexBuffer();
 	CreateRenderImageView();
+	CreateLevelImageView();
+
+	CreateDescriptorPool();
 
 	CreateAtlasDescriptorSet();
+	CreateLevelDescriptorSet();
 	CreateSpritePipeline();
 	CreateTilesPipeline();
 }
@@ -68,6 +76,9 @@ void EndVulkan()
 
 	FreeStaticMemory();
 
+	DestroyDescriptorPool();
+	DestroyLevelDescriptorSet();
+	DestroyLevelImage();
 	DestroyPointSampler();
 	DestroyObjectsBuffer();
 	DestroyRenderImage();

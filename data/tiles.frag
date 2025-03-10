@@ -1,21 +1,33 @@
 #version 450
 
-layout(binding = 0) uniform sampler2D atlas;
+layout(set = 0, binding = 0) uniform sampler2D atlas;
+layout(set = 1, binding = 0) uniform usampler2D level;
 
 layout(location = 0) in vec2 tilePos;
+
 layout(location = 0) out vec4 colour;
 
 layout(push_constant) uniform PushConstants {
-    uvec2 levelSize;
-	uint tileSize;
+    ivec2 levelSize;
+    int tileSize;
 } pc;
 
 void main()
 {
-    uvec2 rough = uvec2(floor(tilePos));
-    uvec2 fine = uvec2(floor(tilePos * pc.tileSize));
-	uvec2 texCoord = fine - rough * pc.tileSize;
-	texCoord.y = pc.tileSize - texCoord.y - 1;
-    vec4 colourTexture = texelFetch(atlas, ivec2(texCoord), 0);
-    colour = colourTexture;
+    ivec2 rough = ivec2(floor(tilePos));
+    ivec2 fine = ivec2(floor(tilePos * pc.tileSize));
+
+    ivec2 levelPos = ivec2(rough.x, pc.levelSize.y - rough.y - 1);
+    uint tileIndex = texelFetch(level, levelPos, 0).r;
+
+    ivec2 texCoord = fine - ivec2(rough * pc.tileSize);
+    texCoord.y = pc.tileSize - texCoord.y - 1;
+
+    ivec2 texSize = textureSize(atlas, 0) / pc.tileSize;
+    uint wrap = (tileIndex / texSize.x) * texSize.x;
+    ivec2 baseCoord = ivec2(tileIndex - wrap, wrap);
+
+    colour = texelFetch(atlas, texCoord + baseCoord * pc.tileSize, 0);
+
+    colour = vec4(baseCoord * pc.tileSize, 0, 1);
 }
