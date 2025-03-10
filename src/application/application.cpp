@@ -51,15 +51,28 @@ void MAGE_FrameLoop()
 	{
 		chrono::system_clock::time_point currentTime = chrono::system_clock::now();
 
+		bool ranCatchupFrame = false;
 		bool shouldRender = false;
 		constexpr chrono::system_clock::duration delta((int)(10000000.0 / ticksPerSecond));
 		while (currentTime - prevFrame > delta)
 		{
 			prevFrame += delta;
 
-			if (currentTime - prevFrame > delta)
+			if (!ranCatchupFrame && currentTime - prevFrame > delta)
 			{
+				while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+				{
+					TranslateMessage(&msg);
+					DispatchMessage(&msg);
+
+					if (msg.message == WM_QUIT)
+					{
+						return;
+					}
+				}
+
 				Game_Tick();
+				ranCatchupFrame = true; // < 30fps = TOO BAD!
 			}
 
 			shouldRender = true;
