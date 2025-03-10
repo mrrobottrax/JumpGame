@@ -25,6 +25,8 @@
 #include "descriptor_sets/vk_level_descriptor_set.h"
 #include "descriptor_sets/vk_static_descriptor_pool.h"
 
+static uint32_t nextImageIndex = 0;
+
 void InitVulkan()
 {
 #ifdef DEBUG
@@ -96,16 +98,15 @@ void EndVulkan()
 	DestroyInstance();
 }
 
-void RenderFrameVulkan()
+void WaitForFrameVulkan()
 {
-	if (vkGetFenceStatus(vk_device, vk_fence_main) != VK_SUCCESS) return;
+	VkAssert(vkWaitForFences(vk_device, 1, &vk_fence_main, VK_TRUE, UINT64_MAX));
 	vkResetFences(vk_device, 1, &vk_fence_main);
 
-	uint32_t imageIndex = 0;
 	VkResult result;
 	while (true)
 	{
-		result = vkAcquireNextImageKHR(vk_device, vk_swapchain, UINT64_MAX, vk_semaphore_acquireimage, VK_NULL_HANDLE, &imageIndex);
+		result = vkAcquireNextImageKHR(vk_device, vk_swapchain, UINT64_MAX, vk_semaphore_acquireimage, VK_NULL_HANDLE, &nextImageIndex);
 		if (result == VK_ERROR_OUT_OF_DATE_KHR)
 		{
 			RecreateSwapchain();
@@ -114,8 +115,11 @@ void RenderFrameVulkan()
 
 		break;
 	}
+}
 
-	DrawFrame(imageIndex);
+void RenderFrameVulkan()
+{
+	DrawFrame(nextImageIndex);
 
 	VkPresentInfoKHR present{
 		.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
@@ -123,10 +127,10 @@ void RenderFrameVulkan()
 		.pWaitSemaphores = &vk_semaphore_rendering,
 		.swapchainCount = 1,
 		.pSwapchains = &vk_swapchain,
-		.pImageIndices = &imageIndex,
+		.pImageIndices = &nextImageIndex,
 	};
 
-	result = vkQueuePresentKHR(vk_queue_main, &present);
+	VkResult result = vkQueuePresentKHR(vk_queue_main, &present);
 	if (result == VK_SUBOPTIMAL_KHR || result == VK_ERROR_OUT_OF_DATE_KHR)
 	{
 		VkAssert(vkWaitForFences(vk_device, 1, &vk_fence_main, VK_TRUE, UINT64_MAX));

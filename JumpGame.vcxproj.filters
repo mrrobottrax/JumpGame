@@ -120,9 +120,6 @@
     <ClCompile Include="src\graphics\vulkan\descriptor_sets\vk_atlas_descriptor_set.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\time\time.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\graphics\vulkan\game_objects\vk_point_sampler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

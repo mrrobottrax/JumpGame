@@ -30,16 +30,23 @@ static void CreateSwapchainObjects()
 		.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE,
 		.preTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR,
 		.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
-		.presentMode = VK_PRESENT_MODE_FIFO_RELAXED_KHR,
+		.presentMode = VK_PRESENT_MODE_FIFO_KHR,
 		.clipped = VK_TRUE,
 	};
 
 	VkAssert(vkCreateSwapchainKHR(vk_device, &createInfo, nullptr, &vk_swapchain));
 
+	VkAssert(vkGetSwapchainImagesKHR(vk_device, vk_swapchain, &vk_swapchain_image_count, nullptr));
+
+	vk_swapchain_images = new VkImage[vk_swapchain_image_count];
+	vk_swapchain_image_views = new VkImageView[vk_swapchain_image_count];
+
 	VkAssert(vkGetSwapchainImagesKHR(vk_device, vk_swapchain, &vk_swapchain_image_count, vk_swapchain_images));
 
 	for (uint32_t i = 0; i < vk_swapchain_image_count; ++i)
 	{
+#pragma warning (push)
+#pragma warning (disable:6385) // Reading invalid data from vk_swapchain_images
 		VkImageViewCreateInfo viewInfo{
 			.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
 			.image = vk_swapchain_images[i],
@@ -50,33 +57,11 @@ static void CreateSwapchainObjects()
 				.levelCount = 1,
 				.layerCount = 1,
 			},
+#pragma warning (pop)
 		};
 
 		VkAssert(vkCreateImageView(vk_device, &viewInfo, nullptr, &vk_swapchain_image_views[i]));
-
-		//VkFramebufferCreateInfo framebufferInfo{
-		//	.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
-		//	.renderPass = vk_objects_pass,
-		//	.attachmentCount = 1,
-		//	.pAttachments = &vk_swapchain_image_views[i],
-		//	.width = vk_swapchain_width,
-		//	.height = vk_swapchain_height,
-		//	.layers = 1,
-		//};
-
-		//vkCreateFramebuffer(vk_device, &framebufferInfo, nullptr, &vk_swapchain_framebuffers[i]);
 	}
-}
-
-static void DestroySwapchainObjects()
-{
-	for (uint32_t i = 0; i < vk_swapchain_image_count; ++i)
-	{
-		//vkDestroyFramebuffer(vk_device, vk_swapchain_framebuffers[i], nullptr);
-		vkDestroyImageView(vk_device, vk_swapchain_image_views[i], nullptr);
-	}
-
-	vkDestroySwapchainKHR(vk_device, vk_swapchain, nullptr);
 }
 
 void CreateSwapchain()
@@ -87,12 +72,8 @@ void CreateSwapchain()
 	vk_swapchain_width = capabilities.currentExtent.width;
 	vk_swapchain_height = capabilities.currentExtent.height;
 
-	vk_swapchain_image_count = capabilities.minImageCount + 1;
+	vk_swapchain_image_count = capabilities.minImageCount;
 	if (vk_swapchain_image_count > capabilities.maxImageCount) vk_swapchain_image_count = capabilities.maxImageCount;
-
-	vk_swapchain_images = new VkImage[vk_swapchain_image_count];
-	//vk_swapchain_framebuffers = new VkFramebuffer[vk_swapchain_image_count];
-	vk_swapchain_image_views = new VkImageView[vk_swapchain_image_count];
 
 	CreateSwapchainObjects();
 	CalculateRenderScale();
@@ -100,10 +81,14 @@ void CreateSwapchain()
 
 void DestroySwapchain()
 {
-	DestroySwapchainObjects();
+	for (uint32_t i = 0; i < vk_swapchain_image_count; ++i)
+	{
+		vkDestroyImageView(vk_device, vk_swapchain_image_views[i], nullptr);
+	}
+
+	vkDestroySwapchainKHR(vk_device, vk_swapchain, nullptr);
 
 	delete[] vk_swapchain_images;
-	//delete[] vk_swapchain_framebuffers;
 	delete[] vk_swapchain_image_views;
 }
 
@@ -114,13 +99,6 @@ void GetSwapchainFormat()
 
 void RecreateSwapchain()
 {
-	VkSurfaceCapabilitiesKHR capabilities;
-	VkAssert(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(vk_physicaldevice, vk_surface, &capabilities));
-
-	vk_swapchain_width = capabilities.currentExtent.width;
-	vk_swapchain_height = capabilities.currentExtent.height;
-
-	DestroySwapchainObjects();
-	CreateSwapchainObjects();
-	CalculateRenderScale();
+	DestroySwapchain();
+	CreateSwapchain();
 }

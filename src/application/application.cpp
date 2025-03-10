@@ -2,8 +2,8 @@
 #include "window/window.h"
 #include "application.h"
 #include "graphics/graphics.h"
+#include "game/game.h"
 #include "time/time.h"
-#include <console/console.h>
 
 void MAGE_Init()
 {
@@ -43,28 +43,39 @@ void MAGE_End()
 #endif // DEBUG
 }
 
+static chrono::system_clock::time_point prevFrame = chrono::system_clock::now();
 void MAGE_FrameLoop()
 {
 	MSG msg;
 	while (true)
 	{
-		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+		chrono::system_clock::time_point currentTime = chrono::system_clock::now();
 
-			if (msg.message == WM_QUIT)
-			{
-				return;
-			}
+		bool shouldRender = false;
+		constexpr chrono::system_clock::duration delta((int)(10000000.0 / ticksPerSecond));
+		while (currentTime - prevFrame > delta)
+		{
+			prevFrame += delta;
+			shouldRender = true;
 		}
 
-		MAGE_Frame();
-	}
-}
+		if (shouldRender)
+		{
+			MAGE_WaitForNextFrame();
 
-void MAGE_Frame()
-{
-	MAGE_UpdateTime();
-	MAGE_Render();
+			while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+			{
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+
+				if (msg.message == WM_QUIT)
+				{
+					return;
+				}
+			}
+
+			Game_Tick();
+			MAGE_Render();
+		}
+	}
 }

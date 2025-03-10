@@ -43,8 +43,8 @@ static void DrawObjects()
 	ObjectData *const &objectData = (ObjectData *)vk_objects_instancebuffer_memory.map;
 
 	objectData[0] = {
-		.positionX = g_player.positionX,
-		.positionY = g_player.positionY,
+		.positionX = roundf(g_player.positionX * 8) / 8,
+		.positionY = roundf(g_player.positionY * 8) / 8,
 		.spriteIndex = 24,
 	};
 
