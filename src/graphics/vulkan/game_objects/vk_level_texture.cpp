@@ -32,8 +32,6 @@ void CreateLevelImage()
 
 void CreateLevelImageView()
 {
-	memcpy(vk_level_memory.map, levelData, sizeof(levelData));
-
 	// Create image view
 	VkImageViewCreateInfo viewInfo{
 		.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
@@ -64,7 +62,7 @@ void CreateLevelImageView()
 		memcpy(
 			(char *)vk_level_memory.map + row * layout.rowPitch + layout.offset,
 			levelData + row * LEVEL_WIDTH,
-			LEVEL_WIDTH
+			(size_t)LEVEL_WIDTH * 2
 		);
 	}
 

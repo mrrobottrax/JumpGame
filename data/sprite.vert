@@ -18,9 +18,9 @@ void main()
 
     texCoord = vec2(aPos.x, 1 - aPos.y) * pc.tileSize;
 
-    vec2 pos = aPos.xy * (30 / 31.0) + offset.xy;
+    vec2 pos = aPos.xy + offset.xy;
 
-    vec2 halfScale = pc.levelSize / 2;
+    vec2 halfScale = pc.levelSize / 2.0;
 
     pos -= halfScale;
     pos /= halfScale;
