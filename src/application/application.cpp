@@ -56,6 +56,12 @@ void MAGE_FrameLoop()
 		while (currentTime - prevFrame > delta)
 		{
 			prevFrame += delta;
+
+			if (currentTime - prevFrame > delta)
+			{
+				Game_Tick();
+			}
+
 			shouldRender = true;
 		}
 
