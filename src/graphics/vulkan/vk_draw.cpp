@@ -178,7 +178,7 @@ void DrawFrame(int swapchainImageIndex)
 	vkCmdSetScissor(vk_commandbuffer_main, 0, 1, &scissor);
 
 	VkClearValue clear{
-		.color = {.float32 = {0, 0.5f, 1, 1}}
+		.color = {.float32 = {0, 0, 0, 1}}
 	};
 
 	VkRenderPassBeginInfo begin{
