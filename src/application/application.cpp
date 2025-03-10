@@ -60,6 +60,7 @@ void MAGE_FrameLoop()
 
 			if (!ranCatchupFrame && currentTime - prevFrame > delta)
 			{
+#ifndef DEBUG
 				while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 				{
 					TranslateMessage(&msg);
@@ -73,6 +74,7 @@ void MAGE_FrameLoop()
 
 				Game_Tick();
 				ranCatchupFrame = true; // < 30fps = TOO BAD!
+#endif // !DEBUG
 			}
 
 			shouldRender = true;

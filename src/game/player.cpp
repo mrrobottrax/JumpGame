@@ -2,6 +2,8 @@
 #include "player.h"
 #include "input/input.h"
 #include "time/time.h"
+#include "level.h"
+#include "window/window.h"
 
 constexpr float acceleration = 100;
 constexpr float maxspeed = 10;
@@ -53,11 +55,31 @@ void Player::Tick()
 	velocityY -= 80 * tickDelta;
 	positionY += velocityY * tickDelta;
 
+	bool grounded = false;
+
 	if (positionY < 0)
 	{
 		positionY = 0;
 		velocityY = 0;
 
+		grounded = true;
+	}
+
+	positionX = fminf(fmaxf(positionX, 0), LEVEL_WIDTH - 1);
+	positionY = fminf(fmaxf(positionY, 0), LEVEL_HEIGHT - 1);
+
+	unsigned short gridL = levelData[(int)positionX + (int)(LEVEL_HEIGHT - positionY) * LEVEL_WIDTH];
+	unsigned short gridR = levelData[(int)fminf(positionX + 1, LEVEL_WIDTH - 1) + (int)(LEVEL_HEIGHT - positionY) * LEVEL_WIDTH];
+	if ((gridL || gridR) && velocityY < 0)
+	{
+		positionY = ceilf(positionY);
+		velocityY = 0;
+
+		grounded = true;
+	}
+
+	if (grounded)
+	{
 		if (key_space)
 		{
 			velocityY = 30;
