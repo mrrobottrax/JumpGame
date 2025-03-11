@@ -141,10 +141,15 @@ static VkDeviceSize AllocateMemory(MemoryEntry(&entries)[size], VkDeviceMemory &
 		offset += entries[i].requirements.size;
 	}
 
+	constexpr VkDeviceSize minAlloc = 262144;
+	VkDeviceSize allocationSize = offset;
+
+	if (allocationSize < minAlloc) allocationSize = minAlloc;
+
 	VkMemoryAllocateInfo allocateInfo
 	{
 		.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
-		.allocationSize = offset,
+		.allocationSize = allocationSize,
 		.memoryTypeIndex = memoryType
 	};
 

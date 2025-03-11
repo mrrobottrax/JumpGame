@@ -47,7 +47,5 @@ int WINAPI wWinMain(
 		return 1;
 	}
 
-	Log("FinalEnd");
-
 	return 0;
 }

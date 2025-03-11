@@ -1,6 +1,7 @@
 #pragma once
 
 inline VkFormat vk_swapchain_format;
+inline VkColorSpaceKHR vk_swapchain_colourspace;
 inline uint32_t vk_swapchain_width, vk_swapchain_height;
 inline int vk_render_scale;
 

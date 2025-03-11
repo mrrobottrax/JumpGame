@@ -5,10 +5,12 @@
 #include "level.h"
 #include "window/window.h"
 
-constexpr float acceleration = 100;
-constexpr float maxspeed = 10;
+constexpr float ACCELERATION = 100;
+constexpr float MAX_SPEED = 10;
+constexpr float JUMP_VELOCITY = 25;
 
-constexpr int stepDelay = 10;
+constexpr int STEP_DELAY = 10;
+constexpr int COYOTE_TIME = 10;
 
 constexpr unsigned int IDLE_SPRITE = 24;
 
@@ -20,6 +22,16 @@ constexpr unsigned int JUMP_DOWN_SPRITE = 28;
 
 constexpr unsigned int IMPACT_SPRITE0 = 29;
 constexpr unsigned int IMPACT_SPRITE1 = 30;
+
+Player::Player()
+{
+	stepCounter = 0;
+	impactCounter = 0;
+	walkingLeft = false;
+	coyoteCounter = 0;
+	velocityX = 0;
+	velocityY = 0;
+}
 
 void Player::Tick()
 {
@@ -35,7 +47,7 @@ void Player::Tick()
 		wishSpeed += 1;
 	}
 
-	wishSpeed *= maxspeed;
+	wishSpeed *= MAX_SPEED;
 
 	if (wishSpeed < velocityX)
 	{
@@ -44,7 +56,7 @@ void Player::Tick()
 			velocityX = 0;
 		}
 
-		float sub = acceleration * tickDelta;
+		float sub = ACCELERATION * tickDelta;
 		float maxSub = velocityX - wishSpeed;
 
 		velocityX -= fminf(sub, maxSub);
@@ -56,13 +68,13 @@ void Player::Tick()
 			velocityX = 0;
 		}
 
-		float add = acceleration * tickDelta;
+		float add = ACCELERATION * tickDelta;
 		float maxAdd = wishSpeed - velocityX;
 
 		velocityX += fminf(add, maxAdd);
 	}
 
-	velocityX = fmaxf(fminf(velocityX, maxspeed), -maxspeed);
+	velocityX = fmaxf(fminf(velocityX, MAX_SPEED), -MAX_SPEED);
 	positionX += velocityX * tickDelta;
 
 	velocityY -= 80 * tickDelta;
@@ -81,9 +93,9 @@ void Player::Tick()
 	positionX = fminf(fmaxf(positionX, 0), LEVEL_WIDTH - 1);
 	positionY = fminf(fmaxf(positionY, 0), LEVEL_HEIGHT - 1);
 
-	unsigned short gridL = levelData[(int)positionX + (int)(LEVEL_HEIGHT - positionY) * LEVEL_WIDTH];
-	unsigned short gridR = levelData[(int)fminf(positionX + 1, LEVEL_WIDTH - 1) + (int)(LEVEL_HEIGHT - positionY) * LEVEL_WIDTH];
-	if ((gridL || gridR) && velocityY < 0)
+	unsigned short gridL = LEVEL_DATA[(int)positionX + (int)(LEVEL_HEIGHT - positionY) * LEVEL_WIDTH];
+	unsigned short gridR = LEVEL_DATA[(int)fminf(positionX + 1, LEVEL_WIDTH - 1) + (int)(LEVEL_HEIGHT - positionY) * LEVEL_WIDTH];
+	if ((IsTileSolid(gridL) || IsTileSolid(gridR)) && velocityY < 0)
 	{
 		positionY = ceilf(positionY);
 		velocityY = 0;
@@ -91,16 +103,29 @@ void Player::Tick()
 		grounded = true;
 	}
 
-	if (grounded)
+	if (!grounded)
 	{
-		if (key_space)
-		{
-			velocityY = 30;
-		}
+		if (coyoteCounter > 0)
+			--coyoteCounter;
+	}
+	else
+	{
+		coyoteCounter = COYOTE_TIME;
+	}
+
+	if (coyoteCounter > 0)
+	{
+		grounded = 1;
 	}
 
 	if (grounded)
 	{
+		if (key_space)
+		{
+			velocityY = JUMP_VELOCITY;
+			coyoteCounter = 0;
+		}
+
 		if (impactCounter > 0)
 		{
 			if (impactCounter < 5)
@@ -121,7 +146,7 @@ void Player::Tick()
 				--stepCounter;
 				if (stepCounter <= 0)
 				{
-					stepCounter = stepDelay;
+					stepCounter = STEP_DELAY;
 					walkingLeft = !walkingLeft;
 				}
 			}

@@ -6,7 +6,7 @@
 void GetQueueFamilies()
 {
 	uint32_t queueFamilyCount;
-	vkGetPhysicalDeviceQueueFamilyProperties2(vk_physicaldevice, &queueFamilyCount, nullptr);
+	vkGetPhysicalDeviceQueueFamilyProperties(vk_physicaldevice, &queueFamilyCount, nullptr);
 
 	VkQueueFamilyProperties *queueFamilies = new VkQueueFamilyProperties[queueFamilyCount];
 	vkGetPhysicalDeviceQueueFamilyProperties(vk_physicaldevice, &queueFamilyCount, queueFamilies);

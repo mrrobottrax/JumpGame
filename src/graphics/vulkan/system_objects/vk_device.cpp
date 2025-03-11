@@ -17,6 +17,12 @@ void CreateDevice()
 	VkExtensionProperties *extensions = new VkExtensionProperties[propertyCount];
 	vkEnumerateDeviceExtensionProperties(vk_physicaldevice, nullptr, &propertyCount, extensions);
 
+	std::vector<const char *> usedExts(_countof(REQUIRED_EXTENSIONS));
+	for (int i = 0; i < _countof(REQUIRED_EXTENSIONS); ++i)
+	{
+		usedExts[i] = REQUIRED_EXTENSIONS[i];
+	}
+
 	Log("DEVICE EXTENSIONS:");
 	for (uint32_t i = 0; i < propertyCount; ++i)
 	{
@@ -26,6 +32,12 @@ void CreateDevice()
 	#pragma warning (pop)
 
 		Log(properties.extensionName);
+
+		if (strcmp(properties.extensionName, "VK_EXT_pageable_device_local_memory") == 0)
+		{
+			usedExts.push_back("VK_EXT_memory_priority");
+			usedExts.push_back("VK_EXT_pageable_device_local_memory");
+		}
 	}
 
 	delete[] extensions;
@@ -55,8 +67,8 @@ void CreateDevice()
 		.pNext = &features,
 		.queueCreateInfoCount = 1,
 		.pQueueCreateInfos = &queueInfo,
-		.enabledExtensionCount = _countof(REQUIRED_EXTENSIONS),
-		.ppEnabledExtensionNames = REQUIRED_EXTENSIONS
+		.enabledExtensionCount = (uint32_t)usedExts.size(),
+		.ppEnabledExtensionNames = &usedExts[0],
 	};
 
 	VkAssert(vkCreateDevice(vk_physicaldevice, &createInfo, nullptr, &vk_device));

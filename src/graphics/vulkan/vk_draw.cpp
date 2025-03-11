@@ -42,17 +42,21 @@ static void DrawObjects()
 
 	ObjectData *const &objectData = (ObjectData *)vk_objects_instancebuffer_memory.map;
 
-	objectData[0] = {
-		.positionX = roundf(g_player.positionX * 8) / 8,
-		.positionY = roundf(g_player.positionY * 8) / 8,
-		.spriteIndex = g_player.flip ? -g_player.spriteIndex - 1 : g_player.spriteIndex,
-	};
+	for (uint32_t i = 0; i < g_entityCount; ++i)
+	{
+		Entity &entity = *g_entities[i];
+		objectData[i] = {
+			.positionX = roundf(entity.positionX * 8) / 8,
+			.positionY = roundf(entity.positionY * 8) / 8,
+			.spriteIndex = entity.flip ? -entity.spriteIndex - 1 : entity.spriteIndex,
+		};
+	}
 
 	VkDeviceSize offsets[] = { 0, 0 };
 	VkBuffer vertexBuffers[] = { vk_quad_vertexbuffer, vk_objects_instancebuffer };
 	vkCmdBindVertexBuffers2(vk_commandbuffer_main, 0, _countof(vertexBuffers), vertexBuffers, offsets, nullptr, nullptr);
 
-	vkCmdDraw(vk_commandbuffer_main, 6, 1, 0, 0);
+	vkCmdDraw(vk_commandbuffer_main, 6, g_entityCount, 0, 0);
 }
 
 static void BlitImage(int swapchainImageIndex)

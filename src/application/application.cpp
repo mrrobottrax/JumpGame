@@ -46,8 +46,11 @@ void MAGE_End()
 static chrono::system_clock::time_point prevFrame = chrono::system_clock::now();
 void MAGE_FrameLoop()
 {
+	Game_Init();
+
+	bool bExit = false;
 	MSG msg;
-	while (true)
+	while (!bExit)
 	{
 		chrono::system_clock::time_point currentTime = chrono::system_clock::now();
 
@@ -91,12 +94,17 @@ void MAGE_FrameLoop()
 
 				if (msg.message == WM_QUIT)
 				{
-					return;
+					bExit = true;
+					break;
 				}
 			}
+
+			if (bExit) break;
 
 			Game_Tick();
 			MAGE_Render();
 		}
 	}
+
+	Game_End();
 }

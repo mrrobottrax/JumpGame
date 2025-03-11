@@ -209,7 +209,10 @@
     <ClCompile Include="src\console\console.cpp" />
     <ClCompile Include="src\exceptions\exceptions.cpp" />
     <ClCompile Include="src\file\file.cpp" />
+    <ClCompile Include="src\game\coin.cpp" />
+    <ClCompile Include="src\game\entity.cpp" />
     <ClCompile Include="src\game\game.cpp" />
+    <ClCompile Include="src\game\level.cpp" />
     <ClCompile Include="src\game\player.cpp" />
     <ClCompile Include="src\graphics\graphics.cpp" />
     <ClCompile Include="src\graphics\vulkan\descriptor_sets\vk_level_descriptor_set.cpp" />
@@ -254,6 +257,8 @@
     <ClInclude Include="src\console\console.h" />
     <ClInclude Include="src\exceptions\exceptions.h" />
     <ClInclude Include="src\file\file.h" />
+    <ClInclude Include="src\game\coin.h" />
+    <ClInclude Include="src\game\entity.h" />
     <ClInclude Include="src\game\game.h" />
     <ClInclude Include="src\game\level.h" />
     <ClInclude Include="src\game\player.h" />

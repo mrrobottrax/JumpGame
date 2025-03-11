@@ -61,7 +61,7 @@ void CreateLevelImageView()
 	{
 		memcpy(
 			(char *)vk_level_memory.map + row * layout.rowPitch + layout.offset,
-			levelData + row * LEVEL_WIDTH,
+			LEVEL_DATA + row * LEVEL_WIDTH,
 			(size_t)LEVEL_WIDTH * 2
 		);
 	}

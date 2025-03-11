@@ -1,17 +1,18 @@
 #pragma once
 
-class Player
+#include "Entity.h"
+
+class Player : public Entity
 {
 	int stepCounter;
 	int impactCounter;
 	bool walkingLeft;
+	int coyoteCounter;
 
 public:
-	bool flip;
-	int spriteIndex;
-	float positionX, positionY;
 	float velocityX, velocityY;
 
-	void Tick();
+	Player();
+
+	virtual void Tick() override;
 };
-inline Player g_player;
