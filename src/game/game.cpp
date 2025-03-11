@@ -7,7 +7,7 @@ void Game_Init()
 {
 	AddEntity(new Player());
 	AddEntity(new Coin(2, 8));
-	AddEntity(new Coin(5, 23));
+	AddEntity(new Coin(0, 25));
 	AddEntity(new Coin(37, 14));
 }
 

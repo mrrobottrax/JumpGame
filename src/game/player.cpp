@@ -31,6 +31,7 @@ Player::Player()
 	coyoteCounter = 0;
 	velocityX = 0;
 	velocityY = 0;
+	jumpHeldLastFrame = false;
 }
 
 void Player::Tick()
@@ -90,8 +91,13 @@ void Player::Tick()
 		grounded = true;
 	}
 
+	if (positionY >= LEVEL_HEIGHT - 1)
+	{
+		positionY = LEVEL_HEIGHT - 1;
+		velocityY = 0;
+	}
+
 	positionX = fminf(fmaxf(positionX, 0), LEVEL_WIDTH - 1);
-	positionY = fminf(fmaxf(positionY, 0), LEVEL_HEIGHT - 1);
 
 	unsigned short gridL = LEVEL_DATA[(int)positionX + (int)(LEVEL_HEIGHT - positionY) * LEVEL_WIDTH];
 	unsigned short gridR = LEVEL_DATA[(int)fminf(positionX + 1, LEVEL_WIDTH - 1) + (int)(LEVEL_HEIGHT - positionY) * LEVEL_WIDTH];
@@ -120,10 +126,15 @@ void Player::Tick()
 
 	if (grounded)
 	{
-		if (key_space)
+		if (key_space && !jumpHeldLastFrame)
 		{
 			velocityY = JUMP_VELOCITY;
 			coyoteCounter = 0;
+		}
+
+		if (key_space)
+		{
+			jumpHeldLastFrame = true;
 		}
 
 		if (impactCounter > 0)
@@ -184,5 +195,10 @@ void Player::Tick()
 	else if (velocityX > 0)
 	{
 		flip = false;
+	}
+
+	if (!key_space)
+	{
+		jumpHeldLastFrame = false;
 	}
 }

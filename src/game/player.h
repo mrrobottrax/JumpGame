@@ -8,6 +8,7 @@ class Player : public Entity
 	int impactCounter;
 	bool walkingLeft;
 	int coyoteCounter;
+	bool jumpHeldLastFrame;
 
 public:
 	float velocityX, velocityY;
