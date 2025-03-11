@@ -81,7 +81,7 @@ void CreateSpritePipeline()
 	VkVertexInputAttributeDescription spriteIndexAttributeDescription{
 		.location = 2,
 		.binding = 1,
-		.format = VK_FORMAT_R32_UINT,
+		.format = VK_FORMAT_R32_SINT,
 		.offset = 8,
 	};
 

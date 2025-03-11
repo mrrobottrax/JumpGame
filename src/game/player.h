@@ -2,7 +2,13 @@
 
 class Player
 {
+	int stepCounter;
+	int impactCounter;
+	bool walkingLeft;
+
 public:
+	bool flip;
+	int spriteIndex;
 	float positionX, positionY;
 	float velocityX, velocityY;
 

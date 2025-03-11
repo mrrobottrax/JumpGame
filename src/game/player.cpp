@@ -8,6 +8,19 @@
 constexpr float acceleration = 100;
 constexpr float maxspeed = 10;
 
+constexpr int stepDelay = 10;
+
+constexpr unsigned int IDLE_SPRITE = 24;
+
+constexpr unsigned int STEP0_SPRITE = 25;
+constexpr unsigned int STEP1_SPRITE = 26;
+
+constexpr unsigned int JUMP_UP_SPRITE = 27;
+constexpr unsigned int JUMP_DOWN_SPRITE = 28;
+
+constexpr unsigned int IMPACT_SPRITE0 = 29;
+constexpr unsigned int IMPACT_SPRITE1 = 30;
+
 void Player::Tick()
 {
 	float wishSpeed = 0;
@@ -84,5 +97,67 @@ void Player::Tick()
 		{
 			velocityY = 30;
 		}
+	}
+
+	if (grounded)
+	{
+		if (impactCounter > 0)
+		{
+			if (impactCounter < 5)
+			{
+				spriteIndex = IMPACT_SPRITE0;
+			}
+			else
+			{
+				spriteIndex = IMPACT_SPRITE1;
+			}
+			--impactCounter;
+		}
+		else
+		{
+			if (abs(velocityX) > 0.01f)
+			{
+				spriteIndex = walkingLeft ? STEP0_SPRITE : STEP1_SPRITE;
+				--stepCounter;
+				if (stepCounter <= 0)
+				{
+					stepCounter = stepDelay;
+					walkingLeft = !walkingLeft;
+				}
+			}
+			else
+			{
+				spriteIndex = IDLE_SPRITE;
+			}
+		}
+	}
+	else if (velocityY > 0)
+	{
+		spriteIndex = JUMP_UP_SPRITE;
+	}
+	else
+	{
+		spriteIndex = JUMP_DOWN_SPRITE;
+	}
+
+	if (!grounded)
+	{
+		if (velocityY < 0)
+		{
+			impactCounter = 6;
+		}
+		else if (impactCounter == 0)
+		{
+			impactCounter = 3;
+		}
+	}
+
+	if (velocityX < 0)
+	{
+		flip = true;
+	}
+	else if (velocityX > 0)
+	{
+		flip = false;
 	}
 }

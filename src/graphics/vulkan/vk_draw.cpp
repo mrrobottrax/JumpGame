@@ -45,7 +45,7 @@ static void DrawObjects()
 	objectData[0] = {
 		.positionX = roundf(g_player.positionX * 8) / 8,
 		.positionY = roundf(g_player.positionY * 8) / 8,
-		.spriteIndex = 24,
+		.spriteIndex = g_player.flip ? -g_player.spriteIndex - 1 : g_player.spriteIndex,
 	};
 
 	VkDeviceSize offsets[] = { 0, 0 };
