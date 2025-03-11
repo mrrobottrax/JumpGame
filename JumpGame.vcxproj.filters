@@ -54,7 +54,7 @@
     <ClCompile Include="src\graphics\vulkan\vk_debug.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\vulkan\vk_ext_debugutils.cpp">
+    <ClCompile Include="src\graphics\vulkan\extensions\vk_ext_debugutils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\graphics\vulkan\system_objects\vk_surface.cpp">
@@ -144,6 +144,9 @@
     <ClCompile Include="src\game\entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\vulkan\extensions\vk_ext_memorypriority.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\pch.h">
@@ -182,7 +185,7 @@
     <ClInclude Include="src\graphics\vulkan\vk_debug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\graphics\vulkan\vk_ext_debugutils.h">
+    <ClInclude Include="src\graphics\vulkan\extensions\vk_ext_debugutils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\graphics\vulkan\system_objects\vk_surface.h">
@@ -273,6 +276,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\game\coin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\vulkan\extensions\vk_ext_memorypriority.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

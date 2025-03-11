@@ -3,7 +3,9 @@
 struct MemoryTypes
 {
 	uint32_t local;
-	uint32_t local_hostvisible;
+
+	bool hostvisible_is_local;
+	uint32_t hostvisible;
 };
 inline MemoryTypes vk_memory_types;
 

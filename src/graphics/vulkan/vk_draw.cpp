@@ -61,9 +61,9 @@ static void DrawObjects()
 
 static void BlitImage(int swapchainImageIndex)
 {
-	VkImageMemoryBarrier2 toTransferDstBarrier{
+	VkImageMemoryBarrier2 swapchainToTransferDstBarrier{
 		.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
-		.srcStageMask = VK_PIPELINE_STAGE_2_NONE,
+		.srcStageMask = VK_PIPELINE_STAGE_2_BLIT_BIT,
 		.srcAccessMask = VK_ACCESS_2_NONE,
 		.dstStageMask = VK_PIPELINE_STAGE_2_BLIT_BIT,
 		.dstAccessMask = VK_ACCESS_2_TRANSFER_WRITE_BIT,
@@ -79,10 +79,31 @@ static void BlitImage(int swapchainImageIndex)
 		},
 	};
 
+	VkImageMemoryBarrier2 renderToTransferSrcBarrier{
+		.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+		.srcStageMask = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT,
+		.srcAccessMask = VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT,
+		.dstStageMask = VK_PIPELINE_STAGE_2_BLIT_BIT,
+		.dstAccessMask = VK_ACCESS_2_TRANSFER_READ_BIT,
+		.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+		.newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+		.image = vk_render_image,
+		.subresourceRange = {
+			.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
+			.levelCount = 1,
+			.layerCount = 1,
+		},
+	};
+
+	VkImageMemoryBarrier2 imageBarriers[] = {
+		swapchainToTransferDstBarrier,
+		renderToTransferSrcBarrier
+	};
+
 	VkDependencyInfo toTransferDstDependency{
 		.sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
-		.imageMemoryBarrierCount = 1,
-		.pImageMemoryBarriers = &toTransferDstBarrier
+		.imageMemoryBarrierCount = _countof(imageBarriers),
+		.pImageMemoryBarriers = imageBarriers,
 	};
 
 	vkCmdPipelineBarrier2(vk_commandbuffer_main, &toTransferDstDependency);
@@ -131,7 +152,7 @@ static void BlitImage(int swapchainImageIndex)
 		.srcStageMask = VK_PIPELINE_STAGE_2_BLIT_BIT,
 		.srcAccessMask = VK_ACCESS_2_TRANSFER_WRITE_BIT,
 		.dstStageMask = VK_PIPELINE_STAGE_2_NONE,
-		.dstAccessMask = VK_ACCESS_2_NONE,
+		.dstAccessMask = VK_ACCESS_NONE,
 		.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 		.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
 		.srcQueueFamilyIndex = vk_queue_family_indices.mainQueueFamily,
@@ -182,7 +203,7 @@ void DrawFrame(int swapchainImageIndex)
 	vkCmdSetScissor(vk_commandbuffer_main, 0, 1, &scissor);
 
 	VkClearValue clear{
-		.color = {.float32 = {0, 0, 0, 1}}
+		.color = {.float32 = {0, 0, 0, 0}}
 	};
 
 	VkRenderPassBeginInfo begin{
@@ -227,11 +248,13 @@ void DrawFrame(int swapchainImageIndex)
 	const VkSemaphoreSubmitInfo semaphoreSubmitInfo{
 		.sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
 		.semaphore = vk_semaphore_rendering,
+		.stageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
 	};
 
 	const VkSemaphoreSubmitInfo waitInfo{
 		.sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO,
 		.semaphore = vk_semaphore_acquireimage,
+		.stageMask = VK_PIPELINE_STAGE_2_BLIT_BIT
 	};
 
 	VkSubmitInfo2 submitInfo{

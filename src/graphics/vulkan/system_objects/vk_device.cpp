@@ -4,6 +4,7 @@
 #include "console/console.h"
 #include "vk_queuefamilies.h"
 #include <graphics/vulkan/vulkan.h>
+#include "graphics/vulkan/extensions/vk_ext_memorypriority.h"
 
 constexpr const char *REQUIRED_EXTENSIONS[] = {
 	VK_KHR_SWAPCHAIN_EXTENSION_NAME,
@@ -37,6 +38,8 @@ void CreateDevice()
 		{
 			usedExts.push_back("VK_EXT_memory_priority");
 			usedExts.push_back("VK_EXT_pageable_device_local_memory");
+
+			vk_device_extensions.memory_priority = true;
 		}
 	}
 
@@ -72,6 +75,11 @@ void CreateDevice()
 	};
 
 	VkAssert(vkCreateDevice(vk_physicaldevice, &createInfo, nullptr, &vk_device));
+
+	if (vk_device_extensions.memory_priority)
+	{
+		GetMemoryPriorityFunctionPointers();
+	}
 }
 
 void DestroyDevice()

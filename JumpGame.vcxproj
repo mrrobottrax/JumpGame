@@ -217,6 +217,7 @@
     <ClCompile Include="src\graphics\graphics.cpp" />
     <ClCompile Include="src\graphics\vulkan\descriptor_sets\vk_level_descriptor_set.cpp" />
     <ClCompile Include="src\graphics\vulkan\descriptor_sets\vk_static_descriptor_pool.cpp" />
+    <ClCompile Include="src\graphics\vulkan\extensions\vk_ext_memorypriority.cpp" />
     <ClCompile Include="src\graphics\vulkan\game_objects\vk_level_texture.cpp" />
     <ClCompile Include="src\graphics\vulkan\game_objects\vk_point_sampler.cpp" />
     <ClCompile Include="src\graphics\vulkan\pipelines\vk_shadermodule.cpp" />
@@ -232,7 +233,7 @@
     <ClCompile Include="src\graphics\vulkan\system_objects\vk_commandbuffers.cpp" />
     <ClCompile Include="src\graphics\vulkan\vk_debug.cpp" />
     <ClCompile Include="src\graphics\vulkan\system_objects\vk_device.cpp" />
-    <ClCompile Include="src\graphics\vulkan\vk_ext_debugutils.cpp" />
+    <ClCompile Include="src\graphics\vulkan\extensions\vk_ext_debugutils.cpp" />
     <ClCompile Include="src\graphics\vulkan\system_objects\vk_instance.cpp" />
     <ClCompile Include="src\graphics\vulkan\system_objects\vk_physicaldevice.cpp" />
     <ClCompile Include="src\graphics\vulkan\system_objects\vk_queuefamilies.cpp" />
@@ -265,6 +266,7 @@
     <ClInclude Include="src\graphics\graphics.h" />
     <ClInclude Include="src\graphics\vulkan\descriptor_sets\vk_level_descriptor_set.h" />
     <ClInclude Include="src\graphics\vulkan\descriptor_sets\vk_static_descriptor_pool.h" />
+    <ClInclude Include="src\graphics\vulkan\extensions\vk_ext_memorypriority.h" />
     <ClInclude Include="src\graphics\vulkan\game_objects\vk_level_texture.h" />
     <ClInclude Include="src\graphics\vulkan\game_objects\vk_point_sampler.h" />
     <ClInclude Include="src\graphics\vulkan\pipelines\vk_shadermodule.h" />
@@ -280,7 +282,7 @@
     <ClInclude Include="src\graphics\vulkan\system_objects\vk_commandbuffers.h" />
     <ClInclude Include="src\graphics\vulkan\vk_debug.h" />
     <ClInclude Include="src\graphics\vulkan\system_objects\vk_device.h" />
-    <ClInclude Include="src\graphics\vulkan\vk_ext_debugutils.h" />
+    <ClInclude Include="src\graphics\vulkan\extensions\vk_ext_debugutils.h" />
     <ClInclude Include="src\graphics\vulkan\system_objects\vk_instance.h" />
     <ClInclude Include="src\graphics\vulkan\system_objects\vk_physicaldevice.h" />
     <ClInclude Include="src\graphics\vulkan\system_objects\vk_queuefamilies.h" />

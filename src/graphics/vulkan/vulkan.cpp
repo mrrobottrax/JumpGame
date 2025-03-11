@@ -76,8 +76,6 @@ void EndVulkan()
 {
 	VkAssert(vkDeviceWaitIdle(vk_device));
 
-	FreeStaticMemory();
-
 	DestroyDescriptorPool();
 	DestroyLevelDescriptorSet();
 	DestroyLevelImage();
@@ -94,6 +92,9 @@ void EndVulkan()
 	DestroySyncObjects();
 	DestroyCommandBuffers();
 	DestroySurface();
+
+	FreeStaticMemory();
+
 	DestroyDevice();
 	DestroyInstance();
 }
@@ -142,6 +143,6 @@ void VkAssert(VkResult result)
 {
 	if (result < 0)
 	{
-		throw VulkanException("Vulkan Error:", result);
+		throw VulkanException("Vulkan Error: ", result);
 	}
 }

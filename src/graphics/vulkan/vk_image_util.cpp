@@ -17,9 +17,9 @@ void TransitionImage(VkImageLayout oldLayout, VkImageLayout newLayout, VkImage i
 
 	VkImageMemoryBarrier2 imageBarrier{
 		.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
-		.srcStageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
+		.srcStageMask = VK_PIPELINE_STAGE_2_NONE,
 		.srcAccessMask = VK_ACCESS_NONE,
-		.dstStageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT,
+		.dstStageMask = VK_PIPELINE_STAGE_2_NONE,
 		.dstAccessMask = VK_ACCESS_NONE,
 		.oldLayout = oldLayout,
 		.newLayout = newLayout,

@@ -33,5 +33,10 @@ VkBool32 DebugCallback(
 	OutputDebugStringA(pCallbackData->pMessage);
 	OutputDebugStringA("\n");
 
+	if (messageTypes & VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT)
+	{
+		return VK_FALSE;
+	}
+
 	return VK_TRUE;
 }

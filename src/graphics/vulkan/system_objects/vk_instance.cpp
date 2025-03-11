@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "vk_instance.h"
 #include "console/console.h"
-#include <graphics/vulkan/vk_ext_debugutils.h>
 #include <graphics/vulkan/vk_debug.h>
 #include <graphics/vulkan/vulkan.h>
+#include "graphics/vulkan/extensions/vk_ext_debugutils.h"
 
 #ifdef DEBUG
 constexpr const char *REQUIRED_LAYERS[] = {
@@ -100,8 +100,10 @@ void CreateInstance()
 
 	delete[] layers;
 
+#ifdef DEBUG
 	GetDebugUtilsFunctionPointers();
 	CreateDebugCallbacks();
+#endif // DEBUG
 }
 
 void DestroyInstance()
