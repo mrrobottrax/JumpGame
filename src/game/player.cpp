@@ -10,7 +10,7 @@ constexpr float MAX_SPEED = 10;
 constexpr float JUMP_VELOCITY = 25;
 
 constexpr int STEP_DELAY = 10;
-constexpr int COYOTE_TIME = 10;
+constexpr int COYOTE_TIME = 7;
 
 constexpr unsigned int IDLE_SPRITE = 24;
 
