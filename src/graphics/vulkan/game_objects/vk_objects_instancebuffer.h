@@ -1,18 +1,12 @@
 #pragma once
 #include <graphics/vulkan/vk_memory.h>
+#include "graphics/vulkan/vk_spritedata.h"
 
 inline constexpr size_t vk_objects_instancebuffer_size = 1024;
+inline constexpr size_t vk_objects_instancebuffer_maxobjects = vk_objects_instancebuffer_size / sizeof(SpriteData);
 
 inline VkBuffer vk_objects_instancebuffer;
 inline MemoryAllocation vk_objects_instancebuffer_memory;
-
-struct ObjectData
-{
-	float positionX, positionY;
-	int32_t spriteIndex;
-};
-
-inline constexpr size_t vk_objects_instancebuffer_maxobjects = vk_objects_instancebuffer_size / sizeof(ObjectData);
 
 void CreateObjectsBuffer();
 void DestroyObjectsBuffer();

@@ -3,11 +3,12 @@
 class Entity
 {
 public:
-	bool flip;
-	int spriteIndex;
 	float positionX, positionY;
+	short spriteIndex;
+	unsigned char dimensionsX, dimensionsY;
+	bool flip;
 
-	Entity() : flip(false), spriteIndex(1), positionX(0), positionY(0)
+	Entity() : flip(false), spriteIndex(1), positionX(0), positionY(0), dimensionsX(0), dimensionsY(0)
 	{}
 
 	virtual void Tick() = 0;

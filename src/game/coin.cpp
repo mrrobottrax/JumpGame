@@ -7,7 +7,7 @@ constexpr int SPRITE_TIME = 10;
 constexpr int STARTING_SPRITE = 3;
 constexpr int ENDING_SPRITE = 5;
 
-Coin::Coin(float positionX, float positionY)
+Coin::Coin(float positionX, float positionY) : Entity()
 {
 	this->positionX = positionX;
 	this->positionY = positionY;

@@ -6,22 +6,27 @@ layout(push_constant) uniform PushConstants {
 } pc;
 
 layout(location = 0) in vec2 aPos;
-layout(location = 1) in vec2 offset;
-layout(location = 2) in int spriteOffset;
+
+// instance
+layout(location = 1) in uvec2 position;
+layout(location = 2) in uvec2 dimensions;
+layout(location = 3) in int spriteIndex;
 
 layout(location = 0) out vec2 texCoord;
 layout(location = 1) out flat int tileIndex;
 
 void main()
 {
-	bool bFlip = spriteOffset < 0;
-	int flip = int(bFlip);
-	int iFlip = 1 - flip;
-    tileIndex = abs(spriteOffset) - flip;
+    bool bFlip = spriteIndex < 0;
+    int flip = int(bFlip);
+    int iFlip = 1 - flip;
+    tileIndex = abs(spriteIndex) - flip;
 
-    texCoord = vec2(iFlip * aPos.x + flip * (1 - aPos.x), 1 - aPos.y) * pc.tileSize;
+	uvec2 scale = dimensions + 1;
 
-    vec2 pos = aPos.xy + offset.xy;
+    texCoord = vec2(iFlip * aPos.x * scale.x + flip * (scale.x - aPos.x * scale.x), 1 - aPos.y * scale.y) * pc.tileSize;
+
+    vec2 pos = aPos.xy * scale + position.xy / float(pc.tileSize);
 
     vec2 halfScale = pc.levelSize / 2.0;
 

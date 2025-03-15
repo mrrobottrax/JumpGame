@@ -17,6 +17,7 @@
 #include "system_objects/vk_sync.h"
 #include "system_objects/vk_queues.h"
 #include "descriptor_sets/vk_level_descriptor_set.h"
+#include "console/console.h"
 
 static void DrawTiles()
 {
@@ -40,15 +41,22 @@ static void DrawObjects()
 
 	vkCmdBindDescriptorSets(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_sprite_pipeline_layout, 0, 1, &vk_atlas_set, 0, nullptr);
 
-	ObjectData *const &objectData = (ObjectData *)vk_objects_instancebuffer_memory.map;
+	SpriteData *const &objectData = (SpriteData *)vk_objects_instancebuffer_memory.map;
 
-	for (uint32_t i = 0; i < g_entityCount; ++i)
+	if (g_entityCount > vk_objects_instancebuffer_maxobjects)
+	{
+		Log("Entity count too high!");
+	}
+
+	for (uint32_t i = 0; i < g_entityCount && i < vk_objects_instancebuffer_maxobjects; ++i)
 	{
 		Entity &entity = *g_entities[i];
 		objectData[i] = {
-			.positionX = roundf(entity.positionX * 8) / 8,
-			.positionY = roundf(entity.positionY * 8) / 8,
-			.spriteIndex = entity.flip ? -entity.spriteIndex - 1 : entity.spriteIndex,
+			.positionX = (uint16_t)(roundf(entity.positionX * 8)),
+			.positionY = (uint16_t)(roundf(entity.positionY * 8)),
+			.spriteIndex = entity.flip ? (int16_t)(-entity.spriteIndex - 1) : entity.spriteIndex,
+			.sizeX = entity.dimensionsX,
+			.sizeY = entity.dimensionsY,
 		};
 	}
 

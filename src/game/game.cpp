@@ -2,6 +2,7 @@
 #include "game.h"
 #include "player.h"
 #include "coin.h"
+#include "blockhead.h"
 
 static int collectedCoins;
 
@@ -32,6 +33,7 @@ void CollectCoin()
 
 	if (collectedCoins >= 3)
 	{
-		g_gameWon = true;
+		ClearEntities();
+		AddEntity(new Blockhead(0, 0));
 	}
 }

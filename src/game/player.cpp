@@ -12,16 +12,16 @@ constexpr float JUMP_VELOCITY = 25;
 constexpr int STEP_DELAY = 10;
 constexpr int COYOTE_TIME = 7;
 
-constexpr unsigned int IDLE_SPRITE = 24;
+constexpr unsigned int IDLE_SPRITE = 120;
 
-constexpr unsigned int STEP0_SPRITE = 25;
-constexpr unsigned int STEP1_SPRITE = 26;
+constexpr unsigned int STEP0_SPRITE = 121;
+constexpr unsigned int STEP1_SPRITE = 122;
 
-constexpr unsigned int JUMP_UP_SPRITE = 27;
-constexpr unsigned int JUMP_DOWN_SPRITE = 28;
+constexpr unsigned int JUMP_UP_SPRITE = 123;
+constexpr unsigned int JUMP_DOWN_SPRITE = 124;
 
-constexpr unsigned int IMPACT_SPRITE0 = 29;
-constexpr unsigned int IMPACT_SPRITE1 = 30;
+constexpr unsigned int IMPACT_SPRITE0 = 125;
+constexpr unsigned int IMPACT_SPRITE1 = 126;
 
 Player::Player()
 {

@@ -58,7 +58,7 @@ void CreateSpritePipeline()
 
 	VkVertexInputBindingDescription objectDataBindingDescription{
 		.binding = 1,
-		.stride = 12,
+		.stride = 8,
 		.inputRate = VK_VERTEX_INPUT_RATE_INSTANCE,
 	};
 
@@ -74,18 +74,30 @@ void CreateSpritePipeline()
 	VkVertexInputAttributeDescription offsetAttributeDescription{
 		.location = 1,
 		.binding = 1,
-		.format = VK_FORMAT_R32G32_SFLOAT,
+		.format = VK_FORMAT_R16G16_UINT,
 		.offset = 0,
 	};
 
 	VkVertexInputAttributeDescription spriteIndexAttributeDescription{
-		.location = 2,
+		.location = 3,
 		.binding = 1,
-		.format = VK_FORMAT_R32_SINT,
-		.offset = 8,
+		.format = VK_FORMAT_R16_SINT,
+		.offset = 4,
 	};
 
-	VkVertexInputAttributeDescription attributes[] = { vertexAttributeDescription, offsetAttributeDescription, spriteIndexAttributeDescription };
+	VkVertexInputAttributeDescription dimensionsAttributeDescription{
+		.location = 2,
+		.binding = 1,
+		.format = VK_FORMAT_R8G8_UINT,
+		.offset = 6,
+	};
+
+	VkVertexInputAttributeDescription attributes[] = {
+		vertexAttributeDescription,
+		offsetAttributeDescription,
+		spriteIndexAttributeDescription,
+		dimensionsAttributeDescription
+	};
 
 	VkPipelineVertexInputStateCreateInfo vertexState{
 		.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,

@@ -259,6 +259,7 @@
     <ClInclude Include="src\console\console.h" />
     <ClInclude Include="src\exceptions\exceptions.h" />
     <ClInclude Include="src\file\file.h" />
+    <ClInclude Include="src\game\blockhead.h" />
     <ClInclude Include="src\game\coin.h" />
     <ClInclude Include="src\game\entity.h" />
     <ClInclude Include="src\game\game.h" />
@@ -295,6 +296,7 @@
     <ClInclude Include="src\graphics\vulkan\system_objects\vk_sync.h" />
     <ClInclude Include="src\graphics\vulkan\descriptor_sets\vk_atlas_descriptor_set.h" />
     <ClInclude Include="src\graphics\vulkan\game_objects\vk_vertexbuffer.h" />
+    <ClInclude Include="src\graphics\vulkan\vk_spritedata.h" />
     <ClInclude Include="src\graphics\vulkan\vulkan.h" />
     <ClInclude Include="src\input\input.h" />
     <ClInclude Include="src\pch.h" />
