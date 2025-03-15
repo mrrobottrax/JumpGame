@@ -9,6 +9,7 @@
 #include "game_objects/vk_vertexbuffer.h"
 #include "game_objects/vk_renderimage.h"
 #include "game_objects/vk_level_texture.h"
+#include "game_objects/vk_win_screen.h"
 
 void GetMemoryTypes()
 {
@@ -183,6 +184,7 @@ static VkDeviceSize AllocateMemory(MemoryEntry(&entries)[size], VkDeviceMemory &
 static void AllocateHostVisibleMemory()
 {
 	MemoryEntry entries[] = {
+		{vk_win_memory, vk_win_image},
 		{vk_level_memory, vk_level_image},
 		{vk_atlas_memory, vk_atlas_image},
 		{vk_objects_instancebuffer_memory, vk_objects_instancebuffer},

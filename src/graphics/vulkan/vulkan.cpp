@@ -24,6 +24,7 @@
 #include "game_objects/vk_level_texture.h"
 #include "descriptor_sets/vk_level_descriptor_set.h"
 #include "descriptor_sets/vk_static_descriptor_pool.h"
+#include "game_objects/vk_win_screen.h"
 
 static uint32_t nextImageIndex = 0;
 
@@ -56,10 +57,12 @@ void InitVulkan()
 	CreateAtlasTexture();
 	CreateRenderImage();
 	CreateLevelImage();
+	CreateWinTexture();
 
 	AllocateStaticMemory();
 
 	LoadAtlasTexture();
+	LoadWinTexture();
 	LoadVertexBuffer();
 	CreateRenderImageView();
 	CreateLevelImageView();
@@ -79,6 +82,7 @@ void EndVulkan()
 	DestroyDescriptorPool();
 	DestroyLevelDescriptorSet();
 	DestroyLevelImage();
+	DestroyWinTexture();
 	DestroyPointSampler();
 	DestroyObjectsBuffer();
 	DestroyRenderImage();

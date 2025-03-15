@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "vk_atlas_texture.h"
+#include "vk_win_screen.h"
 #include <graphics/vulkan/system_objects/vk_queuefamilies.h>
 #include <graphics/vulkan/vulkan.h>
 #include <graphics/vulkan/system_objects/vk_device.h>
@@ -7,9 +7,9 @@
 
 static UncompressedImage atlasImage;
 
-void CreateAtlasTexture()
+void CreateWinTexture()
 {
-	atlasImage = (UncompressedImage &&)LoadAndUncompressPNG(L"data/tilemap.png");
+	atlasImage = (UncompressedImage &&)LoadAndUncompressPNG(L"data/winscreen.png");
 
 	VkImageCreateInfo imageInfo{
 		.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
@@ -27,15 +27,15 @@ void CreateAtlasTexture()
 		.initialLayout = VK_IMAGE_LAYOUT_PREINITIALIZED,
 	};
 
-	VkAssert(vkCreateImage(vk_device, &imageInfo, nullptr, &vk_atlas_image));
+	VkAssert(vkCreateImage(vk_device, &imageInfo, nullptr, &vk_win_image));
 }
 
-void LoadAtlasTexture()
+void LoadWinTexture()
 {
 	// Create image view
 	VkImageViewCreateInfo viewInfo{
 		.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
-		.image = vk_atlas_image,
+		.image = vk_win_image,
 		.viewType = VK_IMAGE_VIEW_TYPE_2D,
 		.format = VK_FORMAT_R8G8B8A8_SRGB,
 		.components = {VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY, VK_COMPONENT_SWIZZLE_IDENTITY},
@@ -46,7 +46,7 @@ void LoadAtlasTexture()
 		},
 	};
 
-	VkAssert(vkCreateImageView(vk_device, &viewInfo, nullptr, &vk_atlas_view));
+	VkAssert(vkCreateImageView(vk_device, &viewInfo, nullptr, &vk_win_view));
 
 	VkImageSubresource subResource{
 		.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
@@ -54,13 +54,13 @@ void LoadAtlasTexture()
 		.arrayLayer = 0,
 	};
 	VkSubresourceLayout layout;
-	vkGetImageSubresourceLayout(vk_device, vk_atlas_image, &subResource, &layout);
+	vkGetImageSubresourceLayout(vk_device, vk_win_image, &subResource, &layout);
 
 	// Copy data
 	for (uint32_t row = 0; row < atlasImage.height; ++row)
 	{
 		memcpy(
-			(char *)vk_atlas_memory.map + row * layout.rowPitch + layout.offset,
+			(char *)vk_win_memory.map + row * layout.rowPitch + layout.offset,
 			atlasImage.pData + row * atlasImage.width * 4,
 			(size_t)atlasImage.width * 4
 		);
@@ -68,11 +68,11 @@ void LoadAtlasTexture()
 
 	atlasImage.~UncompressedImage();
 
-	TransitionImage(VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, vk_atlas_image);
+	TransitionImage(VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, vk_win_image);
 }
 
-void DestroyAtlasTexture()
+void DestroyWinTexture()
 {
-	vkDestroyImage(vk_device, vk_atlas_image, nullptr);
-	vkDestroyImageView(vk_device, vk_atlas_view, nullptr);
+	vkDestroyImage(vk_device, vk_win_image, nullptr);
+	vkDestroyImageView(vk_device, vk_win_view, nullptr);
 }

@@ -4,7 +4,7 @@
 #include "pipelines/vk_sprite_pipeline.h"
 #include "renderpasses/vk_objects_pass.h"
 #include "window/window.h"
-#include "game/player.h"
+#include "game/entity.h"
 #include "pipelines/vk_tiles_pipeline.h"
 #include <graphics/vulkan/descriptor_sets/vk_atlas_descriptor_set.h>
 #include "system_objects/vk_commandbuffers.h"

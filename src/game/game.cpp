@@ -3,6 +3,8 @@
 #include "player.h"
 #include "coin.h"
 
+static int collectedCoins;
+
 void Game_Init()
 {
 	AddEntity(new Player());
@@ -21,5 +23,15 @@ void Game_Tick()
 	for (uint32_t i = 0; i < g_entityCount; ++i)
 	{
 		g_entities[i]->Tick();
+	}
+}
+
+void CollectCoin()
+{
+	++collectedCoins;
+
+	if (collectedCoins >= 3)
+	{
+		g_gameWon = true;
 	}
 }

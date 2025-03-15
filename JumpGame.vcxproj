@@ -220,6 +220,7 @@
     <ClCompile Include="src\graphics\vulkan\extensions\vk_ext_memorypriority.cpp" />
     <ClCompile Include="src\graphics\vulkan\game_objects\vk_level_texture.cpp" />
     <ClCompile Include="src\graphics\vulkan\game_objects\vk_point_sampler.cpp" />
+    <ClCompile Include="src\graphics\vulkan\game_objects\vk_win_screen.cpp" />
     <ClCompile Include="src\graphics\vulkan\pipelines\vk_shadermodule.cpp" />
     <ClCompile Include="src\graphics\vulkan\pipelines\vk_tiles_pipeline.cpp" />
     <ClCompile Include="src\graphics\vulkan\game_objects\vk_atlas_texture.cpp" />
@@ -267,6 +268,7 @@
     <ClInclude Include="src\graphics\vulkan\descriptor_sets\vk_level_descriptor_set.h" />
     <ClInclude Include="src\graphics\vulkan\descriptor_sets\vk_static_descriptor_pool.h" />
     <ClInclude Include="src\graphics\vulkan\extensions\vk_ext_memorypriority.h" />
+    <ClInclude Include="src\graphics\vulkan\game_objects\vk_win_screen.h" />
     <ClInclude Include="src\graphics\vulkan\game_objects\vk_level_texture.h" />
     <ClInclude Include="src\graphics\vulkan\game_objects\vk_point_sampler.h" />
     <ClInclude Include="src\graphics\vulkan\pipelines\vk_shadermodule.h" />

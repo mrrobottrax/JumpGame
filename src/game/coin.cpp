@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "coin.h"
+#include "game.h"
 
 constexpr int SPRITE_TIME = 10;
 
@@ -55,5 +56,6 @@ void Coin::Tick()
 	if (inX && inY)
 	{
 		DeleteEntity(this);
+		CollectCoin();
 	}
 }
