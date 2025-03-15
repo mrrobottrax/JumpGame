@@ -58,6 +58,10 @@ static void SetKey(unsigned long long key, bool value)
 			key_space = value;
 			break;
 
+		case VK_ESCAPE:
+			PostMessage(hwnd, WM_CLOSE, 0, 0);
+			break;
+
 		case VK_F11:
 			if (value)
 				MAGE_ToggleFullscreen();
