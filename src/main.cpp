@@ -2,7 +2,6 @@
 #include "window/window.h"
 #include "exceptions/exceptions.h"
 #include "application/application.h"
-#include <console/console.h>
 
 int WINAPI wWinMain(
 	_In_ HINSTANCE hInstance,
@@ -14,9 +13,13 @@ int WINAPI wWinMain(
 
 	try
 	{
+		ThrowIfFailed(CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE));
+
 		MAGE_Init();
 		MAGE_FrameLoop();
 		MAGE_End();
+
+		CoUninitialize();
 	}
 	catch (WindowsException &e)
 	{

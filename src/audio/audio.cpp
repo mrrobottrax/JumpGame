@@ -9,9 +9,13 @@ Todo: https://learn.microsoft.com/en-us/windows/win32/coreaudio/mmdevice-api
 
 */
 
+#define REFTIMES_PER_SEC  10000000
+
+static CComPtr<IMMDevice> pDefaultDevice;
+
 void MAGE_InitAudio()
 {
-	IMMDeviceEnumerator *pEnumerator{};
+	CComPtr<IMMDeviceEnumerator> pEnumerator{};
 
 	const CLSID CLSID_MMDeviceEnumerator = __uuidof(MMDeviceEnumerator);
 	const IID IID_IMMDeviceEnumerator = __uuidof(IMMDeviceEnumerator);
@@ -20,24 +24,10 @@ void MAGE_InitAudio()
 		CLSCTX_ALL, IID_IMMDeviceEnumerator,
 		(void **)&pEnumerator));
 
-	IMMDeviceCollection *pCollection;
-	ThrowIfFailed(pEnumerator->EnumAudioEndpoints(eRender, DEVICE_STATE_ACTIVE, &pCollection));
-
-	UINT deviceCount;
-	ThrowIfFailed(pCollection->GetCount(&deviceCount));
-	for (UINT i = 0; i < deviceCount; ++i)
+	pEnumerator->GetDefaultAudioEndpoint(eRender, eMultimedia, &pDefaultDevice);
 	{
-		IMMDevice *pDevice;
-		ThrowIfFailed(pCollection->Item(i, &pDevice));
-
-		IMMEndpoint *pEndpoint;
-		ThrowIfFailed(pDevice->QueryInterface(&pEndpoint));
-
-		LPWSTR id;
-		ThrowIfFailed(pDevice->GetId(&id));
-
-		IPropertyStore *pStore;
-		ThrowIfFailed(pDevice->OpenPropertyStore(STGM_READ, &pStore));
+		CComPtr<IPropertyStore> pStore;
+		ThrowIfFailed(pDefaultDevice->OpenPropertyStore(STGM_READ, &pStore));
 
 		PROPVARIANT friendlyName;
 		PropVariantInit(&friendlyName);
@@ -47,18 +37,21 @@ void MAGE_InitAudio()
 		if (friendlyName.vt != VT_EMPTY)
 		{
 			// Print endpoint friendly name and endpoint ID.
-			Log("Endpoint %d: \"%S\" (%S)",
-				   i, friendlyName.pwszVal, id);
+			Log("Default Endpoint: \"%S\"", friendlyName.pwszVal);
 		}
 
-		CoTaskMemFree(id);
-		id = NULL;
 		ThrowIfFailed(PropVariantClear(&friendlyName));
-		pStore->Release();
-		pEndpoint->Release();
-		pDevice->Release();
 	}
 
-	pCollection->Release();
-	pEnumerator->Release();
+	CComPtr<IAudioClient> pClient;
+	ThrowIfFailed(pDefaultDevice->Activate(__uuidof(IAudioClient), CLSCTX_ALL, NULL, (void **)&pClient));
+
+	WAVEFORMATEX *pFormat;
+	ThrowIfFailed(pClient->GetMixFormat(&pFormat));
+
+	REFERENCE_TIME hnsRequestedDuration = REFTIMES_PER_SEC; // 1 second
+	ThrowIfFailed(pClient->Initialize(AUDCLNT_SHAREMODE_SHARED, 0, hnsRequestedDuration, 0, pFormat, NULL));
 }
+
+void MAGE_EndAudio()
+{}

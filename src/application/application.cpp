@@ -30,6 +30,7 @@ void MAGE_Init()
 void MAGE_End()
 {
 	MAGE_EndGraphics();
+	MAGE_EndAudio();
 
 #ifdef DEBUG
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);

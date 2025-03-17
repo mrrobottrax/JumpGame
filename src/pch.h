@@ -1,6 +1,7 @@
 #pragma once
 
 // Memory leaks
+#define _ATL_DEBUG_INTERFACES
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
@@ -11,6 +12,9 @@
 #include <combaseapi.h>
 #include <mmdeviceapi.h>
 #include <Functiondiscoverykeys_devpkey.h>
+#include <atlbase.h>
+#include <audioclient.h>
+#include <audiopolicy.h>
 
 // Vulkan
 #include <vulkan/vulkan.h>
