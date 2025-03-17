@@ -17,6 +17,22 @@ void Log(const char message[], ...)
 #endif // DEBUG
 }
 
+void Log(const wchar_t message[], ...)
+{
+#ifdef DEBUG
+	printf("[LOG] ");
+
+	va_list args;
+	va_start(args, message);
+
+	vwprintf(message, args);
+
+	va_end(args);
+
+	printf("\n");
+#endif // DEBUG
+}
+
 void LogWarn(const char message[], ...)
 {
 #ifdef DEBUG

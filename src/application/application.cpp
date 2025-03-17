@@ -4,6 +4,7 @@
 #include "graphics/graphics.h"
 #include "game/game.h"
 #include "time/time.h"
+#include "audio/audio.h"
 
 void MAGE_Init()
 {
@@ -22,6 +23,7 @@ void MAGE_Init()
 #endif // DEBUG
 
 	MAGE_CreateWindow();
+	MAGE_InitAudio();
 	MAGE_InitGraphics();
 }
 

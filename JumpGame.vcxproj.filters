@@ -150,6 +150,9 @@
     <ClCompile Include="src\graphics\vulkan\game_objects\vk_win_screen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\audio\audio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\pch.h">
@@ -291,6 +294,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\game\blockhead.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\audio\audio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

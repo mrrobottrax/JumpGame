@@ -9,6 +9,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <combaseapi.h>
+#include <mmdeviceapi.h>
+#include <Functiondiscoverykeys_devpkey.h>
 
 // Vulkan
 #include <vulkan/vulkan.h>

@@ -206,6 +206,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\application\application.cpp" />
+    <ClCompile Include="src\audio\audio.cpp" />
     <ClCompile Include="src\console\console.cpp" />
     <ClCompile Include="src\exceptions\exceptions.cpp" />
     <ClCompile Include="src\file\file.cpp" />
@@ -256,6 +257,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\application\application.h" />
+    <ClInclude Include="src\audio\audio.h" />
     <ClInclude Include="src\console\console.h" />
     <ClInclude Include="src\exceptions\exceptions.h" />
     <ClInclude Include="src\file\file.h" />
