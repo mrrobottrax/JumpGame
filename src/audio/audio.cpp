@@ -6,6 +6,7 @@
 /*
 
 Todo: https://learn.microsoft.com/en-us/windows/win32/coreaudio/mmdevice-api
+https://learn.microsoft.com/en-us/windows/win32/coreaudio/rendering-a-stream
 
 */
 
@@ -51,6 +52,19 @@ void MAGE_InitAudio()
 
 	REFERENCE_TIME hnsRequestedDuration = REFTIMES_PER_SEC; // 1 second
 	ThrowIfFailed(pClient->Initialize(AUDCLNT_SHAREMODE_SHARED, 0, hnsRequestedDuration, 0, pFormat, NULL));
+
+	UINT32 bufferSize;
+	ThrowIfFailed(pClient->GetBufferSize(&bufferSize));
+
+	CComPtr<IAudioRenderClient> pRenderClient;
+	ThrowIfFailed(pClient->GetService(__uuidof(IAudioRenderClient), (void **)&pRenderClient));
+
+	BYTE *pData;
+	ThrowIfFailed(pRenderClient->GetBuffer(bufferSize, &pData));
+
+	ThrowIfFailed(pRenderClient->ReleaseBuffer(bufferSize, 0));
+
+	CoTaskMemFree(pFormat);
 }
 
 void MAGE_EndAudio()
