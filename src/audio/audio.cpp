@@ -13,6 +13,20 @@ https://learn.microsoft.com/en-us/windows/win32/coreaudio/rendering-a-stream
 #define REFTIMES_PER_SEC  10000000
 
 static CComPtr<IMMDevice> pDefaultDevice;
+static HANDLE hAudioThread;
+static volatile bool shouldEndAudioThread = false;
+
+DWORD WINAPI AudioThreadProc(
+	_In_ LPVOID lpParameter
+)
+{
+	while (!shouldEndAudioThread)
+	{
+		Sleep(10);
+	}
+
+	return 0;
+}
 
 void MAGE_InitAudio()
 {
@@ -65,7 +79,14 @@ void MAGE_InitAudio()
 	ThrowIfFailed(pRenderClient->ReleaseBuffer(bufferSize, 0));
 
 	CoTaskMemFree(pFormat);
+
+	hAudioThread = CreateThread(NULL, 0, AudioThreadProc, NULL, 0, NULL);
+	ThrowIfNull(hAudioThread);
 }
 
 void MAGE_EndAudio()
-{}
+{
+	shouldEndAudioThread = true;
+	WaitForSingleObject(hAudioThread, INFINITE);
+	CloseHandle(hAudioThread);
+}

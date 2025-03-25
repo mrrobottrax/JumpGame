@@ -22,5 +22,6 @@ public:
 	std::string msg() const;
 };
 
+void ThrowIfNull(HANDLE handle);
 void ThrowIfFailed(HRESULT hr);
 void ThrowIfFailed(HRESULT hr, const char message[]);

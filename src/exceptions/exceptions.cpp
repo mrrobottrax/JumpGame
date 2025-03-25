@@ -37,6 +37,14 @@ std::string VulkanException::msg() const
 	return format("{}\n{}", exception::what(), str);
 }
 
+void ThrowIfNull(HANDLE handle)
+{
+	if (handle == NULL)
+	{
+		throw WindowsException("ERR:");
+	}
+}
+
 void ThrowIfFailed(HRESULT hr)
 {
 	if (FAILED(hr))
