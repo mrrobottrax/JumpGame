@@ -23,7 +23,7 @@ using namespace Console;
 
 namespace Graphics::Vulkan
 {
-	static void DrawTiles()
+	static void draw_tiles()
 	{
 		// Set pipeline
 		vkCmdBindPipeline(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_tiles_pipeline);
@@ -38,7 +38,7 @@ namespace Graphics::Vulkan
 		vkCmdDraw(vk_commandbuffer_main, 6, 1, 0, 0);
 	}
 
-	static void DrawObjects()
+	static void draw_objects()
 	{
 		// Set pipeline
 		vkCmdBindPipeline(vk_commandbuffer_main, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_sprite_pipeline);
@@ -49,7 +49,7 @@ namespace Graphics::Vulkan
 
 		if (g_entityCount > vk_objects_instancebuffer_maxobjects)
 		{
-			Log("Entity count too high!");
+			log("Entity count too high!");
 		}
 
 		for (uint32_t i = 0; i < g_entityCount && i < vk_objects_instancebuffer_maxobjects; ++i)
@@ -71,7 +71,7 @@ namespace Graphics::Vulkan
 		vkCmdDraw(vk_commandbuffer_main, 6, g_entityCount, 0, 0);
 	}
 
-	static void BlitImage(int swapchainImageIndex)
+	static void blit_image(int swapchainImageIndex)
 	{
 		VkImageMemoryBarrier2 swapchainToTransferDstBarrier{
 			.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
@@ -186,14 +186,14 @@ namespace Graphics::Vulkan
 		vkCmdPipelineBarrier2(vk_commandbuffer_main, &toPresentSrcDependency);
 	}
 
-	void DrawFrame(int swapchainImageIndex)
+	void draw_frame(int swapchainImageIndex)
 	{
 		VkCommandBufferBeginInfo beginInfo{};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
-		VkAssert(vkResetCommandPool(vk_device, vk_commandpool_main, 0));
-		VkAssert(vkBeginCommandBuffer(vk_commandbuffer_main, &beginInfo));
+		vk_assert(vkResetCommandPool(vk_device, vk_commandpool_main, 0));
+		vk_assert(vkBeginCommandBuffer(vk_commandbuffer_main, &beginInfo));
 
 		// set viewport
 		VkViewport viewport{
@@ -240,8 +240,8 @@ namespace Graphics::Vulkan
 		int32_t pushData[] = { LEVEL_WIDTH, LEVEL_HEIGHT, TILE_SIZE };
 		vkCmdPushConstants(vk_commandbuffer_main, vk_tiles_pipeline_layout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(pushData), &pushData);
 
-		DrawTiles();
-		DrawObjects();
+		draw_tiles();
+		draw_objects();
 
 		VkSubpassEndInfo subEnd{
 			.sType = VK_STRUCTURE_TYPE_SUBPASS_END_INFO,
@@ -249,9 +249,9 @@ namespace Graphics::Vulkan
 
 		vkCmdEndRenderPass2(vk_commandbuffer_main, &subEnd);
 
-		BlitImage(swapchainImageIndex);
+		blit_image(swapchainImageIndex);
 
-		VkAssert(vkEndCommandBuffer(vk_commandbuffer_main));
+		vk_assert(vkEndCommandBuffer(vk_commandbuffer_main));
 
 		VkCommandBufferSubmitInfo commandBufferSubmitInfo{};
 		commandBufferSubmitInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO;
@@ -278,6 +278,6 @@ namespace Graphics::Vulkan
 			.signalSemaphoreInfoCount = 1,
 			.pSignalSemaphoreInfos = &semaphoreSubmitInfo,
 		};
-		VkAssert(vkQueueSubmit2(vk_queue_main, 1, &submitInfo, vk_fence_main));
+		vk_assert(vkQueueSubmit2(vk_queue_main, 1, &submitInfo, vk_fence_main));
 	}
 }

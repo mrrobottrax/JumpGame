@@ -5,7 +5,7 @@
 
 namespace Graphics::Vulkan
 {
-	void CreateDescriptorPool()
+	void create_descriptor_pool()
 	{
 		VkDescriptorPoolSize poolSize{
 			.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
@@ -19,10 +19,10 @@ namespace Graphics::Vulkan
 			.pPoolSizes = &poolSize,
 		};
 
-		VkAssert(vkCreateDescriptorPool(vk_device, &poolInfo, nullptr, &vk_static_descriptor_pool));
+		vk_assert(vkCreateDescriptorPool(vk_device, &poolInfo, nullptr, &vk_static_descriptor_pool));
 	}
 
-	void DestroyDescriptorPool()
+	void destroy_descriptor_pool()
 	{
 		vkDestroyDescriptorPool(vk_device, vk_static_descriptor_pool, nullptr);
 	}

@@ -20,5 +20,5 @@ namespace Graphics::Vulkan
 		operator VkShaderModule &() { return module; }
 	};
 
-	ShaderModuleWrapper CreateShaderModule(const wchar_t name[]);
+	ShaderModuleWrapper create_shader_module(const wchar_t name[]);
 }

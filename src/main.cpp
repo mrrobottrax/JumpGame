@@ -13,11 +13,11 @@ int WINAPI wWinMain(
 
 	try
 	{
-		ThrowIfFailed(CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE));
+		throw_if_failed(CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE));
 
-		Application::Init();
-		Application::FrameLoop();
-		Application::Shutdown();
+		Application::init();
+		Application::frame_loop();
+		Application::shutdown();
 
 		CoUninitialize();
 	}

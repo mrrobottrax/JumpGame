@@ -4,6 +4,6 @@ namespace Graphics::Vulkan
 {
 	inline VkSampler vk_point_sampler;
 
-	void CreatePointSampler();
-	void DestroyPointSampler();
+	void create_point_sampler();
+	void destroy_point_sampler();
 }

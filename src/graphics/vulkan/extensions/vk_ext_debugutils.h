@@ -2,5 +2,5 @@
 
 namespace Graphics::Vulkan
 {
-	void GetDebugUtilsFunctionPointers();
+	void get_debug_utils_function_pointers();
 }

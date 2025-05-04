@@ -5,9 +5,9 @@
 
 namespace Graphics::Vulkan
 {
-	ShaderModuleWrapper CreateShaderModule(const wchar_t name[])
+	ShaderModuleWrapper create_shader_module(const wchar_t name[])
 	{
-		FileHandle file = LoadEntireFile(name);
+		FileHandle file = load_entire_file(name);
 
 		VkShaderModule module;
 		VkShaderModuleCreateInfo createInfo{
@@ -16,7 +16,7 @@ namespace Graphics::Vulkan
 			.pCode = (uint32_t *)file.Data(),
 		};
 
-		VkAssert(vkCreateShaderModule(vk_device, &createInfo, nullptr, &module));
+		vk_assert(vkCreateShaderModule(vk_device, &createInfo, nullptr, &module));
 
 		return ShaderModuleWrapper(module);
 	}

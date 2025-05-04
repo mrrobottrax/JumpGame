@@ -8,5 +8,5 @@ namespace Graphics::Vulkan
 	};
 	inline QueueFamilyIndices vk_queue_family_indices;
 
-	void GetQueueFamilies();
+	void get_queue_families();
 }

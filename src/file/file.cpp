@@ -23,7 +23,7 @@ static void OnFileReadComplete(
 	SetEvent(myOverlapped->hEvent);
 }
 
-FileHandle LoadEntireFile(const wchar_t name[])
+FileHandle load_entire_file(const wchar_t name[])
 {
 	wstring fullpath = wstring(L"data\\") + name;
 

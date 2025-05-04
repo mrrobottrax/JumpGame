@@ -16,5 +16,5 @@ public:
 		this->flip = false;
 	}
 
-	virtual void Tick() override {}
+	virtual void tick() override {}
 };

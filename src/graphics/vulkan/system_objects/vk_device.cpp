@@ -14,7 +14,7 @@ namespace Graphics::Vulkan
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME,
 	};
 
-	void CreateDevice()
+	void create_device()
 	{
 		uint32_t propertyCount;
 		vkEnumerateDeviceExtensionProperties(vk_physicaldevice, nullptr, &propertyCount, nullptr);
@@ -28,7 +28,7 @@ namespace Graphics::Vulkan
 			usedExts[i] = REQUIRED_EXTENSIONS[i];
 		}
 
-		Log("DEVICE EXTENSIONS:");
+		log("DEVICE EXTENSIONS:");
 		for (uint32_t i = 0; i < propertyCount; ++i)
 		{
 #pragma warning (push)
@@ -36,7 +36,7 @@ namespace Graphics::Vulkan
 			VkExtensionProperties &properties = extensions[i];
 #pragma warning (pop)
 
-			Log(properties.extensionName);
+			log(properties.extensionName);
 
 			if (strcmp(properties.extensionName, "VK_EXT_pageable_device_local_memory") == 0)
 			{
@@ -78,15 +78,15 @@ namespace Graphics::Vulkan
 			.ppEnabledExtensionNames = &usedExts[0],
 		};
 
-		VkAssert(vkCreateDevice(vk_physicaldevice, &createInfo, nullptr, &vk_device));
+		vk_assert(vkCreateDevice(vk_physicaldevice, &createInfo, nullptr, &vk_device));
 
 		if (vk_device_extensions.memory_priority)
 		{
-			GetMemoryPriorityFunctionPointers();
+			get_memory_priority_function_pointers();
 		}
 	}
 
-	void DestroyDevice()
+	void destroy_device()
 	{
 		vkDestroyDevice(vk_device, nullptr);
 	}

@@ -9,7 +9,7 @@ namespace Graphics::Vulkan
 
 	inline MemoryAllocation vk_level_memory;
 
-	void CreateLevelImage();
-	void CreateLevelImageView();
-	void DestroyLevelImage();
+	void create_level_image();
+	void create_level_image_view();
+	void destroy_level_image();
 }

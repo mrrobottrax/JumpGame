@@ -8,7 +8,7 @@ namespace Graphics::Vulkan
 
 	inline MemoryAllocation vk_win_memory;
 
-	void CreateWinTexture();
-	void LoadWinTexture();
-	void DestroyWinTexture();
+	void create_win_texture();
+	void load_win_texture();
+	void destroy_win_texture();
 }

@@ -3,7 +3,7 @@
 
 namespace Console
 {
-	void Log(const char message[], ...)
+	void log(const char message[], ...)
 	{
 #ifdef DEBUG
 		printf("[LOG] ");
@@ -19,7 +19,7 @@ namespace Console
 #endif // DEBUG
 	}
 
-	void Log(const wchar_t message[], ...)
+	void log(const wchar_t message[], ...)
 	{
 #ifdef DEBUG
 		printf("[LOG] ");
@@ -35,7 +35,7 @@ namespace Console
 #endif // DEBUG
 	}
 
-	void LogWarn(const char message[], ...)
+	void log_warn(const char message[], ...)
 	{
 #ifdef DEBUG
 		printf("[WARNING] ");
@@ -51,24 +51,24 @@ namespace Console
 #endif // DEBUG
 	}
 
-	void Log(unsigned int n)
+	void log(unsigned int n)
 	{
 #ifdef DEBUG
-		Log("%u", n);
+		log("%u", n);
 #endif // DEBUG
 	}
 
-	void Log(void *p)
+	void log(void *p)
 	{
 #ifdef DEBUG
-		Log("%p", p);
+		log("%p", p);
 #endif // DEBUG
 	}
 
-	void Log(float f)
+	void log(float f)
 	{
 #ifdef DEBUG
-		Log("%f", f);
+		log("%f", f);
 #endif // DEBUG
 	}
 }

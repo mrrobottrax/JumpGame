@@ -16,7 +16,7 @@ Coin::Coin(float positionX, float positionY) : Entity()
 	reverseAnim = false;
 }
 
-void Coin::Tick()
+void Coin::tick()
 {
 	--spriteTimer;
 	if (spriteTimer <= 0)
@@ -55,7 +55,7 @@ void Coin::Tick()
 	bool inY = (int)g_entities[0]->positionY == (int)positionY || (int)g_entities[0]->positionY + 1 == (int)positionY;
 	if (inX && inY)
 	{
-		DeleteEntity(this);
-		CollectCoin();
+		delete_entity(this);
+		Game::collect_coin();
 	}
 }

@@ -15,7 +15,7 @@ using namespace Console;
 
 namespace Graphics::Vulkan
 {
-	void GetMemoryTypes()
+	void get_memory_types()
 	{
 		VkPhysicalDeviceMemoryProperties memory;
 		vkGetPhysicalDeviceMemoryProperties(vk_physicaldevice, &memory);
@@ -25,40 +25,40 @@ namespace Graphics::Vulkan
 			.hostvisible = UINT32_MAX,
 		};
 
-		Log("MEMORY TYPES:");
+		log("MEMORY TYPES:");
 		for (uint32_t i = 0; i < memory.memoryTypeCount; ++i)
 		{
 			VkMemoryType &mem = memory.memoryTypes[i];
 
-			Log("%i: ", i);
-			Log("  Heap: ", mem.heapIndex);
+			log("%i: ", i);
+			log("  Heap: ", mem.heapIndex);
 
 			if (mem.propertyFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
-				Log("  -Device local");
+				log("  -Device local");
 
 			if (mem.propertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
-				Log("  -Host visible");
+				log("  -Host visible");
 
 			if (mem.propertyFlags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)
-				Log("  -Host coherent");
+				log("  -Host coherent");
 
 			if (mem.propertyFlags & VK_MEMORY_PROPERTY_HOST_CACHED_BIT)
-				Log("  -Host cached");
+				log("  -Host cached");
 
 			if (mem.propertyFlags & VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT)
-				Log("  -Lazily allocated");
+				log("  -Lazily allocated");
 
 			if (mem.propertyFlags & VK_MEMORY_PROPERTY_PROTECTED_BIT)
-				Log("  -Protected");
+				log("  -Protected");
 
 			if (mem.propertyFlags & VK_MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD)
-				Log("  -Device coherent AMD");
+				log("  -Device coherent AMD");
 
 			if (mem.propertyFlags & VK_MEMORY_PROPERTY_DEVICE_UNCACHED_BIT_AMD)
-				Log("  -Device uncached AMD");
+				log("  -Device uncached AMD");
 
 			if (mem.propertyFlags & VK_MEMORY_PROPERTY_RDMA_CAPABLE_BIT_NV)
-				Log("  -RDMA capable NV");
+				log("  -RDMA capable NV");
 
 			if (mem.propertyFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT &&
 				!(mem.propertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) &&
@@ -67,7 +67,7 @@ namespace Graphics::Vulkan
 			{
 				if (vk_memory_types.local == -1)
 				{
-					Log("  !local");
+					log("  !local");
 					vk_memory_types.local = i;
 				}
 			}
@@ -78,7 +78,7 @@ namespace Graphics::Vulkan
 			{
 				if (vk_memory_types.hostvisible == -1)
 				{
-					Log("  !hostvisible");
+					log("  !hostvisible");
 					vk_memory_types.hostvisible = i;
 				}
 			}
@@ -90,7 +90,7 @@ namespace Graphics::Vulkan
 			{
 				if (!vk_memory_types.hostvisible_is_local)
 				{
-					Log("  !hostvisible_local");
+					log("  !hostvisible_local");
 					vk_memory_types.hostvisible = i;
 					vk_memory_types.hostvisible_is_local = true;
 				}
@@ -125,15 +125,15 @@ namespace Graphics::Vulkan
 			vkGetBufferMemoryRequirements(vk_device, buffer, &requirements);
 		}
 
-		void BindMemory()
+		void bind_memory()
 		{
 			switch (type)
 			{
 				case MemoryEntry::Image:
-					VkAssert(vkBindImageMemory(vk_device, *pImage, allocation.memory, allocation.offset));
+					vk_assert(vkBindImageMemory(vk_device, *pImage, allocation.memory, allocation.offset));
 					break;
 				case MemoryEntry::Buffer:
-					VkAssert(vkBindBufferMemory(vk_device, *pBuffer, allocation.memory, allocation.offset));
+					vk_assert(vkBindBufferMemory(vk_device, *pBuffer, allocation.memory, allocation.offset));
 					break;
 				default:
 					break;
@@ -142,7 +142,7 @@ namespace Graphics::Vulkan
 	};
 
 	template<size_t size>
-	static VkDeviceSize AllocateMemory(MemoryEntry(&entries)[size], VkDeviceMemory &memory, uint32_t memoryType, float priority)
+	static VkDeviceSize allocate_memory(MemoryEntry(&entries)[size], VkDeviceMemory &memory, uint32_t memoryType, float priority)
 	{
 		VkDeviceSize offset = 0;
 		for (int i = 0; i < _countof(entries); ++i)
@@ -164,7 +164,7 @@ namespace Graphics::Vulkan
 			.memoryTypeIndex = memoryType
 		};
 
-		VkAssert(vkAllocateMemory(vk_device, &allocateInfo, nullptr, &memory));
+		vk_assert(vkAllocateMemory(vk_device, &allocateInfo, nullptr, &memory));
 		if (vk_device_extensions.memory_priority)
 		{
 			vkSetDeviceMemoryPriorityEXT(vk_device, memory, priority);
@@ -177,7 +177,7 @@ namespace Graphics::Vulkan
 
 			entries[i].allocation.range.memory = memory;
 			entries[i].allocation.memory = memory;
-			entries[i].BindMemory();
+			entries[i].bind_memory();
 
 			offset += entries[i].requirements.size;
 		}
@@ -185,7 +185,7 @@ namespace Graphics::Vulkan
 		return offset;
 	}
 
-	static void AllocateHostVisibleMemory()
+	static void allocate_host_visible_memory()
 	{
 		MemoryEntry entries[] = {
 			{vk_win_memory, vk_win_image},
@@ -195,9 +195,9 @@ namespace Graphics::Vulkan
 			{vk_quad_vertexbuffer_memory, vk_quad_vertexbuffer},
 		};
 
-		VkDeviceSize size = AllocateMemory(entries, vk_static_host_memory, vk_memory_types.hostvisible, 1);
+		VkDeviceSize size = allocate_memory(entries, vk_static_host_memory, vk_memory_types.hostvisible, 1);
 
-		VkAssert(vkMapMemory(vk_device, vk_static_host_memory, 0, size, 0, &vk_static_host_memory_map));
+		vk_assert(vkMapMemory(vk_device, vk_static_host_memory, 0, size, 0, &vk_static_host_memory_map));
 
 		VkDeviceSize offset = 0;
 		for (int i = 0; i < _countof(entries); ++i)
@@ -210,22 +210,22 @@ namespace Graphics::Vulkan
 		}
 	}
 
-	static void AllocateDeviceLocalMemory()
+	static void allocate_device_local_memory()
 	{
 		MemoryEntry entries[] = {
 			{vk_render_image_memory, vk_render_image},
 		};
 
-		AllocateMemory(entries, vk_static_local_memory, vk_memory_types.local, 0);
+		allocate_memory(entries, vk_static_local_memory, vk_memory_types.local, 0);
 	}
 
-	void AllocateStaticMemory()
+	void allocate_static_memory()
 	{
-		AllocateHostVisibleMemory();
-		AllocateDeviceLocalMemory();
+		allocate_host_visible_memory();
+		allocate_device_local_memory();
 	}
 
-	void FreeStaticMemory()
+	void free_static_memory()
 	{
 		vkFreeMemory(vk_device, vk_static_local_memory, nullptr);
 		vkFreeMemory(vk_device, vk_static_host_memory, nullptr);

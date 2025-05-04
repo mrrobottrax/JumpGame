@@ -6,6 +6,6 @@ namespace Graphics::Vulkan
 	inline VkSemaphore vk_semaphore_rendering;
 	inline VkSemaphore vk_semaphore_acquireimage;
 
-	void CreateSyncObjects();
-	void DestroySyncObjects();
+	void create_sync_objects();
+	void destroy_sync_objects();
 }

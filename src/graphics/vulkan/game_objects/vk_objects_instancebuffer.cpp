@@ -6,7 +6,7 @@
 
 namespace Graphics::Vulkan
 {
-	void CreateObjectsBuffer()
+	void create_objects_buffer()
 	{
 		VkBufferCreateInfo bufferInfo{
 			.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
@@ -17,10 +17,10 @@ namespace Graphics::Vulkan
 			.pQueueFamilyIndices = &vk_queue_family_indices.mainQueueFamily,
 		};
 
-		VkAssert(vkCreateBuffer(vk_device, &bufferInfo, nullptr, &vk_objects_instancebuffer));
+		vk_assert(vkCreateBuffer(vk_device, &bufferInfo, nullptr, &vk_objects_instancebuffer));
 	}
 
-	void DestroyObjectsBuffer()
+	void destroy_object_buffer()
 	{
 		vkDestroyBuffer(vk_device, vk_objects_instancebuffer, nullptr);
 	}

@@ -8,7 +8,7 @@ namespace Graphics::Vulkan
 
 	inline MemoryAllocation vk_atlas_memory;
 
-	void CreateAtlasTexture();
-	void LoadAtlasTexture();
-	void DestroyAtlasTexture();
+	void create_atlas_texture();
+	void load_atlas_texture();
+	void destroy_atlas_texture();
 }

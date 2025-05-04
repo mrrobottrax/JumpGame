@@ -8,7 +8,7 @@
 
 namespace Graphics::Vulkan
 {
-	static void CalculateRenderScale()
+	static void calculate_render_scale()
 	{
 		int scaleX = vk_swapchain_width / SCREEN_WIDTH;
 		int scaleY = vk_swapchain_height / SCREEN_HEIGHT;
@@ -18,7 +18,7 @@ namespace Graphics::Vulkan
 		vk_render_scale = minScale;
 	}
 
-	static void CreateSwapchainObjects()
+	static void create_swapchain_objects()
 	{
 		VkSwapchainCreateInfoKHR createInfo{
 			.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
@@ -36,14 +36,14 @@ namespace Graphics::Vulkan
 			.clipped = VK_TRUE,
 		};
 
-		VkAssert(vkCreateSwapchainKHR(vk_device, &createInfo, nullptr, &vk_swapchain));
+		vk_assert(vkCreateSwapchainKHR(vk_device, &createInfo, nullptr, &vk_swapchain));
 
-		VkAssert(vkGetSwapchainImagesKHR(vk_device, vk_swapchain, &vk_swapchain_image_count, nullptr));
+		vk_assert(vkGetSwapchainImagesKHR(vk_device, vk_swapchain, &vk_swapchain_image_count, nullptr));
 
 		vk_swapchain_images = new VkImage[vk_swapchain_image_count];
 		vk_swapchain_image_views = new VkImageView[vk_swapchain_image_count];
 
-		VkAssert(vkGetSwapchainImagesKHR(vk_device, vk_swapchain, &vk_swapchain_image_count, vk_swapchain_images));
+		vk_assert(vkGetSwapchainImagesKHR(vk_device, vk_swapchain, &vk_swapchain_image_count, vk_swapchain_images));
 
 		for (uint32_t i = 0; i < vk_swapchain_image_count; ++i)
 		{
@@ -62,14 +62,14 @@ namespace Graphics::Vulkan
 	#pragma warning (pop)
 			};
 
-			VkAssert(vkCreateImageView(vk_device, &viewInfo, nullptr, &vk_swapchain_image_views[i]));
+			vk_assert(vkCreateImageView(vk_device, &viewInfo, nullptr, &vk_swapchain_image_views[i]));
 		}
 	}
 
-	void CreateSwapchain()
+	void create_swapchain()
 	{
 		VkSurfaceCapabilitiesKHR capabilities;
-		VkAssert(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(vk_physicaldevice, vk_surface, &capabilities));
+		vk_assert(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(vk_physicaldevice, vk_surface, &capabilities));
 
 		vk_swapchain_width = capabilities.currentExtent.width;
 		vk_swapchain_height = capabilities.currentExtent.height;
@@ -77,11 +77,11 @@ namespace Graphics::Vulkan
 		vk_swapchain_image_count = capabilities.minImageCount + 1;
 		if (vk_swapchain_image_count > capabilities.maxImageCount) vk_swapchain_image_count = capabilities.maxImageCount;
 
-		CreateSwapchainObjects();
-		CalculateRenderScale();
+		create_swapchain_objects();
+		calculate_render_scale();
 	}
 
-	void DestroySwapchain()
+	void destroy_swapchain()
 	{
 		for (uint32_t i = 0; i < vk_swapchain_image_count; ++i)
 		{
@@ -94,13 +94,13 @@ namespace Graphics::Vulkan
 		delete[] vk_swapchain_image_views;
 	}
 
-	void GetSwapchainFormat()
+	void get_swapchain_format()
 	{
 		uint32_t surfaceFormatCount;
-		VkAssert(vkGetPhysicalDeviceSurfaceFormatsKHR(vk_physicaldevice, vk_surface, &surfaceFormatCount, nullptr));
+		vk_assert(vkGetPhysicalDeviceSurfaceFormatsKHR(vk_physicaldevice, vk_surface, &surfaceFormatCount, nullptr));
 
 		VkSurfaceFormatKHR *surfaceFormats = new VkSurfaceFormatKHR[surfaceFormatCount];
-		VkAssert(vkGetPhysicalDeviceSurfaceFormatsKHR(vk_physicaldevice, vk_surface, &surfaceFormatCount, surfaceFormats));
+		vk_assert(vkGetPhysicalDeviceSurfaceFormatsKHR(vk_physicaldevice, vk_surface, &surfaceFormatCount, surfaceFormats));
 
 		if (surfaceFormatCount > 0)
 		{
@@ -126,9 +126,9 @@ namespace Graphics::Vulkan
 		delete[] surfaceFormats;
 	}
 
-	void RecreateSwapchain()
+	void recreate_swapchain()
 	{
-		DestroySwapchain();
-		CreateSwapchain();
+		destroy_swapchain();
+		create_swapchain();
 	}
 }

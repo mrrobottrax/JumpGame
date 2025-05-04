@@ -4,6 +4,6 @@ namespace Graphics::Vulkan
 {
 	inline VkSurfaceKHR vk_surface;
 
-	void CreateSurface();
-	void DestroySurface();
+	void create_surface();
+	void destroy_surface();
 }

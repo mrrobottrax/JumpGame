@@ -4,7 +4,7 @@ namespace Application
 {
 	inline HINSTANCE hInstance;
 
-	void Init();
-	void Shutdown();
-	void FrameLoop();
+	void init();
+	void shutdown();
+	void frame_loop();
 }

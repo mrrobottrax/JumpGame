@@ -7,7 +7,7 @@
 
 namespace Graphics::Vulkan
 {
-	void CreateSpritePipeline()
+	void create_sprite_pipeline()
 	{
 		// Create layout
 
@@ -27,12 +27,12 @@ namespace Graphics::Vulkan
 			.pPushConstantRanges = &pushConstantRange,
 		};
 
-		VkAssert(vkCreatePipelineLayout(vk_device, &layoutInfo, nullptr, &vk_sprite_pipeline_layout));
+		vk_assert(vkCreatePipelineLayout(vk_device, &layoutInfo, nullptr, &vk_sprite_pipeline_layout));
 
 		// Shader stages
 
-		ShaderModuleWrapper vertexModule = CreateShaderModule(L"sprite.vert.spv");
-		ShaderModuleWrapper fragmentModule = CreateShaderModule(L"sprite.frag.spv");
+		ShaderModuleWrapper vertexModule = create_shader_module(L"sprite.vert.spv");
+		ShaderModuleWrapper fragmentModule = create_shader_module(L"sprite.frag.spv");
 
 		VkPipelineShaderStageCreateInfo fragmentStage{
 			.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
@@ -192,10 +192,10 @@ namespace Graphics::Vulkan
 			.renderPass = vk_objects_pass,
 		};
 
-		VkAssert(vkCreateGraphicsPipelines(vk_device, VK_NULL_HANDLE, 1, &createInfo, nullptr, &vk_sprite_pipeline));
+		vk_assert(vkCreateGraphicsPipelines(vk_device, VK_NULL_HANDLE, 1, &createInfo, nullptr, &vk_sprite_pipeline));
 	}
 
-	void DestroySpritePipeline()
+	void destroy_sprite_pipeline()
 	{
 		vkDestroyPipelineLayout(vk_device, vk_sprite_pipeline_layout, nullptr);
 		vkDestroyPipeline(vk_device, vk_sprite_pipeline, nullptr);

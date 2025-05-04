@@ -5,7 +5,7 @@
 
 namespace Graphics::Vulkan
 {
-	void CreateCommandBuffers()
+	void create_command_buffers()
 	{
 		VkCommandPoolCreateInfo createInfo{
 			.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
@@ -24,7 +24,7 @@ namespace Graphics::Vulkan
 		vkAllocateCommandBuffers(vk_device, &allocateInfo, &vk_commandbuffer_main);
 	}
 
-	void DestroyCommandBuffers()
+	void destroy_command_buffer()
 	{
 		vkDestroyCommandPool(vk_device, vk_commandpool_main, nullptr);
 	}

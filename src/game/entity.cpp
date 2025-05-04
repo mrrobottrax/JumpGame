@@ -1,12 +1,12 @@
 #include "pch.h"
 #include "entity.h"
 
-void AddEntity(Entity *pEntity)
+void add_entity(Entity *pEntity)
 {
 	g_entities[g_entityCount++] = pEntity;
 }
 
-void DeleteEntity(Entity *pEntity)
+void delete_entity(Entity *pEntity)
 {
 	for (uint32_t i = 0; i < g_entityCount; ++i)
 	{
@@ -19,7 +19,7 @@ void DeleteEntity(Entity *pEntity)
 	}
 }
 
-void ClearEntities()
+void clear_entities()
 {
 	for (uint32_t i = 0; i < g_entityCount; ++i)
 	{

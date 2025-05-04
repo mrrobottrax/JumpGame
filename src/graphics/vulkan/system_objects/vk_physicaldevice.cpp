@@ -13,7 +13,7 @@ namespace Graphics::Vulkan
 		int score;
 	};
 
-	void PickPhysicalDevice()
+	void pick_physical_device()
 	{
 		uint32_t physicalDeviceCount;
 		vkEnumeratePhysicalDevices(vk_instance, &physicalDeviceCount, nullptr);
@@ -25,7 +25,7 @@ namespace Graphics::Vulkan
 
 		DeviceEntry bestDevice;
 
-		Log("DEVICES:");
+		log("DEVICES:");
 		for (uint32_t i = 0; i < physicalDeviceCount; ++i)
 		{
 #pragma warning (push)
@@ -51,7 +51,7 @@ namespace Graphics::Vulkan
 					break;
 			}
 
-			Log("%s : %i", properties.deviceName, score);
+			log("%s : %i", properties.deviceName, score);
 
 			if (i == 0 || score > bestDevice.score)
 			{
@@ -67,7 +67,7 @@ namespace Graphics::Vulkan
 		VkPhysicalDeviceProperties properties;
 		vkGetPhysicalDeviceProperties(bestDevice.vk_physicaldevice, &properties);
 
-		Log("USING DEVICE: %s", properties.deviceName);
+		log("USING DEVICE: %s", properties.deviceName);
 
 		delete[] devices;
 	}

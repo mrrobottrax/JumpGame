@@ -2,19 +2,19 @@
 #include "input.h"
 #include "window/window.h"
 
-static void SetKey(unsigned long long key, bool value);
+static void set_key(unsigned long long key, bool value);
 
-void Input_Keydown(unsigned long long key)
+void input_keydown(unsigned long long key)
 {
-	SetKey(key, true);
+	set_key(key, true);
 }
 
-void Input_Keyup(unsigned long long key)
+void input_keyup(unsigned long long key)
 {
-	SetKey(key, false);
+	set_key(key, false);
 }
 
-static void SetKey(unsigned long long key, bool value)
+static void set_key(unsigned long long key, bool value)
 {
 	switch (key)
 	{

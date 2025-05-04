@@ -5,7 +5,7 @@
 
 namespace Graphics::Vulkan
 {
-	void GetDeviceQueues()
+	void get_device_queues()
 	{
 		VkDeviceQueueInfo2 queueInfo{
 			.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2,

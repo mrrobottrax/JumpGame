@@ -10,5 +10,5 @@ class Coin : public Entity
 public:
 	Coin(float positionX, float positionY);
 
-	virtual void Tick() override;
+	virtual void tick() override;
 };

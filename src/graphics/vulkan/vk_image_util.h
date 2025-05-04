@@ -2,5 +2,5 @@
 
 namespace Graphics::Vulkan
 {
-	void TransitionImage(VkImageLayout oldLayout, VkImageLayout newLayout, VkImage image);
+	void transition_image(VkImageLayout oldLayout, VkImageLayout newLayout, VkImage image);
 }

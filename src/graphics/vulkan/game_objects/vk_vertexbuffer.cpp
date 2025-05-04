@@ -17,7 +17,7 @@ namespace Graphics::Vulkan
 		0, 1,
 	};
 
-	void CreateVertexBuffer()
+	void create_vertex_buffer()
 	{
 		VkBufferCreateInfo createInfo{
 			.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
@@ -28,15 +28,15 @@ namespace Graphics::Vulkan
 			.pQueueFamilyIndices = &vk_queue_family_indices.mainQueueFamily,
 		};
 
-		VkAssert(vkCreateBuffer(vk_device, &createInfo, nullptr, &vk_quad_vertexbuffer));
+		vk_assert(vkCreateBuffer(vk_device, &createInfo, nullptr, &vk_quad_vertexbuffer));
 	}
 
-	void LoadVertexBuffer()
+	void load_vertex_buffer()
 	{
 		memcpy(vk_quad_vertexbuffer_memory.map, quad_verts, sizeof(quad_verts));
 	}
 
-	void DestroyVertexBuffer()
+	void destroy_vertex_buffer()
 	{
 		vkDestroyBuffer(vk_device, vk_quad_vertexbuffer, nullptr);
 	}

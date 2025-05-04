@@ -30,4 +30,4 @@ constexpr unsigned short LEVEL_DATA[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0,
 };
 
-bool IsTileSolid(unsigned short tile);
+bool is_tile_solid(unsigned short tile);

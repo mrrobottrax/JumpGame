@@ -2,10 +2,10 @@
 
 namespace Graphics::Vulkan
 {
-	void Init();
-	void Shutdown();
-	void WaitForFrame();
-	void RenderFrame();
+	void init();
+	void shutdown();
+	void wait_for_frame();
+	void render_frame();
 
-	void VkAssert(VkResult result);
+	void vk_assert(VkResult result);
 }

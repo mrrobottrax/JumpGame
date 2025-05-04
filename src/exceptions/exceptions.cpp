@@ -37,7 +37,7 @@ std::string VulkanException::msg() const
 	return format("{}\n{}", exception::what(), str);
 }
 
-void ThrowIfNull(HANDLE handle)
+void throw_if_null(HANDLE handle)
 {
 	if (handle == NULL)
 	{
@@ -45,7 +45,7 @@ void ThrowIfNull(HANDLE handle)
 	}
 }
 
-void ThrowIfFailed(HRESULT hr)
+void throw_if_failed(HRESULT hr)
 {
 	if (FAILED(hr))
 	{
@@ -53,7 +53,7 @@ void ThrowIfFailed(HRESULT hr)
 	}
 }
 
-void ThrowIfFailed(HRESULT hr, const char message[])
+void throw_if_failed(HRESULT hr, const char message[])
 {
 	if (FAILED(hr))
 	{

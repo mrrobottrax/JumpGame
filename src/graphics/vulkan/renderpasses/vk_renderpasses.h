@@ -2,6 +2,6 @@
 
 namespace Graphics::Vulkan
 {
-	void CreateRenderPasses();
-	void DestroyRenderPasses();
+	void create_render_passes();
+	void destroy_render_passes();
 }

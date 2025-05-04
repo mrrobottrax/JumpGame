@@ -5,7 +5,7 @@
 
 namespace Graphics::Vulkan
 {
-	void CreatePointSampler()
+	void create_point_sampler()
 	{
 		VkSamplerCreateInfo samplerInfo{
 			.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
@@ -23,10 +23,10 @@ namespace Graphics::Vulkan
 			.unnormalizedCoordinates = VK_FALSE,
 		};
 
-		VkAssert(vkCreateSampler(vk_device, &samplerInfo, nullptr, &vk_point_sampler));
+		vk_assert(vkCreateSampler(vk_device, &samplerInfo, nullptr, &vk_point_sampler));
 	}
 
-	void DestroyPointSampler()
+	void destroy_point_sampler()
 	{
 		vkDestroySampler(vk_device, vk_point_sampler, nullptr);
 	}

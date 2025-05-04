@@ -11,7 +11,7 @@ namespace Graphics::Vulkan
 {
 	constexpr VkFormat format = VK_FORMAT_R8G8B8A8_SRGB;
 
-	void CreateRenderImage()
+	void create_render_image()
 	{
 		VkImageCreateInfo createInfo{
 			.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
@@ -33,10 +33,10 @@ namespace Graphics::Vulkan
 			.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
 		};
 
-		VkAssert(vkCreateImage(vk_device, &createInfo, nullptr, &vk_render_image));
+		vk_assert(vkCreateImage(vk_device, &createInfo, nullptr, &vk_render_image));
 	}
 
-	void CreateRenderImageView()
+	void create_render_image_view()
 	{
 		VkImageViewCreateInfo viewInfo{
 			.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
@@ -51,7 +51,7 @@ namespace Graphics::Vulkan
 			},
 		};
 
-		VkAssert(vkCreateImageView(vk_device, &viewInfo, nullptr, &vk_render_image_view));
+		vk_assert(vkCreateImageView(vk_device, &viewInfo, nullptr, &vk_render_image_view));
 
 		VkFramebufferCreateInfo framebufferInfo{
 			.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
@@ -63,10 +63,10 @@ namespace Graphics::Vulkan
 			.layers = 1,
 		};
 
-		VkAssert(vkCreateFramebuffer(vk_device, &framebufferInfo, nullptr, &vk_render_framebuffer));
+		vk_assert(vkCreateFramebuffer(vk_device, &framebufferInfo, nullptr, &vk_render_framebuffer));
 	}
 
-	void DestroyRenderImage()
+	void destroy_render_image()
 	{
 		vkDestroyImageView(vk_device, vk_render_image_view, nullptr);
 		vkDestroyFramebuffer(vk_device, vk_render_framebuffer, nullptr);

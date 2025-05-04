@@ -15,5 +15,5 @@ public:
 
 	Player();
 
-	virtual void Tick() override;
+	virtual void tick() override;
 };

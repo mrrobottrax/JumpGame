@@ -1,7 +1,7 @@
 #pragma once
 
-void Input_Keydown(unsigned long long key);
-void Input_Keyup(unsigned long long key);
+void input_keydown(unsigned long long key);
+void input_keyup(unsigned long long key);
 
 inline bool key_w;
 inline bool key_s;

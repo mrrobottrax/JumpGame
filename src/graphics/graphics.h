@@ -4,29 +4,29 @@ namespace Graphics
 {
 	namespace Vulkan
 	{
-		void Init();
-		void Shutdown();
-		void WaitForFrame();
-		void RenderFrame();
+		void init();
+		void shutdown();
+		void wait_for_frame();
+		void render_frame();
 	}
 
-	inline void Init()
+	inline void init()
 	{
-		Vulkan::Init();
+		Vulkan::init();
 	}
 
-	inline void Shutdown()
+	inline void shutdown()
 	{
-		Vulkan::Shutdown();
+		Vulkan::shutdown();
 	}
 
 	inline void WaitForNextFrame()
 	{
-		Vulkan::WaitForFrame();
+		Vulkan::wait_for_frame();
 	}
 
 	inline void Render()
 	{
-		Vulkan::RenderFrame();
+		Vulkan::render_frame();
 	}
 }

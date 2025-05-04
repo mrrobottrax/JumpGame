@@ -4,5 +4,5 @@ namespace Graphics::Vulkan
 {
 	inline VkPhysicalDevice vk_physicaldevice;
 
-	void PickPhysicalDevice();
+	void pick_physical_device();
 }

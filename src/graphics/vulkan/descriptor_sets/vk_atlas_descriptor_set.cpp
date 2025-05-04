@@ -8,7 +8,7 @@
 
 namespace Graphics::Vulkan
 {
-	void CreateAtlasDescriptorSet()
+	void create_atlas_descriptor_set()
 	{
 		VkDescriptorSetLayoutBinding samplerBinding{
 			.binding = 0,
@@ -26,7 +26,7 @@ namespace Graphics::Vulkan
 			.pBindings = bindings,
 		};
 
-		VkAssert(vkCreateDescriptorSetLayout(vk_device, &layoutInfo, nullptr, &vk_atlas_set_layout));
+		vk_assert(vkCreateDescriptorSetLayout(vk_device, &layoutInfo, nullptr, &vk_atlas_set_layout));
 
 		VkDescriptorSetAllocateInfo allocInfo{
 			.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
@@ -35,7 +35,7 @@ namespace Graphics::Vulkan
 			.pSetLayouts = &vk_atlas_set_layout,
 		};
 
-		VkAssert(vkAllocateDescriptorSets(vk_device, &allocInfo, &vk_atlas_set));
+		vk_assert(vkAllocateDescriptorSets(vk_device, &allocInfo, &vk_atlas_set));
 
 		VkDescriptorImageInfo imageInfo{
 			.sampler = vk_point_sampler,
@@ -56,7 +56,7 @@ namespace Graphics::Vulkan
 		vkUpdateDescriptorSets(vk_device, 1, &write, 0, nullptr);
 	}
 
-	void DestroyAtlasDescriptorSet()
+	void destroy_atlas_descriptor_set()
 	{
 		vkDestroyDescriptorSetLayout(vk_device, vk_atlas_set_layout, nullptr);
 	}

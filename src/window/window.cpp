@@ -101,11 +101,11 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			break;
 
 		case WM_KEYDOWN:
-			Input_Keydown(wParam);
+			input_keydown(wParam);
 			break;
 
 		case WM_KEYUP:
-			Input_Keyup(wParam);
+			input_keyup(wParam);
 			break;
 
 		case WM_ENTERSIZEMOVE:

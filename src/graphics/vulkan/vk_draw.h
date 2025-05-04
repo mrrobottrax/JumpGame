@@ -2,5 +2,5 @@
 
 namespace Graphics::Vulkan
 {
-	void DrawFrame(int swapchainImageIndex);
+	void draw_frame(int swapchainImageIndex);
 }

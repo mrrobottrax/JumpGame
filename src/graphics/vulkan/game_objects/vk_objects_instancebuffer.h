@@ -10,6 +10,6 @@ namespace Graphics::Vulkan
 	inline VkBuffer vk_objects_instancebuffer;
 	inline MemoryAllocation vk_objects_instancebuffer_memory;
 
-	void CreateObjectsBuffer();
-	void DestroyObjectsBuffer();
+	void create_objects_buffer();
+	void destroy_object_buffer();
 }

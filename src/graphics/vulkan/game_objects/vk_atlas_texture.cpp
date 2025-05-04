@@ -9,7 +9,7 @@ namespace Graphics::Vulkan
 {
 	static UncompressedImage atlasImage;
 
-	void CreateAtlasTexture()
+	void create_atlas_texture()
 	{
 		atlasImage = (UncompressedImage &&)LoadAndUncompressPNG(L"data/tilemap.png");
 
@@ -29,10 +29,10 @@ namespace Graphics::Vulkan
 			.initialLayout = VK_IMAGE_LAYOUT_PREINITIALIZED,
 		};
 
-		VkAssert(vkCreateImage(vk_device, &imageInfo, nullptr, &vk_atlas_image));
+		vk_assert(vkCreateImage(vk_device, &imageInfo, nullptr, &vk_atlas_image));
 	}
 
-	void LoadAtlasTexture()
+	void load_atlas_texture()
 	{
 		// Create image view
 		VkImageViewCreateInfo viewInfo{
@@ -48,7 +48,7 @@ namespace Graphics::Vulkan
 			},
 		};
 
-		VkAssert(vkCreateImageView(vk_device, &viewInfo, nullptr, &vk_atlas_view));
+		vk_assert(vkCreateImageView(vk_device, &viewInfo, nullptr, &vk_atlas_view));
 
 		VkImageSubresource subResource{
 			.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
@@ -70,10 +70,10 @@ namespace Graphics::Vulkan
 
 		atlasImage.~UncompressedImage();
 
-		TransitionImage(VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, vk_atlas_image);
+		transition_image(VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, vk_atlas_image);
 	}
 
-	void DestroyAtlasTexture()
+	void destroy_atlas_texture()
 	{
 		vkDestroyImage(vk_device, vk_atlas_image, nullptr);
 		vkDestroyImageView(vk_device, vk_atlas_view, nullptr);

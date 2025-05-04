@@ -10,30 +10,30 @@ namespace Graphics::Vulkan
 {
 	static VkDebugUtilsMessengerEXT vk_reportCallback;
 
-	void CreateDebugCallbacks()
+	void create_debug_callbacks()
 	{
 		VkDebugUtilsMessengerCreateInfoEXT createInfo{
 			.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
 			.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT,
 			.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_DEVICE_ADDRESS_BINDING_BIT_EXT,
-			.pfnUserCallback = &DebugCallback,
+			.pfnUserCallback = &debug_callback,
 		};
 
-		VkAssert(vkCreateDebugUtilsMessengerEXT(vk_instance, &createInfo, nullptr, &vk_reportCallback));
+		vk_assert(vkCreateDebugUtilsMessengerEXT(vk_instance, &createInfo, nullptr, &vk_reportCallback));
 	}
 
-	void DestroyDebugCallbacks()
+	void destroy_debug_callbacks()
 	{
 		vkDestroyDebugUtilsMessengerEXT(vk_instance, vk_reportCallback, nullptr);
 	}
 
-	VkBool32 DebugCallback(
+	VkBool32 debug_callback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT           messageSeverity,
 		VkDebugUtilsMessageTypeFlagsEXT                  messageTypes,
 		const VkDebugUtilsMessengerCallbackDataEXT *pCallbackData,
 		void *pUserData)
 	{
-		Log(pCallbackData->pMessage);
+		log(pCallbackData->pMessage);
 		OutputDebugStringA(pCallbackData->pMessage);
 		OutputDebugStringA("\n");
 

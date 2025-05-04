@@ -2,6 +2,6 @@
 
 namespace Audio
 {
-	void Init();
-	void Shutdown();
+	void init();
+	void shutdown();
 }

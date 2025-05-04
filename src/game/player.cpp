@@ -34,7 +34,7 @@ Player::Player()
 	jumpHeldLastFrame = false;
 }
 
-void Player::Tick()
+void Player::tick()
 {
 	float wishSpeed = 0;
 
@@ -101,7 +101,7 @@ void Player::Tick()
 
 	unsigned short gridL = LEVEL_DATA[(int)positionX + (int)(LEVEL_HEIGHT - positionY) * LEVEL_WIDTH];
 	unsigned short gridR = LEVEL_DATA[(int)fminf(positionX + 1, LEVEL_WIDTH - 1) + (int)(LEVEL_HEIGHT - positionY) * LEVEL_WIDTH];
-	if ((IsTileSolid(gridL) || IsTileSolid(gridR)) && velocityY < 0)
+	if ((is_tile_solid(gridL) || is_tile_solid(gridR)) && velocityY < 0)
 	{
 		positionY = ceilf(positionY);
 		velocityY = 0;

@@ -21,7 +21,7 @@ VKAPI_ATTR void VKAPI_CALL vkDestroyDebugUtilsMessengerEXT(
 	return pfn_vkDestroyDebugUtilsMessengerEXT(instance, messenger, pAllocator);
 }
 
-void Graphics::Vulkan::GetDebugUtilsFunctionPointers()
+void Graphics::Vulkan::get_debug_utils_function_pointers()
 {
 	pfn_vkCreateDebugUtilsMessengerEXT = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(vk_instance, "vkCreateDebugUtilsMessengerEXT");
 	pfn_vkDestroyDebugUtilsMessengerEXT = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(vk_instance, "vkDestroyDebugUtilsMessengerEXT");

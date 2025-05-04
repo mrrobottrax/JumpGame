@@ -9,7 +9,7 @@ namespace Graphics::Vulkan
 {
 	static UncompressedImage atlasImage;
 
-	void CreateWinTexture()
+	void create_win_texture()
 	{
 		atlasImage = (UncompressedImage &&)LoadAndUncompressPNG(L"data/winscreen.png");
 
@@ -29,10 +29,10 @@ namespace Graphics::Vulkan
 			.initialLayout = VK_IMAGE_LAYOUT_PREINITIALIZED,
 		};
 
-		VkAssert(vkCreateImage(vk_device, &imageInfo, nullptr, &vk_win_image));
+		vk_assert(vkCreateImage(vk_device, &imageInfo, nullptr, &vk_win_image));
 	}
 
-	void LoadWinTexture()
+	void load_win_texture()
 	{
 		// Create image view
 		VkImageViewCreateInfo viewInfo{
@@ -48,7 +48,7 @@ namespace Graphics::Vulkan
 			},
 		};
 
-		VkAssert(vkCreateImageView(vk_device, &viewInfo, nullptr, &vk_win_view));
+		vk_assert(vkCreateImageView(vk_device, &viewInfo, nullptr, &vk_win_view));
 
 		VkImageSubresource subResource{
 			.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
@@ -70,10 +70,10 @@ namespace Graphics::Vulkan
 
 		atlasImage.~UncompressedImage();
 
-		TransitionImage(VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, vk_win_image);
+		transition_image(VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, vk_win_image);
 	}
 
-	void DestroyWinTexture()
+	void destroy_win_texture()
 	{
 		vkDestroyImage(vk_device, vk_win_image, nullptr);
 		vkDestroyImageView(vk_device, vk_win_view, nullptr);

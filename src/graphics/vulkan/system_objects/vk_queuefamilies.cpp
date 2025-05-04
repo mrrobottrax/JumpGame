@@ -7,7 +7,7 @@ using namespace Console;
 
 namespace Graphics::Vulkan
 {
-	void GetQueueFamilies()
+	void get_queue_families()
 	{
 		uint32_t queueFamilyCount;
 		vkGetPhysicalDeviceQueueFamilyProperties(vk_physicaldevice, &queueFamilyCount, nullptr);
@@ -17,7 +17,7 @@ namespace Graphics::Vulkan
 
 		vk_queue_family_indices.mainQueueFamily = -1;
 
-		Log("Queues:");
+		log("Queues:");
 		for (uint32_t i = 0; i < queueFamilyCount; ++i)
 		{
 #pragma warning (push)
@@ -25,12 +25,12 @@ namespace Graphics::Vulkan
 			VkQueueFamilyProperties &properties = queueFamilies[i];
 #pragma warning (pop)
 
-			Log("%i:", i);
-			Log("  count: %i:", properties.queueCount);
+			log("%i:", i);
+			log("  count: %i:", properties.queueCount);
 
 			if (properties.queueFlags & VK_QUEUE_GRAPHICS_BIT)
 			{
-				Log("  -Graphics");
+				log("  -Graphics");
 
 				if (vk_queue_family_indices.mainQueueFamily == -1)
 				{
@@ -39,30 +39,30 @@ namespace Graphics::Vulkan
 			}
 
 			if (properties.queueFlags & VK_QUEUE_COMPUTE_BIT)
-				Log("  -Compute");
+				log("  -Compute");
 
 			if (properties.queueFlags & VK_QUEUE_TRANSFER_BIT)
-				Log("  -Transfer");
+				log("  -Transfer");
 
 			if (properties.queueFlags & VK_QUEUE_SPARSE_BINDING_BIT)
-				Log("  -Sparse binding");
+				log("  -Sparse binding");
 
 			if (properties.queueFlags & VK_QUEUE_PROTECTED_BIT)
-				Log("  -Protected");
+				log("  -Protected");
 
 			if (properties.queueFlags & VK_QUEUE_VIDEO_DECODE_BIT_KHR)
-				Log("  -Video decode");
+				log("  -Video decode");
 
 			if (properties.queueFlags & VK_QUEUE_VIDEO_ENCODE_BIT_KHR)
-				Log("  -Video encode");
+				log("  -Video encode");
 
 			if (properties.queueFlags & VK_QUEUE_OPTICAL_FLOW_BIT_NV)
-				Log("  -VK_QUEUE_OPTICAL_FLOW_BIT_NV");
+				log("  -VK_QUEUE_OPTICAL_FLOW_BIT_NV");
 		}
 
 		delete[] queueFamilies;
 
-		Log("PICKED QUEUES:");
-		Log("Main Queue: %i", vk_queue_family_indices.mainQueueFamily);
+		log("PICKED QUEUES:");
+		log("Main Queue: %i", vk_queue_family_indices.mainQueueFamily);
 	}
 }

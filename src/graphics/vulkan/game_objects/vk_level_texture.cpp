@@ -11,7 +11,7 @@
 
 namespace Graphics::Vulkan
 {
-	void CreateLevelImage()
+	void create_level_image()
 	{
 		VkImageCreateInfo imageInfo{
 			.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
@@ -29,10 +29,10 @@ namespace Graphics::Vulkan
 			.initialLayout = VK_IMAGE_LAYOUT_PREINITIALIZED,
 		};
 
-		VkAssert(vkCreateImage(vk_device, &imageInfo, nullptr, &vk_level_image));
+		vk_assert(vkCreateImage(vk_device, &imageInfo, nullptr, &vk_level_image));
 	}
 
-	void CreateLevelImageView()
+	void create_level_image_view()
 	{
 		// Create image view
 		VkImageViewCreateInfo viewInfo{
@@ -48,7 +48,7 @@ namespace Graphics::Vulkan
 			},
 		};
 
-		VkAssert(vkCreateImageView(vk_device, &viewInfo, nullptr, &vk_level_view));
+		vk_assert(vkCreateImageView(vk_device, &viewInfo, nullptr, &vk_level_view));
 
 		VkImageSubresource subResource{
 			.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
@@ -68,10 +68,10 @@ namespace Graphics::Vulkan
 			);
 		}
 
-		TransitionImage(VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, vk_level_image);
+		transition_image(VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, vk_level_image);
 	}
 
-	void DestroyLevelImage()
+	void destroy_level_image()
 	{
 		vkDestroyImageView(vk_device, vk_level_view, nullptr);
 		vkDestroyImage(vk_device, vk_level_image, nullptr);

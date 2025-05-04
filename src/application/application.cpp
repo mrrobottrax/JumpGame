@@ -8,7 +8,7 @@
 
 namespace Application
 {
-	void Init()
+	void init()
 	{
 #ifdef DEBUG
 		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -26,12 +26,12 @@ namespace Application
 
 		MAGE_CreateWindow();
 		//MAGE_InitAudio();
-		Graphics::Init();
+		Graphics::init();
 	}
 
-	void Shutdown()
+	void shutdown()
 	{
-		Graphics::Shutdown();
+		Graphics::shutdown();
 		//MAGE_EndAudio();
 
 #ifdef DEBUG
@@ -49,9 +49,9 @@ namespace Application
 	}
 
 	static chrono::system_clock::time_point prevFrame = chrono::system_clock::now();
-	void FrameLoop()
+	void frame_loop()
 	{
-		Game_Init();
+		Game::init();
 
 		bool bExit = false;
 		MSG msg;
@@ -106,11 +106,11 @@ namespace Application
 
 				if (bExit) break;
 
-				Game_Tick();
+				Game::tick();
 				Graphics::Render();
 			}
 		}
 
-		Game_End();
+		Game::shutdown();
 	}
 }

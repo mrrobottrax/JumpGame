@@ -32,84 +32,84 @@ namespace Graphics::Vulkan
 {
 	static uint32_t nextImageIndex = 0;
 
-	void Init()
+	void init()
 	{
 #ifdef DEBUG
 		if (!CompileShaders())
 		{
-			Log("Error compiling shaders");
+			log("Error compiling shaders");
 			throw runtime_error("Shader compilation error");
 		}
 #endif // DEBUG
 
-		CreateInstance();
-		PickPhysicalDevice();
-		GetQueueFamilies();
-		GetMemoryTypes();
-		CreateDevice();
-		GetDeviceQueues();
-		CreateSurface();
-		CreateCommandBuffers();
-		CreateSyncObjects();
-		GetSwapchainFormat();
-		CreateRenderPasses();
-		CreateSwapchain();
-		CreatePointSampler();
+		create_instance();
+		pick_physical_device();
+		get_queue_families();
+		get_memory_types();
+		create_device();
+		get_device_queues();
+		create_surface();
+		create_command_buffers();
+		create_sync_objects();
+		get_swapchain_format();
+		create_render_passes();
+		create_swapchain();
+		create_point_sampler();
 
-		CreateVertexBuffer();
-		CreateObjectsBuffer();
-		CreateAtlasTexture();
-		CreateRenderImage();
-		CreateLevelImage();
-		CreateWinTexture();
+		create_vertex_buffer();
+		create_objects_buffer();
+		create_atlas_texture();
+		create_render_image();
+		create_level_image();
+		create_win_texture();
 
-		AllocateStaticMemory();
+		allocate_static_memory();
 
-		LoadAtlasTexture();
-		LoadWinTexture();
-		LoadVertexBuffer();
-		CreateRenderImageView();
-		CreateLevelImageView();
+		load_atlas_texture();
+		load_win_texture();
+		load_vertex_buffer();
+		create_render_image_view();
+		create_level_image_view();
 
-		CreateDescriptorPool();
+		create_descriptor_pool();
 
-		CreateAtlasDescriptorSet();
-		CreateLevelDescriptorSet();
-		CreateSpritePipeline();
-		CreateTilesPipeline();
+		create_atlas_descriptor_set();
+		create_level_descriptor_set();
+		create_sprite_pipeline();
+		create_tile_pipeline();
 	}
 
-	void Shutdown()
+	void shutdown()
 	{
-		VkAssert(vkDeviceWaitIdle(vk_device));
+		vk_assert(vkDeviceWaitIdle(vk_device));
 
-		DestroyDescriptorPool();
-		DestroyLevelDescriptorSet();
-		DestroyLevelImage();
-		DestroyWinTexture();
-		DestroyPointSampler();
-		DestroyObjectsBuffer();
-		DestroyRenderImage();
-		DestroyAtlasDescriptorSet();
-		DestroyAtlasTexture();
-		DestroyTilesPipeline();
-		DestroySpritePipeline();
-		DestroyVertexBuffer();
-		DestroyRenderPasses();
-		DestroySwapchain();
-		DestroySyncObjects();
-		DestroyCommandBuffers();
-		DestroySurface();
+		destroy_descriptor_pool();
+		destroy_level_descriptor_set();
+		destroy_level_image();
+		destroy_win_texture();
+		destroy_point_sampler();
+		destroy_object_buffer();
+		destroy_render_image();
+		destroy_atlas_descriptor_set();
+		destroy_atlas_texture();
+		destroy_tiles_pipeline();
+		destroy_sprite_pipeline();
+		destroy_vertex_buffer();
+		destroy_render_passes();
+		destroy_swapchain();
+		destroy_sync_objects();
+		destroy_command_buffer();
+		destroy_surface();
 
-		FreeStaticMemory();
+		free_static_memory();
 
-		DestroyDevice();
-		DestroyInstance();
+		destroy_device();
+		destroy_instance();
 	}
 
-	void WaitForFrame()
+	void wait_for_frame()
 	{
-		VkAssert(vkWaitForFences(vk_device, 1, &vk_fence_main, VK_TRUE, UINT64_MAX));
+		vk_assert(vkWaitForFences(vk_device, 1, &vk_fence_main, VK_TRUE, UINT64_MAX));
 		vkResetFences(vk_device, 1, &vk_fence_main);
 
 		VkResult result;
@@ -118,7 +118,7 @@ namespace Graphics::Vulkan
 			result = vkAcquireNextImageKHR(vk_device, vk_swapchain, UINT64_MAX, vk_semaphore_acquireimage, VK_NULL_HANDLE, &nextImageIndex);
 			if (result == VK_ERROR_OUT_OF_DATE_KHR)
 			{
-				RecreateSwapchain();
+				recreate_swapchain();
 				continue;
 			}
 
@@ -126,9 +126,9 @@ namespace Graphics::Vulkan
 		}
 	}
 
-	void RenderFrame()
+	void render_frame()
 	{
-		DrawFrame(nextImageIndex);
+		draw_frame(nextImageIndex);
 
 		VkPresentInfoKHR present{
 			.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
@@ -142,12 +142,12 @@ namespace Graphics::Vulkan
 		VkResult result = vkQueuePresentKHR(vk_queue_main, &present);
 		if (result == VK_SUBOPTIMAL_KHR || result == VK_ERROR_OUT_OF_DATE_KHR)
 		{
-			VkAssert(vkWaitForFences(vk_device, 1, &vk_fence_main, VK_TRUE, UINT64_MAX));
-			RecreateSwapchain();
+			vk_assert(vkWaitForFences(vk_device, 1, &vk_fence_main, VK_TRUE, UINT64_MAX));
+			recreate_swapchain();
 		}
 	}
 
-	void VkAssert(VkResult result)
+	void vk_assert(VkResult result)
 	{
 		if (result < 0)
 		{

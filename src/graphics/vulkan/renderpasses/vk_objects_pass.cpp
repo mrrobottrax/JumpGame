@@ -5,7 +5,7 @@
 
 namespace Graphics::Vulkan
 {
-	void CreateObjectsPass()
+	void create_objects_pass()
 	{
 		VkAttachmentDescription2 attachment{
 			.sType = VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2,
@@ -42,7 +42,7 @@ namespace Graphics::Vulkan
 		vkCreateRenderPass2(vk_device, &createInfo, nullptr, &vk_objects_pass);
 	}
 
-	void DestroyObjectsPass()
+	void destroy_objects_pass()
 	{
 		vkDestroyRenderPass(vk_device, vk_objects_pass, nullptr);
 	}

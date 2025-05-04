@@ -6,7 +6,7 @@
 
 namespace Graphics::Vulkan
 {
-	void CreateSurface()
+	void create_surface()
 	{
 		VkWin32SurfaceCreateInfoKHR createInfo{
 			.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR,
@@ -17,7 +17,7 @@ namespace Graphics::Vulkan
 		vkCreateWin32SurfaceKHR(vk_instance, &createInfo, nullptr, &vk_surface);
 	}
 
-	void DestroySurface()
+	void destroy_surface()
 	{
 		vkDestroySurfaceKHR(vk_instance, vk_surface, nullptr);
 	}

@@ -4,6 +4,6 @@ namespace Graphics::Vulkan
 {
 	inline VkInstance vk_instance;
 
-	void CreateInstance();
-	void DestroyInstance();
+	void create_instance();
+	void destroy_instance();
 }

@@ -22,6 +22,6 @@ public:
 	std::string msg() const;
 };
 
-void ThrowIfNull(HANDLE handle);
-void ThrowIfFailed(HRESULT hr);
-void ThrowIfFailed(HRESULT hr, const char message[]);
+void throw_if_null(HANDLE handle);
+void throw_if_failed(HRESULT hr);
+void throw_if_failed(HRESULT hr, const char message[]);

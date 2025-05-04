@@ -1,7 +1,10 @@
 #pragma once
 
-void Game_Init();
-void Game_End();
-void Game_Tick();
+namespace Game
+{
+	void init();
+	void shutdown();
+	void tick();
 
-void CollectCoin();
+	void collect_coin();
+}

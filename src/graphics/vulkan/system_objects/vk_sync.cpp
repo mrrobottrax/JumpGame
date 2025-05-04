@@ -5,24 +5,24 @@
 
 namespace Graphics::Vulkan
 {
-	void CreateSyncObjects()
+	void create_sync_objects()
 	{
 		VkFenceCreateInfo fenceInfo{
 			.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
 			.flags = VK_FENCE_CREATE_SIGNALED_BIT
 		};
 
-		VkAssert(vkCreateFence(vk_device, &fenceInfo, nullptr, &vk_fence_main));
+		vk_assert(vkCreateFence(vk_device, &fenceInfo, nullptr, &vk_fence_main));
 
 		VkSemaphoreCreateInfo semaphoreInfo{
 			.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
 		};
 
-		VkAssert(vkCreateSemaphore(vk_device, &semaphoreInfo, nullptr, &vk_semaphore_rendering));
-		VkAssert(vkCreateSemaphore(vk_device, &semaphoreInfo, nullptr, &vk_semaphore_acquireimage));
+		vk_assert(vkCreateSemaphore(vk_device, &semaphoreInfo, nullptr, &vk_semaphore_rendering));
+		vk_assert(vkCreateSemaphore(vk_device, &semaphoreInfo, nullptr, &vk_semaphore_acquireimage));
 	}
 
-	void DestroySyncObjects()
+	void destroy_sync_objects()
 	{
 		vkDestroySemaphore(vk_device, vk_semaphore_rendering, nullptr);
 		vkDestroySemaphore(vk_device, vk_semaphore_acquireimage, nullptr);

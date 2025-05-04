@@ -31,4 +31,4 @@ public:
 	inline const void *Data() { return pFile->pData; }
 };
 
-FileHandle LoadEntireFile(const wchar_t name[]);
+FileHandle load_entire_file(const wchar_t name[]);

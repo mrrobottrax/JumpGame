@@ -8,14 +8,14 @@
 
 namespace Graphics::Vulkan
 {
-	void TransitionImage(VkImageLayout oldLayout, VkImageLayout newLayout, VkImage image)
+	void transition_image(VkImageLayout oldLayout, VkImageLayout newLayout, VkImage image)
 	{
-		VkAssert(vkResetCommandPool(vk_device, vk_commandpool_main, 0));
+		vk_assert(vkResetCommandPool(vk_device, vk_commandpool_main, 0));
 		VkCommandBufferBeginInfo beginInfo{
 			.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
 			.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT,
 		};
-		VkAssert(vkBeginCommandBuffer(vk_commandbuffer_main, &beginInfo));
+		vk_assert(vkBeginCommandBuffer(vk_commandbuffer_main, &beginInfo));
 
 		VkImageMemoryBarrier2 imageBarrier{
 			.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
@@ -42,7 +42,7 @@ namespace Graphics::Vulkan
 		};
 		vkCmdPipelineBarrier2(vk_commandbuffer_main, &dependency);
 
-		VkAssert(vkEndCommandBuffer(vk_commandbuffer_main));
+		vk_assert(vkEndCommandBuffer(vk_commandbuffer_main));
 
 		VkCommandBufferSubmitInfo bufferSubmitInfo{
 			.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO,
@@ -54,7 +54,7 @@ namespace Graphics::Vulkan
 			.commandBufferInfoCount = 1,
 			.pCommandBufferInfos = &bufferSubmitInfo,
 		};
-		VkAssert(vkQueueSubmit2(vk_queue_main, 1, &submit, VK_NULL_HANDLE));
-		VkAssert(vkQueueWaitIdle(vk_queue_main));
+		vk_assert(vkQueueSubmit2(vk_queue_main, 1, &submit, VK_NULL_HANDLE));
+		vk_assert(vkQueueWaitIdle(vk_queue_main));
 	}
 }

@@ -8,7 +8,7 @@ namespace Graphics::Vulkan
 
 	inline MemoryAllocation vk_quad_vertexbuffer_memory;
 
-	void CreateVertexBuffer();
-	void LoadVertexBuffer();
-	void DestroyVertexBuffer();
+	void create_vertex_buffer();
+	void load_vertex_buffer();
+	void destroy_vertex_buffer();
 }

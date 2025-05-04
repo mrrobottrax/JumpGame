@@ -43,12 +43,12 @@ namespace Audio
 			Sleep((DWORD)(hnsBufferDuration / REFTIMES_PER_MILLISEC / 2));
 
 			UINT32 padding;
-			ThrowIfFailed(pClient->GetCurrentPadding(&padding));
+			throw_if_failed(pClient->GetCurrentPadding(&padding));
 
 			UINT32 available = bufferSize - padding;
 
 			BYTE *pData;
-			ThrowIfFailed(pRenderClient->GetBuffer(available, &pData));
+			throw_if_failed(pRenderClient->GetBuffer(available, &pData));
 
 			if (bitDepth == 32)
 			{
@@ -96,7 +96,7 @@ namespace Audio
 				}
 			}
 
-			ThrowIfFailed(pRenderClient->ReleaseBuffer(available, 0));
+			throw_if_failed(pRenderClient->ReleaseBuffer(available, 0));
 
 			counter += available;
 		}
@@ -110,7 +110,7 @@ namespace Audio
 
 		const CLSID CLSID_MMDeviceEnumerator = __uuidof(MMDeviceEnumerator);
 		const IID IID_IMMDeviceEnumerator = __uuidof(IMMDeviceEnumerator);
-		ThrowIfFailed(CoCreateInstance(
+		throw_if_failed(CoCreateInstance(
 			CLSID_MMDeviceEnumerator, NULL,
 			CLSCTX_ALL, IID_IMMDeviceEnumerator,
 			(void **)&pEnumerator));
@@ -121,26 +121,26 @@ namespace Audio
 		// print name
 		{
 			CComPtr<IPropertyStore> pStore;
-			ThrowIfFailed(pDefaultDevice->OpenPropertyStore(STGM_READ, &pStore));
+			throw_if_failed(pDefaultDevice->OpenPropertyStore(STGM_READ, &pStore));
 
 			PROPVARIANT friendlyName;
 			PropVariantInit(&friendlyName);
 
-			ThrowIfFailed(pStore->GetValue(PKEY_Device_FriendlyName, &friendlyName));
+			throw_if_failed(pStore->GetValue(PKEY_Device_FriendlyName, &friendlyName));
 
 			if (friendlyName.vt != VT_EMPTY)
 			{
-				Log("Default Endpoint: \"%S\"", friendlyName.pwszVal);
+				log("Default Endpoint: \"%S\"", friendlyName.pwszVal);
 			}
 
-			ThrowIfFailed(PropVariantClear(&friendlyName));
+			throw_if_failed(PropVariantClear(&friendlyName));
 		}
 
 		// create client
-		ThrowIfFailed(pDefaultDevice->Activate(__uuidof(IAudioClient), CLSCTX_ALL, NULL, (void **)&pClient));
+		throw_if_failed(pDefaultDevice->Activate(__uuidof(IAudioClient), CLSCTX_ALL, NULL, (void **)&pClient));
 
 		// get format
-		ThrowIfFailed(pClient->GetMixFormat(&pFormat));
+		throw_if_failed(pClient->GetMixFormat(&pFormat));
 
 		if (pFormat->wFormatTag != WAVE_FORMAT_EXTENSIBLE)
 		{
@@ -151,9 +151,9 @@ namespace Audio
 		channels = pFormat->nChannels;
 		bitDepth = pFormat->wBitsPerSample;
 
-		Log("Sample rate: %u", sampleRate);
-		Log("Channels: %u", channels);
-		Log("Bit depth: %u", bitDepth);
+		log("Sample rate: %u", sampleRate);
+		log("Channels: %u", channels);
+		log("Bit depth: %u", bitDepth);
 
 		if (pFormat->wBitsPerSample != 32)
 		{
@@ -162,30 +162,30 @@ namespace Audio
 
 		// init client
 		REFERENCE_TIME hnsRequestedDuration = REFTIMES_PER_SEC; // 1 second
-		ThrowIfFailed(pClient->Initialize(AUDCLNT_SHAREMODE_SHARED, 0, hnsRequestedDuration, 0, pFormat, NULL));
+		throw_if_failed(pClient->Initialize(AUDCLNT_SHAREMODE_SHARED, 0, hnsRequestedDuration, 0, pFormat, NULL));
 
-		ThrowIfFailed(pClient->GetBufferSize(&bufferSize));
+		throw_if_failed(pClient->GetBufferSize(&bufferSize));
 
-		Log("Buffer size: %u", bufferSize);
+		log("Buffer size: %u", bufferSize);
 
 		hnsBufferDuration = (REFERENCE_TIME)((double)REFTIMES_PER_SEC * bufferSize / sampleRate);
 
-		Log("Buffer duration: %lu", hnsBufferDuration);
+		log("Buffer duration: %lu", hnsBufferDuration);
 
 		// create render client
-		ThrowIfFailed(pClient->GetService(__uuidof(IAudioRenderClient), (void **)&pRenderClient));
+		throw_if_failed(pClient->GetService(__uuidof(IAudioRenderClient), (void **)&pRenderClient));
 
 		// fill buffer with 0
 		BYTE *pData;
-		ThrowIfFailed(pRenderClient->GetBuffer(bufferSize, &pData));
+		throw_if_failed(pRenderClient->GetBuffer(bufferSize, &pData));
 
 		memset(pData, 0, static_cast<size_t>(bufferSize) * (bitDepth / 8) * channels);
 
-		ThrowIfFailed(pRenderClient->ReleaseBuffer(bufferSize, 0));
-		ThrowIfFailed(pClient->Start());
+		throw_if_failed(pRenderClient->ReleaseBuffer(bufferSize, 0));
+		throw_if_failed(pClient->Start());
 
 		hAudioThread = CreateThread(NULL, 0, AudioThreadProc, NULL, 0, NULL);
-		ThrowIfNull(hAudioThread);
+		throw_if_null(hAudioThread);
 	}
 
 	void MAGE_EndAudio()
@@ -198,12 +198,12 @@ namespace Audio
 		CloseHandle(hAudioThread);
 	}
 
-	void Init()
+	void init()
 	{
 
 	}
 
-	void Shutdown()
+	void shutdown()
 	{
 
 	}

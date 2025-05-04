@@ -10,7 +10,7 @@ namespace Graphics::Vulkan
 
 	inline MemoryAllocation vk_render_image_memory;
 
-	void CreateRenderImage();
-	void CreateRenderImageView();
-	void DestroyRenderImage();
+	void create_render_image();
+	void create_render_image_view();
+	void destroy_render_image();
 }

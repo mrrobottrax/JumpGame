@@ -24,7 +24,7 @@ namespace Graphics::Vulkan
 
 	inline VkDeviceMemory vk_static_local_memory;
 
-	void GetMemoryTypes();
-	void AllocateStaticMemory();
-	void FreeStaticMemory();
+	void get_memory_types();
+	void allocate_static_memory();
+	void free_static_memory();
 }

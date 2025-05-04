@@ -31,52 +31,52 @@ namespace Graphics::Vulkan
 	};
 #endif // DEBUG
 
-	void CreateInstance()
+	void create_instance()
 	{
 		uint32_t layerCount;
-		VkAssert(vkEnumerateInstanceLayerProperties(&layerCount, nullptr));
+		vk_assert(vkEnumerateInstanceLayerProperties(&layerCount, nullptr));
 
 		VkLayerProperties *layers = new VkLayerProperties[layerCount];
-		VkAssert(vkEnumerateInstanceLayerProperties(&layerCount, layers));
+		vk_assert(vkEnumerateInstanceLayerProperties(&layerCount, layers));
 
-		Log("AVAILABLE LAYERS:");
+		log("AVAILABLE LAYERS:");
 #pragma warning (push)
 #pragma warning (disable:6385)
 		for (uint32_t i = 0; i < layerCount; ++i)
 		{
 			VkLayerProperties &layer = layers[i];
 
-			Log(layer.layerName);
+			log(layer.layerName);
 
 			uint32_t extensionCount;
-			VkAssert(vkEnumerateInstanceExtensionProperties(layer.layerName, &extensionCount, nullptr));
+			vk_assert(vkEnumerateInstanceExtensionProperties(layer.layerName, &extensionCount, nullptr));
 
 			VkExtensionProperties *extensions = new VkExtensionProperties[extensionCount];
-			VkAssert(vkEnumerateInstanceExtensionProperties(layer.layerName, &extensionCount, extensions));
+			vk_assert(vkEnumerateInstanceExtensionProperties(layer.layerName, &extensionCount, extensions));
 
 			for (uint32_t j = 0; j < extensionCount; ++j)
 			{
 				VkExtensionProperties &extension = extensions[j];
 
-				Log("    %s", extension.extensionName);
+				log("    %s", extension.extensionName);
 			}
 
 			delete[] extensions;
 		}
 
-		Log("AVAILABLE EXTENSIONS:");
+		log("AVAILABLE EXTENSIONS:");
 
 		uint32_t extensionCount;
-		VkAssert(vkEnumerateInstanceExtensionProperties(NULL, &extensionCount, nullptr));
+		vk_assert(vkEnumerateInstanceExtensionProperties(NULL, &extensionCount, nullptr));
 
 		VkExtensionProperties *extensions = new VkExtensionProperties[extensionCount];
-		VkAssert(vkEnumerateInstanceExtensionProperties(NULL, &extensionCount, extensions));
+		vk_assert(vkEnumerateInstanceExtensionProperties(NULL, &extensionCount, extensions));
 
 		for (uint32_t j = 0; j < extensionCount; ++j)
 		{
 			VkExtensionProperties &extension = extensions[j];
 
-			Log("    %s", extension.extensionName);
+			log("    %s", extension.extensionName);
 		}
 
 		delete[] extensions;
@@ -100,19 +100,19 @@ namespace Graphics::Vulkan
 			.ppEnabledExtensionNames = REQUIRED_EXTENSIONS,
 		};
 
-		VkAssert(vkCreateInstance(&createInfo, nullptr, &vk_instance));
+		vk_assert(vkCreateInstance(&createInfo, nullptr, &vk_instance));
 
 		delete[] layers;
 
 #ifdef DEBUG
-		GetDebugUtilsFunctionPointers();
-		CreateDebugCallbacks();
+		get_debug_utils_function_pointers();
+		create_debug_callbacks();
 #endif // DEBUG
 	}
 
-	void DestroyInstance()
+	void destroy_instance()
 	{
-		DestroyDebugCallbacks();
+		destroy_debug_callbacks();
 		vkDestroyInstance(vk_instance, nullptr);
 	}
 }

@@ -2,5 +2,5 @@
 
 namespace Graphics::Vulkan
 {
-	void GetMemoryPriorityFunctionPointers();
+	void get_memory_priority_function_pointers();
 }

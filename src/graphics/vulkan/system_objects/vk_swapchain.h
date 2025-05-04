@@ -12,8 +12,8 @@ namespace Graphics::Vulkan
 	inline VkImage *vk_swapchain_images;
 	inline VkImageView *vk_swapchain_image_views;
 
-	void CreateSwapchain();
-	void DestroySwapchain();
-	void GetSwapchainFormat();
-	void RecreateSwapchain();
+	void create_swapchain();
+	void destroy_swapchain();
+	void get_swapchain_format();
+	void recreate_swapchain();
 }
