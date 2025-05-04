@@ -26,127 +26,130 @@
 #include "descriptor_sets/vk_static_descriptor_pool.h"
 #include "game_objects/vk_win_screen.h"
 
-static uint32_t nextImageIndex = 0;
-
-void InitVulkan()
+namespace Graphics::Vulkan
 {
-#ifdef DEBUG
-	if (!CompileShaders())
+	static uint32_t nextImageIndex = 0;
+
+	void Init()
 	{
-		Log("Error compiling shaders");
-		throw runtime_error("Shader compilation error");
-	}
+#ifdef DEBUG
+		if (!CompileShaders())
+		{
+			Log("Error compiling shaders");
+			throw runtime_error("Shader compilation error");
+		}
 #endif // DEBUG
 
-	CreateInstance();
-	PickPhysicalDevice();
-	GetQueueFamilies();
-	GetMemoryTypes();
-	CreateDevice();
-	GetDeviceQueues();
-	CreateSurface();
-	CreateCommandBuffers();
-	CreateSyncObjects();
-	GetSwapchainFormat();
-	CreateRenderPasses();
-	CreateSwapchain();
-	CreatePointSampler();
+		CreateInstance();
+		PickPhysicalDevice();
+		GetQueueFamilies();
+		GetMemoryTypes();
+		CreateDevice();
+		GetDeviceQueues();
+		CreateSurface();
+		CreateCommandBuffers();
+		CreateSyncObjects();
+		GetSwapchainFormat();
+		CreateRenderPasses();
+		CreateSwapchain();
+		CreatePointSampler();
 
-	CreateVertexBuffer();
-	CreateObjectsBuffer();
-	CreateAtlasTexture();
-	CreateRenderImage();
-	CreateLevelImage();
-	CreateWinTexture();
+		CreateVertexBuffer();
+		CreateObjectsBuffer();
+		CreateAtlasTexture();
+		CreateRenderImage();
+		CreateLevelImage();
+		CreateWinTexture();
 
-	AllocateStaticMemory();
+		AllocateStaticMemory();
 
-	LoadAtlasTexture();
-	LoadWinTexture();
-	LoadVertexBuffer();
-	CreateRenderImageView();
-	CreateLevelImageView();
+		LoadAtlasTexture();
+		LoadWinTexture();
+		LoadVertexBuffer();
+		CreateRenderImageView();
+		CreateLevelImageView();
 
-	CreateDescriptorPool();
+		CreateDescriptorPool();
 
-	CreateAtlasDescriptorSet();
-	CreateLevelDescriptorSet();
-	CreateSpritePipeline();
-	CreateTilesPipeline();
-}
-
-void EndVulkan()
-{
-	VkAssert(vkDeviceWaitIdle(vk_device));
-
-	DestroyDescriptorPool();
-	DestroyLevelDescriptorSet();
-	DestroyLevelImage();
-	DestroyWinTexture();
-	DestroyPointSampler();
-	DestroyObjectsBuffer();
-	DestroyRenderImage();
-	DestroyAtlasDescriptorSet();
-	DestroyAtlasTexture();
-	DestroyTilesPipeline();
-	DestroySpritePipeline();
-	DestroyVertexBuffer();
-	DestroyRenderPasses();
-	DestroySwapchain();
-	DestroySyncObjects();
-	DestroyCommandBuffers();
-	DestroySurface();
-
-	FreeStaticMemory();
-
-	DestroyDevice();
-	DestroyInstance();
-}
-
-void WaitForFrameVulkan()
-{
-	VkAssert(vkWaitForFences(vk_device, 1, &vk_fence_main, VK_TRUE, UINT64_MAX));
-	vkResetFences(vk_device, 1, &vk_fence_main);
-
-	VkResult result;
-	while (true)
-	{
-		result = vkAcquireNextImageKHR(vk_device, vk_swapchain, UINT64_MAX, vk_semaphore_acquireimage, VK_NULL_HANDLE, &nextImageIndex);
-		if (result == VK_ERROR_OUT_OF_DATE_KHR)
-		{
-			RecreateSwapchain();
-			continue;
-		}
-
-		break;
+		CreateAtlasDescriptorSet();
+		CreateLevelDescriptorSet();
+		CreateSpritePipeline();
+		CreateTilesPipeline();
 	}
-}
 
-void RenderFrameVulkan()
-{
-	DrawFrame(nextImageIndex);
+	void Shutdown()
+	{
+		VkAssert(vkDeviceWaitIdle(vk_device));
 
-	VkPresentInfoKHR present{
-		.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
-		.waitSemaphoreCount = 1,
-		.pWaitSemaphores = &vk_semaphore_rendering,
-		.swapchainCount = 1,
-		.pSwapchains = &vk_swapchain,
-		.pImageIndices = &nextImageIndex,
-	};
+		DestroyDescriptorPool();
+		DestroyLevelDescriptorSet();
+		DestroyLevelImage();
+		DestroyWinTexture();
+		DestroyPointSampler();
+		DestroyObjectsBuffer();
+		DestroyRenderImage();
+		DestroyAtlasDescriptorSet();
+		DestroyAtlasTexture();
+		DestroyTilesPipeline();
+		DestroySpritePipeline();
+		DestroyVertexBuffer();
+		DestroyRenderPasses();
+		DestroySwapchain();
+		DestroySyncObjects();
+		DestroyCommandBuffers();
+		DestroySurface();
 
-	VkResult result = vkQueuePresentKHR(vk_queue_main, &present);
-	if (result == VK_SUBOPTIMAL_KHR || result == VK_ERROR_OUT_OF_DATE_KHR)
+		FreeStaticMemory();
+
+		DestroyDevice();
+		DestroyInstance();
+	}
+
+	void WaitForFrame()
 	{
 		VkAssert(vkWaitForFences(vk_device, 1, &vk_fence_main, VK_TRUE, UINT64_MAX));
-		RecreateSwapchain();
-	}
-}
+		vkResetFences(vk_device, 1, &vk_fence_main);
 
-void VkAssert(VkResult result)
-{
-	if (result < 0)
+		VkResult result;
+		while (true)
+		{
+			result = vkAcquireNextImageKHR(vk_device, vk_swapchain, UINT64_MAX, vk_semaphore_acquireimage, VK_NULL_HANDLE, &nextImageIndex);
+			if (result == VK_ERROR_OUT_OF_DATE_KHR)
+			{
+				RecreateSwapchain();
+				continue;
+			}
+
+			break;
+		}
+	}
+
+	void RenderFrame()
 	{
-		throw VulkanException("Vulkan Error: ", result);
+		DrawFrame(nextImageIndex);
+
+		VkPresentInfoKHR present{
+			.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
+			.waitSemaphoreCount = 1,
+			.pWaitSemaphores = &vk_semaphore_rendering,
+			.swapchainCount = 1,
+			.pSwapchains = &vk_swapchain,
+			.pImageIndices = &nextImageIndex,
+		};
+
+		VkResult result = vkQueuePresentKHR(vk_queue_main, &present);
+		if (result == VK_SUBOPTIMAL_KHR || result == VK_ERROR_OUT_OF_DATE_KHR)
+		{
+			VkAssert(vkWaitForFences(vk_device, 1, &vk_fence_main, VK_TRUE, UINT64_MAX));
+			RecreateSwapchain();
+		}
+	}
+
+	void VkAssert(VkResult result)
+	{
+		if (result < 0)
+		{
+			throw VulkanException("Vulkan Error: ", result);
+		}
 	}
 }

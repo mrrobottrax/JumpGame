@@ -23,14 +23,14 @@ void MAGE_Init()
 #endif // DEBUG
 
 	MAGE_CreateWindow();
-	MAGE_InitAudio();
-	MAGE_InitGraphics();
+	//MAGE_InitAudio();
+	Graphics::Init();
 }
 
 void MAGE_End()
 {
-	MAGE_EndGraphics();
-	MAGE_EndAudio();
+	Graphics::Shutdown();
+	//MAGE_EndAudio();
 
 #ifdef DEBUG
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
@@ -88,7 +88,7 @@ void MAGE_FrameLoop()
 
 		if (shouldRender)
 		{
-			MAGE_WaitForNextFrame();
+			Graphics::WaitForNextFrame();
 
 			while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 			{
@@ -105,7 +105,7 @@ void MAGE_FrameLoop()
 			if (bExit) break;
 
 			Game_Tick();
-			MAGE_Render();
+			Graphics::Render();
 		}
 	}
 

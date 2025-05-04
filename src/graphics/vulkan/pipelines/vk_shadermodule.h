@@ -1,21 +1,24 @@
 #pragma once
 
-extern VkDevice vk_device;
-
-class ShaderModuleWrapper
+namespace Graphics::Vulkan
 {
-	VkShaderModule module;
+	extern VkDevice vk_device;
 
-public:
-	ShaderModuleWrapper(VkShaderModule module) : module(module)
-	{}
-
-	~ShaderModuleWrapper()
+	class ShaderModuleWrapper
 	{
-		vkDestroyShaderModule(vk_device, module, nullptr);
-	}
+		VkShaderModule module;
 
-	operator VkShaderModule &() { return module; }
-};
+	public:
+		ShaderModuleWrapper(VkShaderModule module) : module(module)
+		{}
 
-ShaderModuleWrapper CreateShaderModule(const wchar_t name[]);
+		~ShaderModuleWrapper()
+		{
+			vkDestroyShaderModule(vk_device, module, nullptr);
+		}
+
+		operator VkShaderModule &() { return module; }
+	};
+
+	ShaderModuleWrapper CreateShaderModule(const wchar_t name[]);
+}

@@ -1,8 +1,11 @@
 #pragma once
 
-void InitVulkan();
-void EndVulkan();
-void WaitForFrameVulkan();
-void RenderFrameVulkan();
+namespace Graphics::Vulkan
+{
+	void Init();
+	void Shutdown();
+	void WaitForFrame();
+	void RenderFrame();
 
-void VkAssert(VkResult result);
+	void VkAssert(VkResult result);
+}

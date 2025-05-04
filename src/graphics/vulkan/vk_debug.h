@@ -1,10 +1,13 @@
 #pragma once
 
-void CreateDebugCallbacks();
-void DestroyDebugCallbacks();
+namespace Graphics::Vulkan
+{
+	void CreateDebugCallbacks();
+	void DestroyDebugCallbacks();
 
-VkBool32 DebugCallback(
-	VkDebugUtilsMessageSeverityFlagBitsEXT           messageSeverity,
-	VkDebugUtilsMessageTypeFlagsEXT                  messageTypes,
-	const VkDebugUtilsMessengerCallbackDataEXT *pCallbackData,
-	void *pUserData);
+	VkBool32 DebugCallback(
+		VkDebugUtilsMessageSeverityFlagBitsEXT           messageSeverity,
+		VkDebugUtilsMessageTypeFlagsEXT                  messageTypes,
+		const VkDebugUtilsMessengerCallbackDataEXT *pCallbackData,
+		void *pUserData);
+}

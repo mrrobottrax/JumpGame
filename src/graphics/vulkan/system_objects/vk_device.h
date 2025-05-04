@@ -1,11 +1,14 @@
 #pragma once
 
-inline VkDevice vk_device;
-
-inline struct EnabledDeviceExtensions
+namespace Graphics::Vulkan
 {
-    bool memory_priority;
-} vk_device_extensions;
+    inline VkDevice vk_device;
 
-void CreateDevice();
-void DestroyDevice();
+    inline struct EnabledDeviceExtensions
+    {
+        bool memory_priority;
+    } vk_device_extensions;
+
+    void CreateDevice();
+    void DestroyDevice();
+}

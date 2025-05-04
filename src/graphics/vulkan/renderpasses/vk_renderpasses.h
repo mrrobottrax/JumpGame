@@ -1,4 +1,7 @@
 #pragma once
 
-void CreateRenderPasses();
-void DestroyRenderPasses();
+namespace Graphics::Vulkan
+{
+	void CreateRenderPasses();
+	void DestroyRenderPasses();
+}

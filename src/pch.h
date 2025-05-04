@@ -31,5 +31,6 @@
 #include <stdexcept>
 #include <format>
 #include <chrono>
+#include <cassert>
 
 using namespace std; // I know people hate this

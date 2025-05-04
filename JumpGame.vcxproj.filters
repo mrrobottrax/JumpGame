@@ -33,9 +33,6 @@
     <ClCompile Include="src\application\application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\graphics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\graphics\vulkan\vulkan.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

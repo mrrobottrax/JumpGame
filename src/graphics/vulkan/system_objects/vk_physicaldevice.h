@@ -1,5 +1,8 @@
 #pragma once
 
-inline VkPhysicalDevice vk_physicaldevice;
+namespace Graphics::Vulkan
+{
+	inline VkPhysicalDevice vk_physicaldevice;
 
-void PickPhysicalDevice();
+	void PickPhysicalDevice();
+}

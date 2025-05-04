@@ -1,3 +1,6 @@
 #pragma once
 
-void DrawFrame(int swapchainImageIndex);
+namespace Graphics::Vulkan
+{
+	void DrawFrame(int swapchainImageIndex);
+}

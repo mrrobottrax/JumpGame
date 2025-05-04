@@ -1,5 +1,8 @@
 #pragma once
 
-inline VkQueue vk_queue_main;
+namespace Graphics::Vulkan
+{
+	inline VkQueue vk_queue_main;
 
-void GetDeviceQueues();
+	void GetDeviceQueues();
+}

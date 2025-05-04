@@ -1,11 +1,14 @@
 #pragma once
 #include <graphics/vulkan/vk_memory.h>
 
-inline VkImage vk_atlas_image;
-inline VkImageView vk_atlas_view;
+namespace Graphics::Vulkan
+{
+	inline VkImage vk_atlas_image;
+	inline VkImageView vk_atlas_view;
 
-inline MemoryAllocation vk_atlas_memory;
+	inline MemoryAllocation vk_atlas_memory;
 
-void CreateAtlasTexture();
-void LoadAtlasTexture();
-void DestroyAtlasTexture();
+	void CreateAtlasTexture();
+	void LoadAtlasTexture();
+	void DestroyAtlasTexture();
+}

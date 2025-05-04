@@ -2,12 +2,15 @@
 #include "vk_renderpasses.h"
 #include "vk_objects_pass.h"
 
-void CreateRenderPasses()
+namespace Graphics::Vulkan
 {
-	CreateObjectsPass();
-}
+	void CreateRenderPasses()
+	{
+		CreateObjectsPass();
+	}
 
-void DestroyRenderPasses()
-{
-	DestroyObjectsPass();
+	void DestroyRenderPasses()
+	{
+		DestroyObjectsPass();
+	}
 }

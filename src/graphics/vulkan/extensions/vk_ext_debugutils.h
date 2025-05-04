@@ -1,3 +1,6 @@
 #pragma once
 
-void GetDebugUtilsFunctionPointers();
+namespace Graphics::Vulkan
+{
+	void GetDebugUtilsFunctionPointers();
+}

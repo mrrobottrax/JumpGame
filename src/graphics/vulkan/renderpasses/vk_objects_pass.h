@@ -1,6 +1,9 @@
 #pragma once
 
-inline VkRenderPass vk_objects_pass;
+namespace Graphics::Vulkan
+{
+	inline VkRenderPass vk_objects_pass;
 
-void CreateObjectsPass();
-void DestroyObjectsPass();
+	void CreateObjectsPass();
+	void DestroyObjectsPass();
+}

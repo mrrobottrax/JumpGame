@@ -11,7 +11,7 @@ VKAPI_ATTR void VKAPI_CALL vkSetDeviceMemoryPriorityEXT(
 	return pfn_vkSetDeviceMemoryPriorityEXT(device, memory, priority);
 }
 
-void GetMemoryPriorityFunctionPointers()
+void Graphics::Vulkan::GetMemoryPriorityFunctionPointers()
 {
 	pfn_vkSetDeviceMemoryPriorityEXT = (PFN_vkSetDeviceMemoryPriorityEXT)vkGetInstanceProcAddr(vk_instance, "vkSetDeviceMemoryPriorityEXT");
 }

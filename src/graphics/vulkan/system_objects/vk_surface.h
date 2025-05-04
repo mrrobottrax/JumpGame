@@ -1,6 +1,9 @@
 #pragma once
 
-inline VkSurfaceKHR vk_surface;
+namespace Graphics::Vulkan
+{
+	inline VkSurfaceKHR vk_surface;
 
-void CreateSurface();
-void DestroySurface();
+	void CreateSurface();
+	void DestroySurface();
+}

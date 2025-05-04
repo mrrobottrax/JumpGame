@@ -1,3 +1,6 @@
 #pragma once
 
-void TransitionImage(VkImageLayout oldLayout, VkImageLayout newLayout, VkImage image);
+namespace Graphics::Vulkan
+{
+	void TransitionImage(VkImageLayout oldLayout, VkImageLayout newLayout, VkImage image);
+}

@@ -1,4 +1,7 @@
 #pragma once
 
-void MAGE_InitAudio();
-void MAGE_EndAudio();
+namespace Audio
+{
+	void Init();
+	void Shutdown();
+}

@@ -1,8 +1,11 @@
 #pragma once
 
-struct SpriteData
+namespace Graphics::Vulkan
 {
-	unsigned short positionX, positionY;
-	short spriteIndex;
-	unsigned char sizeX, sizeY;
-};
+	struct SpriteData
+	{
+		unsigned short positionX, positionY;
+		short spriteIndex;
+		unsigned char sizeX, sizeY;
+	};
+}

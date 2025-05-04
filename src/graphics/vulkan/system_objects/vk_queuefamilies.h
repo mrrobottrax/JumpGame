@@ -1,9 +1,12 @@
 #pragma once
 
-struct QueueFamilyIndices
+namespace Graphics::Vulkan
 {
-	uint32_t mainQueueFamily;
-};
-inline QueueFamilyIndices vk_queue_family_indices;
+	struct QueueFamilyIndices
+	{
+		uint32_t mainQueueFamily;
+	};
+	inline QueueFamilyIndices vk_queue_family_indices;
 
-void GetQueueFamilies();
+	void GetQueueFamilies();
+}

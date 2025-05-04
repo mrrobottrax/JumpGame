@@ -1,3 +1,6 @@
 #pragma once
 
-void GetMemoryPriorityFunctionPointers();
+namespace Graphics::Vulkan
+{
+	void GetMemoryPriorityFunctionPointers();
+}

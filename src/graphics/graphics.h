@@ -1,6 +1,32 @@
 #pragma once
 
-void MAGE_InitGraphics();
-void MAGE_EndGraphics();
-void MAGE_WaitForNextFrame();
-void MAGE_Render();
+namespace Graphics
+{
+	namespace Vulkan
+	{
+		void Init();
+		void Shutdown();
+		void WaitForFrame();
+		void RenderFrame();
+	}
+
+	inline void Init()
+	{
+		Vulkan::Init();
+	}
+
+	inline void Shutdown()
+	{
+		Vulkan::Shutdown();
+	}
+
+	inline void WaitForNextFrame()
+	{
+		Vulkan::WaitForFrame();
+	}
+
+	inline void Render()
+	{
+		Vulkan::RenderFrame();
+	}
+}
