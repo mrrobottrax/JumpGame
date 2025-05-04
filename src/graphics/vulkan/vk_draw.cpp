@@ -19,6 +19,8 @@
 #include "descriptor_sets/vk_level_descriptor_set.h"
 #include "console/console.h"
 
+using namespace Console;
+
 namespace Graphics::Vulkan
 {
 	static void DrawTiles()

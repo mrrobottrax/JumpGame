@@ -6,67 +6,92 @@
 #include "time/time.h"
 #include "audio/audio.h"
 
-void MAGE_Init()
+namespace Application
 {
-#ifdef DEBUG
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-
-	if (!AllocConsole())
+	void Init()
 	{
-		throw std::runtime_error("Failed to create console");
+#ifdef DEBUG
+		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
+		if (!AllocConsole())
+		{
+			throw std::runtime_error("Failed to create console");
+		}
+
+		FILE *stream;
+		freopen_s(&stream, "CONOUT$", "w", stdout);
+		freopen_s(&stream, "CONOUT$", "r", stdin);
+		freopen_s(&stream, "CONOUT$", "w", stderr);
+#endif // DEBUG
+
+		MAGE_CreateWindow();
+		//MAGE_InitAudio();
+		Graphics::Init();
 	}
 
-	FILE *stream;
-	freopen_s(&stream, "CONOUT$", "w", stdout);
-	freopen_s(&stream, "CONOUT$", "r", stdin);
-	freopen_s(&stream, "CONOUT$", "w", stderr);
-#endif // DEBUG
-
-	MAGE_CreateWindow();
-	//MAGE_InitAudio();
-	Graphics::Init();
-}
-
-void MAGE_End()
-{
-	Graphics::Shutdown();
-	//MAGE_EndAudio();
+	void Shutdown()
+	{
+		Graphics::Shutdown();
+		//MAGE_EndAudio();
 
 #ifdef DEBUG
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
-	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDOUT);
-	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
-	_CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDOUT);
-	_CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
-	_CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDOUT);
-	_CrtDumpMemoryLeaks();
-	system("pause");
+		_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+		_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDOUT);
+		_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
+		_CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDOUT);
+		_CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
+		_CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDOUT);
+		_CrtDumpMemoryLeaks();
+		system("pause");
 
-	FreeConsole();
+		FreeConsole();
 #endif // DEBUG
-}
+	}
 
-static chrono::system_clock::time_point prevFrame = chrono::system_clock::now();
-void MAGE_FrameLoop()
-{
-	Game_Init();
-
-	bool bExit = false;
-	MSG msg;
-	while (!bExit)
+	static chrono::system_clock::time_point prevFrame = chrono::system_clock::now();
+	void FrameLoop()
 	{
-		chrono::system_clock::time_point currentTime = chrono::system_clock::now();
+		Game_Init();
 
-		bool ranCatchupFrame = false;
-		bool shouldRender = false;
-		constexpr chrono::system_clock::duration delta((int)(10000000.0 / ticksPerSecond));
-		while (currentTime - prevFrame > delta)
+		bool bExit = false;
+		MSG msg;
+		while (!bExit)
 		{
-			prevFrame += delta;
+			chrono::system_clock::time_point currentTime = chrono::system_clock::now();
 
-			if (!ranCatchupFrame && currentTime - prevFrame > delta)
+			bool ranCatchupFrame = false;
+			bool shouldRender = false;
+			constexpr chrono::system_clock::duration delta((int)(10000000.0 / ticksPerSecond));
+			while (currentTime - prevFrame > delta)
 			{
+				prevFrame += delta;
+
+				if (!ranCatchupFrame && currentTime - prevFrame > delta)
+				{
 #ifndef DEBUG
+					while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+					{
+						TranslateMessage(&msg);
+						DispatchMessage(&msg);
+
+						if (msg.message == WM_QUIT)
+						{
+							return;
+						}
+					}
+
+					Game_Tick();
+					ranCatchupFrame = true; // < 30fps = TOO BAD!
+#endif // !DEBUG
+				}
+
+				shouldRender = true;
+			}
+
+			if (shouldRender)
+			{
+				Graphics::WaitForNextFrame();
+
 				while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 				{
 					TranslateMessage(&msg);
@@ -74,40 +99,18 @@ void MAGE_FrameLoop()
 
 					if (msg.message == WM_QUIT)
 					{
-						return;
+						bExit = true;
+						break;
 					}
 				}
 
+				if (bExit) break;
+
 				Game_Tick();
-				ranCatchupFrame = true; // < 30fps = TOO BAD!
-#endif // !DEBUG
+				Graphics::Render();
 			}
-
-			shouldRender = true;
 		}
 
-		if (shouldRender)
-		{
-			Graphics::WaitForNextFrame();
-
-			while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-			{
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-
-				if (msg.message == WM_QUIT)
-				{
-					bExit = true;
-					break;
-				}
-			}
-
-			if (bExit) break;
-
-			Game_Tick();
-			Graphics::Render();
-		}
+		Game_End();
 	}
-
-	Game_End();
 }

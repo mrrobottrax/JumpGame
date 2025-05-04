@@ -3,6 +3,8 @@
 #include "vk_instance.h"
 #include "console/console.h"
 
+using namespace Console;
+
 namespace Graphics::Vulkan
 {
 	struct DeviceEntry

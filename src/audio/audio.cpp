@@ -3,6 +3,8 @@
 #include "exceptions/exceptions.h"
 #include "console/console.h"
 
+using namespace Console;
+
 /*
 
 Todo: https://learn.microsoft.com/en-us/windows/win32/coreaudio/mmdevice-api

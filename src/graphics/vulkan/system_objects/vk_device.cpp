@@ -6,6 +6,8 @@
 #include <graphics/vulkan/vulkan.h>
 #include "graphics/vulkan/extensions/vk_ext_memorypriority.h"
 
+using namespace Console;
+
 namespace Graphics::Vulkan
 {
 	constexpr const char *REQUIRED_EXTENSIONS[] = {

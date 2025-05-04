@@ -4,7 +4,7 @@
 #include "application/application.h"
 #include <exceptions/exceptions.h>
 
-extern HINSTANCE hInstance;
+extern HINSTANCE Application::hInstance;
 
 HWND hwnd;
 HCURSOR cursor;
@@ -33,7 +33,7 @@ void MAGE_CreateWindow()
 
 	WNDCLASS wc = {};
 	wc.lpfnWndProc = WindowProc;
-	wc.hInstance = hInstance;
+	wc.hInstance = Application::hInstance;
 	wc.lpszClassName = CLASS_NAME;
 	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	wc.style = CS_HREDRAW | CS_VREDRAW;
@@ -59,7 +59,7 @@ void MAGE_CreateWindow()
 		NULL,
 		NULL,
 
-		hInstance,
+		Application::hInstance,
 
 		NULL
 	);

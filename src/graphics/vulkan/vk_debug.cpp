@@ -4,6 +4,8 @@
 #include <console/console.h>
 #include "system_objects/vk_instance.h"
 
+using namespace Console;
+
 namespace Graphics::Vulkan
 {
 	static VkDebugUtilsMessengerEXT vk_reportCallback;

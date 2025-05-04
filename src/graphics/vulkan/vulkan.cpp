@@ -26,6 +26,8 @@
 #include "descriptor_sets/vk_static_descriptor_pool.h"
 #include "game_objects/vk_win_screen.h"
 
+using namespace Console;
+
 namespace Graphics::Vulkan
 {
 	static uint32_t nextImageIndex = 0;

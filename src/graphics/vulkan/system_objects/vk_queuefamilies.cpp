@@ -3,6 +3,8 @@
 #include "vk_physicaldevice.h"
 #include <console/console.h>
 
+using namespace Console;
+
 namespace Graphics::Vulkan
 {
 	void GetQueueFamilies()

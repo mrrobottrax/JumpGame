@@ -1,71 +1,74 @@
 #include "pch.h"
 #include "console.h"
 
-void Log(const char message[], ...)
+namespace Console
 {
+	void Log(const char message[], ...)
+	{
 #ifdef DEBUG
-	printf("[LOG] ");
+		printf("[LOG] ");
 
-	va_list args;
-	va_start(args, message);
+		va_list args;
+		va_start(args, message);
 
-	vprintf(message, args);
+		vprintf(message, args);
 
-	va_end(args);
+		va_end(args);
 
-	printf("\n");
+		printf("\n");
 #endif // DEBUG
-}
+	}
 
-void Log(const wchar_t message[], ...)
-{
+	void Log(const wchar_t message[], ...)
+	{
 #ifdef DEBUG
-	printf("[LOG] ");
+		printf("[LOG] ");
 
-	va_list args;
-	va_start(args, message);
+		va_list args;
+		va_start(args, message);
 
-	vwprintf(message, args);
+		vwprintf(message, args);
 
-	va_end(args);
+		va_end(args);
 
-	printf("\n");
+		printf("\n");
 #endif // DEBUG
-}
+	}
 
-void LogWarn(const char message[], ...)
-{
+	void LogWarn(const char message[], ...)
+	{
 #ifdef DEBUG
-	printf("[WARNING] ");
+		printf("[WARNING] ");
 
-	va_list args;
-	va_start(args, message);
+		va_list args;
+		va_start(args, message);
 
-	vprintf(message, args);
+		vprintf(message, args);
 
-	va_end(args);
+		va_end(args);
 
-	printf("\n");
+		printf("\n");
 #endif // DEBUG
-}
+	}
 
-void Log(unsigned int n)
-{
+	void Log(unsigned int n)
+	{
 #ifdef DEBUG
-	Log("%u", n);
+		Log("%u", n);
 #endif // DEBUG
-}
+	}
 
-void Log(void *p)
-{
+	void Log(void *p)
+	{
 #ifdef DEBUG
-	Log("%p", p);
+		Log("%p", p);
 #endif // DEBUG
-}
+	}
 
-void Log(float f)
-{
+	void Log(float f)
+	{
 #ifdef DEBUG
-	Log("%f", f);
+		Log("%f", f);
 #endif // DEBUG
+	}
 }

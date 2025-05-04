@@ -1,7 +1,10 @@
 #pragma once
 
-inline HINSTANCE hInstance;
+namespace Application
+{
+	inline HINSTANCE hInstance;
 
-void MAGE_Init();
-void MAGE_End();
-void MAGE_FrameLoop();
+	void Init();
+	void Shutdown();
+	void FrameLoop();
+}

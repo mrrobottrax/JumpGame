@@ -11,6 +11,8 @@
 #include "game_objects/vk_level_texture.h"
 #include "game_objects/vk_win_screen.h"
 
+using namespace Console;
+
 namespace Graphics::Vulkan
 {
 	void GetMemoryTypes()

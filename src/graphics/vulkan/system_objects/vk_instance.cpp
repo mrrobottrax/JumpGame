@@ -5,6 +5,8 @@
 #include <graphics/vulkan/vulkan.h>
 #include "graphics/vulkan/extensions/vk_ext_debugutils.h"
 
+using namespace Console;
+
 namespace Graphics::Vulkan
 {
 #ifdef DEBUG

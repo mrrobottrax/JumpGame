@@ -10,7 +10,7 @@ namespace Graphics::Vulkan
 	{
 		VkWin32SurfaceCreateInfoKHR createInfo{
 			.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR,
-			.hinstance = hInstance,
+			.hinstance = Application::hInstance,
 			.hwnd = hwnd,
 		};
 

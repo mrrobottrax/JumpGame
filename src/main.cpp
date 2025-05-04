@@ -9,15 +9,15 @@ int WINAPI wWinMain(
 	_In_ PWSTR pCmdLine,
 	_In_ int nCmdShow)
 {
-	::hInstance = hInstance;
+	Application::hInstance = hInstance;
 
 	try
 	{
 		ThrowIfFailed(CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE));
 
-		MAGE_Init();
-		MAGE_FrameLoop();
-		MAGE_End();
+		Application::Init();
+		Application::FrameLoop();
+		Application::Shutdown();
 
 		CoUninitialize();
 	}
