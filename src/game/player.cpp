@@ -91,16 +91,16 @@ void Player::tick()
 		grounded = true;
 	}
 
-	if (positionY >= LEVEL_HEIGHT - 1)
+	if (positionY >= Window::LEVEL_HEIGHT - 1)
 	{
-		positionY = LEVEL_HEIGHT - 1;
+		positionY = Window::LEVEL_HEIGHT - 1;
 		velocityY = 0;
 	}
 
-	positionX = fminf(fmaxf(positionX, 0), LEVEL_WIDTH - 1);
+	positionX = fminf(fmaxf(positionX, 0), Window::LEVEL_WIDTH - 1);
 
-	unsigned short gridL = LEVEL_DATA[(int)positionX + (int)(LEVEL_HEIGHT - positionY) * LEVEL_WIDTH];
-	unsigned short gridR = LEVEL_DATA[(int)fminf(positionX + 1, LEVEL_WIDTH - 1) + (int)(LEVEL_HEIGHT - positionY) * LEVEL_WIDTH];
+	unsigned short gridL = LEVEL_DATA[(int)positionX + (int)(Window::LEVEL_HEIGHT - positionY) * Window::LEVEL_WIDTH];
+	unsigned short gridR = LEVEL_DATA[(int)fminf(positionX + 1, Window::LEVEL_WIDTH - 1) + (int)(Window::LEVEL_HEIGHT - positionY) * Window::LEVEL_WIDTH];
 	if ((is_tile_solid(gridL) || is_tile_solid(gridR)) && velocityY < 0)
 	{
 		positionY = ceilf(positionY);

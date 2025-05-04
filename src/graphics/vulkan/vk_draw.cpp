@@ -120,8 +120,8 @@ namespace Graphics::Vulkan
 
 		vkCmdPipelineBarrier2(vk_commandbuffer_main, &toTransferDstDependency);
 
-		int xSize = (int)SCREEN_WIDTH * vk_render_scale;
-		int ySize = (int)SCREEN_HEIGHT * vk_render_scale;
+		int xSize = (int)Window::SCREEN_WIDTH * vk_render_scale;
+		int ySize = (int)Window::SCREEN_HEIGHT * vk_render_scale;
 		int xOffset = (vk_swapchain_width - xSize) / 2;
 		int yOffset = (vk_swapchain_height - ySize) / 2;
 		VkImageBlit2 region{
@@ -133,7 +133,7 @@ namespace Graphics::Vulkan
 			},
 			.srcOffsets = {
 				{0, 0, 0},
-				{SCREEN_WIDTH, SCREEN_HEIGHT, 1},
+				{Window::SCREEN_WIDTH, Window::SCREEN_HEIGHT, 1},
 			},
 			.dstSubresource = {
 				.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
@@ -197,9 +197,9 @@ namespace Graphics::Vulkan
 
 		// set viewport
 		VkViewport viewport{
-			.x = 0, .y = (float)SCREEN_HEIGHT,
-			.width = (float)SCREEN_WIDTH,
-			.height = -(float)SCREEN_HEIGHT,
+			.x = 0, .y = (float)Window::SCREEN_HEIGHT,
+			.width = (float)Window::SCREEN_WIDTH,
+			.height = -(float)Window::SCREEN_HEIGHT,
 			.minDepth = 0,
 			.maxDepth = 1,
 		};
@@ -208,8 +208,8 @@ namespace Graphics::Vulkan
 		VkRect2D scissor{
 			.offset = { 0, 0 },
 			.extent = {
-				.width = SCREEN_WIDTH,
-				.height = SCREEN_HEIGHT
+				.width = Window::SCREEN_WIDTH,
+				.height = Window::SCREEN_HEIGHT
 			},
 		};
 		vkCmdSetScissor(vk_commandbuffer_main, 0, 1, &scissor);
@@ -223,7 +223,7 @@ namespace Graphics::Vulkan
 			.renderPass = vk_objects_pass,
 			.framebuffer = vk_render_framebuffer,
 			.renderArea = {
-				.extent = {.width = SCREEN_WIDTH, .height = SCREEN_HEIGHT},
+				.extent = {.width = Window::SCREEN_WIDTH, .height = Window::SCREEN_HEIGHT},
 			},
 			.clearValueCount = 1,
 			.pClearValues = &clear,
@@ -237,7 +237,7 @@ namespace Graphics::Vulkan
 		vkCmdBeginRenderPass2(vk_commandbuffer_main, &begin, &subBegin);
 
 		// set push constants
-		int32_t pushData[] = { LEVEL_WIDTH, LEVEL_HEIGHT, TILE_SIZE };
+		int32_t pushData[] = { Window::LEVEL_WIDTH, Window::LEVEL_HEIGHT, Window::TILE_SIZE };
 		vkCmdPushConstants(vk_commandbuffer_main, vk_tiles_pipeline_layout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(pushData), &pushData);
 
 		draw_tiles();

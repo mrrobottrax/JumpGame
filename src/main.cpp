@@ -24,28 +24,28 @@ int WINAPI wWinMain(
 	catch (WindowsException &e)
 	{
 		printf(e.msg().c_str());
-		MessageBoxA(hwnd, e.msg().c_str(), NULL, MB_SYSTEMMODAL);
+		MessageBoxA(Window::hwnd, e.msg().c_str(), NULL, MB_SYSTEMMODAL);
 		system("pause");
 		return 1;
 	}
 	catch (VulkanException &e)
 	{
 		printf(e.msg().c_str());
-		MessageBoxA(hwnd, e.msg().c_str(), NULL, MB_SYSTEMMODAL);
+		MessageBoxA(Window::hwnd, e.msg().c_str(), NULL, MB_SYSTEMMODAL);
 		system("pause");
 		return 1;
 	}
 	catch (std::exception &e)
 	{
 		printf("%s\n", e.what());
-		MessageBoxA(hwnd, e.what(), NULL, MB_SYSTEMMODAL);
+		MessageBoxA(Window::hwnd, e.what(), NULL, MB_SYSTEMMODAL);
 		system("pause");
 		return 1;
 	}
 	catch (...)
 	{
 		printf("Unknown error");
-		MessageBoxA(hwnd, "Unknown error", NULL, MB_SYSTEMMODAL);
+		MessageBoxA(Window::hwnd, "Unknown error", NULL, MB_SYSTEMMODAL);
 		system("pause");
 		return 1;
 	}

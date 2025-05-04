@@ -18,8 +18,8 @@ namespace Graphics::Vulkan
 			.imageType = VK_IMAGE_TYPE_2D,
 			.format = format,
 			.extent = {
-				.width = SCREEN_WIDTH,
-				.height = SCREEN_HEIGHT,
+				.width = Window::SCREEN_WIDTH,
+				.height = Window::SCREEN_HEIGHT,
 				.depth = 1,
 			},
 			.mipLevels = 1,
@@ -58,8 +58,8 @@ namespace Graphics::Vulkan
 			.renderPass = vk_objects_pass,
 			.attachmentCount = 1,
 			.pAttachments = &vk_render_image_view,
-			.width = SCREEN_WIDTH,
-			.height = SCREEN_HEIGHT,
+			.width = Window::SCREEN_WIDTH,
+			.height = Window::SCREEN_HEIGHT,
 			.layers = 1,
 		};
 

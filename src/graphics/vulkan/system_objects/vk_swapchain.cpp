@@ -10,8 +10,8 @@ namespace Graphics::Vulkan
 {
 	static void calculate_render_scale()
 	{
-		int scaleX = vk_swapchain_width / SCREEN_WIDTH;
-		int scaleY = vk_swapchain_height / SCREEN_HEIGHT;
+		int scaleX = vk_swapchain_width / Window::SCREEN_WIDTH;
+		int scaleY = vk_swapchain_height / Window::SCREEN_HEIGHT;
 		int minScale = scaleX;
 		if (scaleY < minScale) minScale = scaleY;
 

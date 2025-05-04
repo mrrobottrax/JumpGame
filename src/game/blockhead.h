@@ -10,8 +10,8 @@ public:
 	{
 		this->positionX = positionX;
 		this->positionY = positionY;
-		this->dimensionsX = LEVEL_WIDTH;
-		this->dimensionsY = LEVEL_HEIGHT;
+		this->dimensionsX = Window::LEVEL_WIDTH;
+		this->dimensionsY = Window::LEVEL_HEIGHT;
 		this->spriteIndex = 1560;
 		this->flip = false;
 	}

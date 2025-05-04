@@ -24,7 +24,7 @@ namespace Application
 		freopen_s(&stream, "CONOUT$", "w", stderr);
 #endif // DEBUG
 
-		MAGE_CreateWindow();
+		Window::create_window();
 		//MAGE_InitAudio();
 		Graphics::init();
 	}

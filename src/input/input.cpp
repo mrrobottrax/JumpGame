@@ -59,12 +59,12 @@ static void set_key(unsigned long long key, bool value)
 			break;
 
 		case VK_ESCAPE:
-			PostMessage(hwnd, WM_CLOSE, 0, 0);
+			PostMessage(Window::hwnd, WM_CLOSE, 0, 0);
 			break;
 
 		case VK_F11:
 			if (value)
-				MAGE_ToggleFullscreen();
+				Window::toggle_fullscreen();
 			break;
 	}
 }

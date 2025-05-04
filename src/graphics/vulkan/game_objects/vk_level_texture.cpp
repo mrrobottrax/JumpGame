@@ -17,7 +17,7 @@ namespace Graphics::Vulkan
 			.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
 			.imageType = VK_IMAGE_TYPE_2D,
 			.format = VK_FORMAT_R16_UINT,
-			.extent = {.width = LEVEL_WIDTH, .height = LEVEL_HEIGHT, .depth = 1},
+			.extent = {.width = Window::LEVEL_WIDTH, .height = Window::LEVEL_HEIGHT, .depth = 1},
 			.mipLevels = 1,
 			.arrayLayers = 1,
 			.samples = VK_SAMPLE_COUNT_1_BIT,
@@ -59,12 +59,12 @@ namespace Graphics::Vulkan
 		vkGetImageSubresourceLayout(vk_device, vk_level_image, &subResource, &layout);
 
 		// Copy data
-		for (uint32_t row = 0; row < LEVEL_HEIGHT; ++row)
+		for (uint32_t row = 0; row < Window::LEVEL_HEIGHT; ++row)
 		{
 			memcpy(
 				(char *)vk_level_memory.map + row * layout.rowPitch + layout.offset,
-				LEVEL_DATA + row * LEVEL_WIDTH,
-				(size_t)LEVEL_WIDTH * 2
+				LEVEL_DATA + row * Window::LEVEL_WIDTH,
+				(size_t)Window::LEVEL_WIDTH * 2
 			);
 		}
 
