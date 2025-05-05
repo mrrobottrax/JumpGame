@@ -21,10 +21,6 @@ namespace Graphics::Vulkan
 		"VK_KHR_win32_surface",
 	};
 #else
-	constexpr const char *REQUIRED_LAYERS[] = {
-		"VK_LAYER_KHRONOS_synchronization2",
-	};
-
 	constexpr const char *REQUIRED_EXTENSIONS[] = {
 		"VK_KHR_surface",
 		"VK_KHR_win32_surface",
@@ -94,8 +90,10 @@ namespace Graphics::Vulkan
 		VkInstanceCreateInfo createInfo{
 			.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
 			.pApplicationInfo = &appInfo,
+#ifdef DEBUG
 			.enabledLayerCount = _countof(REQUIRED_LAYERS),
 			.ppEnabledLayerNames = REQUIRED_LAYERS,
+#endif // DEBUG
 			.enabledExtensionCount = _countof(REQUIRED_EXTENSIONS),
 			.ppEnabledExtensionNames = REQUIRED_EXTENSIONS,
 		};

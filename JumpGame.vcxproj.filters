@@ -296,6 +296,9 @@
     <ClInclude Include="src\audio\audio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="data\sprite.frag" />
@@ -305,8 +308,13 @@
     <None Include="data\tiles.vert" />
   </ItemGroup>
   <ItemGroup>
-    <Media Include="C:\Users\mrrob\Desktop\coin.wav">
+    <ResourceCompile Include="JumpGame.rc">
       <Filter>Resource Files</Filter>
-    </Media>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="jumpman.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

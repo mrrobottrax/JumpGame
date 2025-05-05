@@ -3,11 +3,14 @@
 #include "input/input.h"
 #include "application/application.h"
 #include <exceptions/exceptions.h>
+#include "resource.h"
 
 extern HINSTANCE Application::hInstance;
 
 namespace Window
 {
+	constexpr COLORREF BG_COLOR = 0x00181818;
+
 	HWND hwnd;
 	
 	static HCURSOR cursor;
@@ -25,12 +28,12 @@ namespace Window
 									0,
 									LR_DEFAULTSIZE | LR_SHARED);
 
-								/*icon = (HICON)LoadImage(hInstance,
-														MAKEINTRESOURCE(IDI_ICON1),
-														IMAGE_ICON,
-														0,
-														0,
-														LR_DEFAULTSIZE | LR_SHARED);*/
+		icon = (HICON)LoadImage(Application::hInstance,
+								MAKEINTRESOURCE(IDI_ICON1),
+								IMAGE_ICON,
+								0,
+								0,
+								LR_DEFAULTSIZE | LR_SHARED);
 
 		const wchar_t CLASS_NAME[] = L"Mage Window";
 
@@ -40,7 +43,7 @@ namespace Window
 		wc.lpszClassName = CLASS_NAME;
 		wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 		wc.style = CS_HREDRAW | CS_VREDRAW;
-		//wc.hIcon = icon;
+		wc.hIcon = icon;
 
 		RegisterClass(&wc);
 
@@ -71,6 +74,8 @@ namespace Window
 		{
 			throw std::runtime_error("Failed to create window");
 		}
+
+		DwmSetWindowAttribute(hwnd, DWMWA_CAPTION_COLOR, &BG_COLOR, 4);
 
 		ShowWindow(hwnd, SW_SHOWNORMAL);
 		set_fullscreen(g_windowData.fullscreen);

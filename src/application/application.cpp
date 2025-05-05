@@ -28,7 +28,7 @@ namespace Application
 		Window::create_window();
 		try
 		{
-			Audio::init();
+			//Audio::init();
 		}
 		catch (exception &e)
 		{
@@ -40,7 +40,7 @@ namespace Application
 	void shutdown()
 	{
 		Graphics::shutdown();
-		Audio::shutdown();
+		//Audio::shutdown();
 
 #ifdef DEBUG
 		_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
