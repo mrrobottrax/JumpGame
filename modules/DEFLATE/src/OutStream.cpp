@@ -6,7 +6,7 @@ void OutStream::AppendByte(unsigned char val)
 	size_t pageNum = index / OUT_STREAM_PAGE_SIZE;
 
 	Page *pPage = pFirstPage;
-	for (int i = 0; i < pageNum; ++i)
+	for (size_t i = 0; i < pageNum; ++i)
 	{
 		pPage = pPage->pNext;
 	}
@@ -40,7 +40,7 @@ unsigned char OutStream::ReadBack(unsigned int distance)
 	size_t pageNum = index / OUT_STREAM_PAGE_SIZE;
 
 	Page *pPage = pFirstPage;
-	for (int i = 0; i < pageNum; ++i)
+	for (size_t i = 0; i < pageNum; ++i)
 	{
 		pPage = pPage->pNext;
 	}
@@ -61,7 +61,7 @@ unsigned char OutStream::ReadByte(size_t index)
 	size_t pageNum = index / OUT_STREAM_PAGE_SIZE;
 
 	Page *pPage = pFirstPage;
-	for (int i = 0; i < pageNum; ++i)
+	for (size_t i = 0; i < pageNum; ++i)
 	{
 		pPage = pPage->pNext;
 	}

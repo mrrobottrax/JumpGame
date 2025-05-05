@@ -14,15 +14,18 @@ https://learn.microsoft.com/en-us/windows/win32/coreaudio/rendering-a-stream
 
 namespace Audio
 {
-// REFERENCE_TIME is a win32 thing = 100 nanoseconds
-#define REFTIMES_PER_SEC 10000000
-#define REFTIMES_PER_MILLISEC 10000
+	// constants
 
+	// REFERENCE_TIME is a win32 thing = 100 nanoseconds
+	constexpr size_t REFTIMES_PER_SEC = 10000000;
+	constexpr size_t REFTIMES_PER_MILLISEC = 10000;
+
+	// statics
 	static WAVEFORMATEX *pFormat;
 	static UINT32 bufferSize;
 	static DWORD sampleRate;
 	static REFERENCE_TIME hnsBufferDuration;
-	static WORD bitDepth;
+	static WORD containerSize;
 	static WORD channels;
 
 	static CComPtr<IMMDevice> pDefaultDevice;
@@ -31,80 +34,21 @@ namespace Audio
 	static HANDLE hAudioThread;
 	static volatile bool shouldEndAudioThread = false;
 
-	DWORD WINAPI AudioThreadProc(
-		_In_ LPVOID lpParameter
-	)
+	enum class EAudioFormat
 	{
-		UINT64 counter = 0;
+		UNKNOWN,
+		FLOAT_32,
+		INT_16,
+		INT_8,
+		UNSUPPORTED,
+	};
+	static EAudioFormat currentFormat = EAudioFormat::UNKNOWN;
 
-		while (!shouldEndAudioThread)
-		{
-			// sleep for half of buffer
-			Sleep((DWORD)(hnsBufferDuration / REFTIMES_PER_MILLISEC / 2));
+	// static methods
+	static DWORD WINAPI audio_thread_proc(_In_ LPVOID lpParameter);
+	static EAudioFormat get_format(WAVEFORMATEX *pWaveFormatEx);
 
-			UINT32 padding;
-			throw_if_failed(pClient->GetCurrentPadding(&padding));
-
-			UINT32 available = bufferSize - padding;
-
-			BYTE *pData;
-			throw_if_failed(pRenderClient->GetBuffer(available, &pData));
-
-			if (bitDepth == 32)
-			{
-				float *pFloat = reinterpret_cast<float *>(pData);
-				for (UINT32 i = 0; i < available; ++i)
-				{
-					double tSeconds = (double)(counter + i) / sampleRate;
-					double val = sin(tSeconds * 440.0 * 2.0 * 3.14159265);
-					for (UINT32 ch = 0; ch < channels; ++ch)
-					{
-						pFloat[i * channels + ch] = (float)val;
-					}
-				}
-			}
-
-			// i've actually just made it throw when it's not the float format. lazy. so these don't do anything now.
-
-			else if (bitDepth == 16)
-			{
-				// 16-bit signed PCM
-				int16_t *pInt16 = reinterpret_cast<int16_t *>(pData);
-				for (UINT32 i = 0; i < available; ++i)
-				{
-					double tSeconds = (double)(counter + i) / sampleRate;
-					double val = sin(tSeconds * 440.0 * 2.0 * 3.14159265);
-					int16_t sample = static_cast<int16_t>(val * 32767.0);
-					for (UINT32 ch = 0; ch < channels; ++ch)
-					{
-						pInt16[i * channels + ch] = sample;
-					}
-				}
-			}
-			else if (bitDepth == 8)
-			{
-				// 8-bit unsigned PCM (unlikely, but handle it)
-				for (UINT32 i = 0; i < available; ++i)
-				{
-					double tSeconds = (double)(counter + i) / sampleRate;
-					double val = sin(tSeconds * 440.0 * 2.0 * 3.14159265) / 2.0 + 0.5;
-					BYTE sample = static_cast<BYTE>(val * 255.0);
-					for (UINT32 ch = 0; ch < channels; ++ch)
-					{
-						pData[i * channels + ch] = sample;
-					}
-				}
-			}
-
-			throw_if_failed(pRenderClient->ReleaseBuffer(available, 0));
-
-			counter += available;
-		}
-
-		return 0;
-	}
-
-	void MAGE_InitAudio()
+	void init()
 	{
 		CComPtr<IMMDeviceEnumerator> pEnumerator{};
 
@@ -141,35 +85,23 @@ namespace Audio
 
 		// get format
 		throw_if_failed(pClient->GetMixFormat(&pFormat));
-
-		if (pFormat->wFormatTag != WAVE_FORMAT_EXTENSIBLE)
-		{
-			throw std::runtime_error("Unsupported audio format (type 1). Email me at andrewhoult77@gmail.com so I know to add support!");
-		}
+		currentFormat = get_format(pFormat);
 
 		sampleRate = pFormat->nSamplesPerSec;
 		channels = pFormat->nChannels;
-		bitDepth = pFormat->wBitsPerSample;
+		containerSize = pFormat->wBitsPerSample;
 
 		log("Sample rate: %u", sampleRate);
 		log("Channels: %u", channels);
-		log("Bit depth: %u", bitDepth);
-
-		if (pFormat->wBitsPerSample != 32)
-		{
-			throw std::runtime_error("Unsupported audio format (type 2). Email me at andrewhoult77@gmail.com so I know to add support!");
-		}
 
 		// init client
 		REFERENCE_TIME hnsRequestedDuration = REFTIMES_PER_SEC; // 1 second
 		throw_if_failed(pClient->Initialize(AUDCLNT_SHAREMODE_SHARED, 0, hnsRequestedDuration, 0, pFormat, NULL));
 
 		throw_if_failed(pClient->GetBufferSize(&bufferSize));
-
 		log("Buffer size: %u", bufferSize);
 
 		hnsBufferDuration = (REFERENCE_TIME)((double)REFTIMES_PER_SEC * bufferSize / sampleRate);
-
 		log("Buffer duration: %lu", hnsBufferDuration);
 
 		// create render client
@@ -179,16 +111,16 @@ namespace Audio
 		BYTE *pData;
 		throw_if_failed(pRenderClient->GetBuffer(bufferSize, &pData));
 
-		memset(pData, 0, static_cast<size_t>(bufferSize) * (bitDepth / 8) * channels);
+		memset(pData, 0, static_cast<size_t>(bufferSize) * (containerSize / 8) * channels);
 
 		throw_if_failed(pRenderClient->ReleaseBuffer(bufferSize, 0));
 		throw_if_failed(pClient->Start());
 
-		hAudioThread = CreateThread(NULL, 0, AudioThreadProc, NULL, 0, NULL);
+		hAudioThread = CreateThread(NULL, 0, audio_thread_proc, NULL, 0, NULL);
 		throw_if_null(hAudioThread);
 	}
 
-	void MAGE_EndAudio()
+	void shutdown()
 	{
 		CoTaskMemFree(pFormat);
 		pClient->Stop();
@@ -198,13 +130,113 @@ namespace Audio
 		CloseHandle(hAudioThread);
 	}
 
-	void init()
+	AudioFile convert_audio(AudioFile &input)
 	{
-
+		// resample and convert to float/pcm
+		return AudioFile();
 	}
 
-	void shutdown()
+	static DWORD WINAPI audio_thread_proc(
+		_In_ LPVOID lpParameter
+	)
 	{
+		UINT64 counter = 0;
 
+		while (!shouldEndAudioThread)
+		{
+			// sleep for half of buffer
+			Sleep((DWORD)(hnsBufferDuration / REFTIMES_PER_MILLISEC / 2));
+
+			UINT32 padding;
+			throw_if_failed(pClient->GetCurrentPadding(&padding));
+
+			UINT32 available = bufferSize - padding;
+
+			BYTE *pData;
+			throw_if_failed(pRenderClient->GetBuffer(available, &pData));
+
+			
+
+			throw_if_failed(pRenderClient->ReleaseBuffer(available, 0));
+
+			counter += available;
+		}
+
+		return 0;
+	}
+
+	EAudioFormat get_format(WAVEFORMATEX *pWaveFormatEx)
+	{
+		enum
+		{
+			UNKNOWN = 0,
+			FLOAT,
+			PCM
+		} roughFormat = UNKNOWN;
+		int bits = 0;
+
+		if (pWaveFormatEx->wFormatTag == WAVE_FORMAT_EXTENSIBLE)
+		{
+			WAVEFORMATEXTENSIBLE &waveFormat = *((WAVEFORMATEXTENSIBLE *)pWaveFormatEx);
+
+			if (waveFormat.SubFormat == KSDATAFORMAT_SUBTYPE_PCM)
+			{
+				roughFormat = PCM;
+				log("Format: PCM");
+			}
+			else if (waveFormat.SubFormat == KSDATAFORMAT_SUBTYPE_IEEE_FLOAT)
+			{
+				roughFormat = FLOAT;
+				log("Format: Float");
+			}
+			else
+			{
+				throw runtime_error(format("Unknown audio format {0}:{1}:{2}:{3}.{4}.{5}.{6}.{7}.{8}.{9}.{10}. Email me at andrewhoult77@gmail.com so I can add support.", waveFormat.SubFormat.Data1, waveFormat.SubFormat.Data2, waveFormat.SubFormat.Data3, waveFormat.SubFormat.Data4[0], waveFormat.SubFormat.Data4[1], waveFormat.SubFormat.Data4[2], waveFormat.SubFormat.Data4[3], waveFormat.SubFormat.Data4[4], waveFormat.SubFormat.Data4[5], waveFormat.SubFormat.Data4[6], waveFormat.SubFormat.Data4[7]));
+			}
+
+			bits = waveFormat.Samples.wValidBitsPerSample;
+			log("Bits: %i", waveFormat.Samples.wValidBitsPerSample);
+		}
+		else if (pWaveFormatEx->wFormatTag == WAVE_FORMAT_PCM)
+		{
+			roughFormat = PCM;
+			bits = pWaveFormatEx->wBitsPerSample;
+
+			log("Format: PCM");
+			log("Bits: %i", pWaveFormatEx->wBitsPerSample);
+		}
+		else
+		{
+			throw runtime_error(format("Uknown audio format {0}. Email me at andrewhoult77@gmail.com so I can add support.", pWaveFormatEx->wFormatTag));
+		}
+
+		if (roughFormat == FLOAT)
+		{
+			if (bits == 32)
+			{
+				return EAudioFormat::FLOAT_32;
+			}
+			else
+			{
+				throw runtime_error(format("Unsupported float bit depth of {0}. Email me at andrewhoult77@gmail.com so I can fix this.", bits));
+			}
+		}
+		else if (roughFormat == PCM)
+		{
+			if (bits == 8)
+			{
+				return EAudioFormat::INT_8;
+			}
+			else if (bits == 16)
+			{
+				return EAudioFormat::INT_16;
+			}
+			else
+			{
+				throw runtime_error(format("Unsupported PCM bit depth of {0}. Email me at andrewhoult77@gmail.com so I can fix this.", bits));
+			}
+		}
+
+		throw runtime_error("Unknown audio format error");
 	}
 }

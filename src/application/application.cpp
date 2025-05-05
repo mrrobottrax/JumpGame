@@ -5,6 +5,7 @@
 #include "game/game.h"
 #include "time/time.h"
 #include "audio/audio.h"
+#include "exceptions/exceptions.h"
 
 namespace Application
 {
@@ -25,14 +26,21 @@ namespace Application
 #endif // DEBUG
 
 		Window::create_window();
-		//MAGE_InitAudio();
+		try
+		{
+			Audio::init();
+		}
+		catch (exception &e)
+		{
+			alert(e);
+		}
 		Graphics::init();
 	}
 
 	void shutdown()
 	{
 		Graphics::shutdown();
-		//MAGE_EndAudio();
+		Audio::shutdown();
 
 #ifdef DEBUG
 		_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
@@ -80,7 +88,7 @@ namespace Application
 						}
 					}
 
-					Game_Tick();
+					Game::tick();
 					ranCatchupFrame = true; // < 30fps = TOO BAD!
 #endif // !DEBUG
 				}

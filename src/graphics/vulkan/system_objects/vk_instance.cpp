@@ -112,7 +112,9 @@ namespace Graphics::Vulkan
 
 	void destroy_instance()
 	{
+#ifdef DEBUG
 		destroy_debug_callbacks();
+#endif // DEBUG
 		vkDestroyInstance(vk_instance, nullptr);
 	}
 }
